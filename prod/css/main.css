@@ -1,8 +1,8 @@
 @media only screen and (min-width: 1081px) {
   body {
-    margin-left: 35%;
-    margin-right: 35%;
-    zoom: 0.5;
+    margin-left: 30%;
+    margin-right: 30%;
+    zoom: 0.4;
   }
 }
 @media only screen and (max-width: 1080px) {
@@ -13,7 +13,7 @@
   }
 }
 body {
-  background-color: #000050;
+  background-color: #000000;
   color: white;
   text-align: center;
 }
@@ -33,7 +33,7 @@ a:active {
   text-decoration: none;
 }
 .pink { color: pink; }
-.bg-heading { background-color: #000050; }
+.bg-heading { background-color: #000000; }
 .bg-aloft {
   background-image: url('../images/aloft.png');
   background-size: 100% 100%;
@@ -55,8 +55,8 @@ a:active {
   background-size: 100% 100%;
 }
 .bg-HF012 {
-    background-image: url('../images/hf0123kx5hp0.png');
-    background-size: 100% 100%;
+  background-image: url('../images/hf0123kx5hp0.png');
+  background-size: 100% 100%;
 }
 .bg-FPS {
   background-image: url('../images/fps3000x500p30.png');
@@ -83,7 +83,7 @@ hr.dash { border: 3px dashed white !important; }
   color: lightgray;
   opacity: 0.5;
 }
-.svgbg { fill: #212529; }
+.svgbg { fill: #000000; }
 .textlabel {
   fill: white;
   font-size: 150%;
@@ -121,7 +121,7 @@ hr.dash { border: 3px dashed white !important; }
   font-size: 150%;
 }
 .alternatemax {
-  fill: #ffc107;
+  fill: #ffc107ad;
   font-size: 200%;
   font-weight: bold;
 }
