@@ -1,8 +1,7 @@
 'use strict';
 // IIFE ASYNC MESONET PRIVATE API FOR TIME SERIES: https://developers.synopticdata.com/mesonet
 (async () => {
-//     const url = 'https://wasatchwind.github.io/example_time_series.json'
-    const url = `https://api.mesowest.net/v2/station/timeseries?&stid=KSLC&stid=UTOLY&stid=AMB&stid=KU42&stid=FPS&stid=C8948&stid=OGP&stid=HF012&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&obtimezone=local&timeformat=%-I:%M%20%p&token=6243aadc536049fc9329c17ff2f88db3`
+    const url = `https://api.mesowest.net/v2/station/timeseries?&stid=KSLC&stid=UTOLY&stid=AMB&stid=KU42&stid=FPS&stid=HF012&stid=REY&stid=IFF&stid=CEN&stid=BBN&stid=SND&stid=KPVU&stid=SIGU1&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&obtimezone=local&timeformat=%-I:%M%20%p&token=6243aadc536049fc9329c17ff2f88db3`
     const response = await fetch(url)
     const tsData = await response.json()
     if (tsData) {
@@ -62,9 +61,9 @@ function zone(data, zDigit=[]) {
 }
 
 function windChart(data) {
-    const ylwLim = (data.stid==='AMB' || data.stid==='OGP') ? 19 : data.stid==='FPS' ? 15 : 9
-    const redLim = (data.stid==='AMB' || data.stid==='OGP') ? 29 : 19
-    const length = data.stid==='AMB' ? 6 : 12
+    const ylwLim = (data.stid==='AMB' || data.stid==='BBN' || data.stid==='SND' || data.stid==='REY' || data.stid==='IFF') ? 19 : data.stid==='FPS' ? 15 : 9
+    const redLim = (data.stid==='AMB' || data.stid==='BBN' || data.stid==='SND' || data.stid==='REY' || data.stid==='IFF') ? 29 : 19
+    const length = (data.stid==='AMB' || data.stid==='BBN' || data.stid==='SND' || data.stid==='REY' || data.stid==='IFF') ? 6 : 12
     document.getElementById(`${data.stid}-main`).style.display = 'block'
     for (let key in data) data[key] = data[key].slice(-length)
     time(data.stid, data.date_time)
@@ -84,7 +83,7 @@ function wind(stid, data, ylwLim, redLim) {
     data = data.map(d => Math.round(d)>=1 ? Math.round(d) : d===null ? '&nbsp;' : '<span class="fs-3 fw-normal">Calm</span>')
     const barHeight = data.map(d => d!=='' ? `${d*4}px` : '0px')
     const barColor = data.map(d => (d>ylwLim && d<redLim) ? wwYlw : d>=redLim ? wwOrg : wwGrn)
-    document.getElementById(`${stid}-wind`).innerHTML = typeof data[data.length-1]==='string' ? '<span class="display-5 fw-bold">Calm</span>' : data[data.length-1]
+    document.getElementById(`${stid}-wind`).innerHTML = typeof data[data.length-1]==='string' ? '<span class="display-5">Calm</span>' : data[data.length-1]
     for (let i=0; i<data.length; i++) {
         document.getElementById(`${stid}-wind-${i}`).innerHTML = data[i]
         let element = document.getElementById(`${stid}-wbar-${i}`)

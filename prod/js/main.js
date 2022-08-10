@@ -30,7 +30,7 @@ const svg = d3.select('#skew-t-d3')
 const x = d3.scaleLinear().range([-10, width]).domain([-10, 110])
 const y = d3.scaleLinear().range([height, 0]).domain([surfaceAlt, 18])
 let raobData = {}
-let currentDiv = 'Wind'
+let currentDiv = 'Site Readings'
 document.getElementById('current-div').innerHTML = currentDiv
 
 window.onclick = function(event) {
@@ -85,34 +85,81 @@ function toggleWindChart(div) {
     }
 })();
 
-(function setHeadingDate() {
-    const headingDate = now.toLocaleString('en-us', {weekday: 'short', month: 'short', day: 'numeric'})
-    document.getElementById('heading-date').innerHTML = headingDate
-})();
-
-(function getMorningSkewT() {
-    const date = now.toLocaleString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'}).split('/')
-    const url = `https://climate.cod.edu/data/raob/KSLC/skewt/KSLC.skewt.${date[2]}${date[0]}${date[1]}.12.gif`
-    document.getElementById('skew-t-img').src = url
-})();
-
-(function getAllGraphicalForecastImages() {
-    const url = 'https://graphical.weather.gov/images/slc/'
-    const timeStr = (now.getHours()>18 || now.getHours()<7) ? 5 : 1
-    const nextDay = now.getHours()>18 ? `( ${new Date(now.setHours(now.getHours()+24)).toLocaleString('en-us', {weekday: 'short'})} )` : null
-    const nextDayClassCount = 3
-    if (nextDay) for (let i=0; i<nextDayClassCount; i++) document.getElementsByClassName('next-day')[i].innerHTML = nextDay
-    for (let i=0; i<4; i++) {
-        document.getElementById(`graphical-sky-${i}`).src = `${url}Sky${timeStr+i}_slc.png`
-        document.getElementById(`graphical-wx-${i}`).src = `${url}Wx${timeStr+i}_slc.png`
+// IIFE ASYNC Get SLC Forecast Discussion text
+(async () => 
+    {
+        const url = 'https://forecast.weather.gov/product.php?site=NWS&issuedby=SLC&product=AFD&format=txt&version=1&glossary=0'
+        const response = await fetch(url)
+        const ForecastDiscussionText = await response.text()
+        if (ForecastDiscussionText) {
+            let CleanText = ForecastDiscussionText.replace(/[\n\r]/g, " ")
+            let date_position_start = CleanText.search("National Weather Service Salt Lake City UT")+43
+            let date_position_end = CleanText.search(".SYNOPSIS.")-1
+            let synopsis_position_start = CleanText.search(".SYNOPSIS.")+12
+            let synopsis_position_end = CleanText.search(".SHORT TERM")-4
+            let aviation_position_start = CleanText.search(".AVIATION")+19
+            let aviation_position_end = CleanText.search("REST OF UTAH AND SOUTHWEST WYOMING.")-1
+            document.getElementById("forecast-discussion-date").innerText = CleanText.substring(date_position_start, date_position_end)
+            document.getElementById("forecast-discussion-synopsis").innerText = CleanText.substring(synopsis_position_start, synopsis_position_end)
+            document.getElementById("forecast-discussion-aviation").innerText = CleanText.substring(aviation_position_start, aviation_position_end)
+        }
     }
-})();
+)();
 
-if (now.getHours()>=6 && now.getHours()<=14) windSurfaceForecastGraphical()
-function windSurfaceForecastGraphical() {
-    const offset = now.getTimezoneOffset()/60===6 ? '3 pm' : '2 pm'
-    document.getElementById('graphical-wind-time').innerHTML = offset
-    document.getElementById('graphical-wind-img').src = 'https://graphical.weather.gov/images/slc/WindSpd3_slc.png'
-    document.getElementById('graphical-gust-img').src = 'https://graphical.weather.gov/images/slc/WindGust3_slc.png'
-    document.getElementById('graphical-wind-div').style.display = 'block'
-}
+// IIFE ASYNC Get morning SkewT
+(async () =>
+    {
+        const date = now.toLocaleString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'}).split('/')
+        const url = `https://climate.cod.edu/data/raob/KSLC/skewt/KSLC.skewt.${date[2]}${date[0]}${date[1]}.12.gif`
+        document.getElementById('skew-t-img').src = url
+        document.getElementById('skew-t-href').href = url
+    }
+)();
+
+// IIFE ASYNC Get graphical forecast images
+(async () =>
+    {
+        const url = 'https://graphical.weather.gov/images/slc/'
+        const timeStr = (now.getHours()>18 || now.getHours()<7) ? 5 : 1
+        const nextDay = now.getHours()>18 ? `( ${new Date(now.setHours(now.getHours()+24)).toLocaleString('en-us', {weekday: 'short'})} )` : null
+        const nextDayClassCount = 3
+        if (nextDay) for (let i=0; i<nextDayClassCount; i++) document.getElementsByClassName('next-day')[i].innerHTML = nextDay
+        for (let i=0; i<4; i++) {
+            document.getElementById(`graphical-sky-${i}`).src = `${url}Sky${timeStr+i}_slc.png`
+            document.getElementById(`graphical-wx-${i}`).src = `${url}Wx${timeStr+i}_slc.png`
+        }
+    }
+)();
+
+// IIFE ASYNC Get surface forecast graphics
+(async () =>
+    {
+        if (now.getHours()>=6 && now.getHours()<=14) {
+            const offset = now.getTimezoneOffset()/60===6 ? '3 pm' : '2 pm'
+            document.getElementById('graphical-wind-time').innerHTML = offset
+            document.getElementById('graphical-wind-img').src = 'https://graphical.weather.gov/images/slc/WindSpd3_slc.png'
+            document.getElementById('graphical-gust-img').src = 'https://graphical.weather.gov/images/slc/WindGust3_slc.png'
+            document.getElementById('graphical-wind-div').style.display = 'block'        
+        }
+    }
+)();
+
+// IIFE ASYNC Get SLC Forecast Discussion text
+(async () => 
+    {
+        const url = 'https://forecast.weather.gov/product.php?site=NWS&issuedby=SLC&product=AFD&format=txt&version=1&glossary=0'
+        const response = await fetch(url)
+        const ForecastDiscussionText = await response.json()
+        if (ForecastDiscussionText) {
+            let date_position_start = ForecastDiscussionText.search("National Weather Service Salt Lake City UT")+1
+            let date_position_end = ForecastDiscussionText.search(".SYNOPSIS.")-1
+            let synopsis_position_start = ForecastDiscussionText.search(".SYNOPSIS.")+12
+            let synopsis_position_end = ForecastDiscussionText.search(".SHORT TERM")-4
+            let aviation_position_start = ForecastDiscussionText.search(".AVIATION.")+19
+            let aviation_position_end = ForecastDiscussionText.search("REST OF UTAH AND SOUTHWEST WYOMING.")-1
+            document.getElementById("forecast-discussion-date").innerText = ForecastDiscussionText.substring(date_position_start, date_position_end)
+            document.getElementById("forecast-discussion-synopsis").innerText = ForecastDiscussionText.substring(synopsis_position_start, synopsis_position_end)
+            document.getElementById("forecast-discussion-aviation").innerText = ForecastDiscussionText.substring(aviation_position_start, aviation_position_end)
+        }
+    }
+)();

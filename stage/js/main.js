@@ -60,7 +60,8 @@ function windSurfaceForecastGraphical() {
     document.getElementById('graphical-wind-div').style.display = 'block'
 };
 
-(function getAllGraphicalForecastImages() {
+// Get graphical forecast images
+(async () => {
     const url = 'https://graphical.weather.gov/images/slc/'
     const timeStr = (now.getHours() > 18 || now.getHours() < 7) ? 5 : 1
     document.getElementById('sky-next-day').innerHTML = nextDay
@@ -70,7 +71,8 @@ function windSurfaceForecastGraphical() {
     }
 })();
 
-(function getMorningSkewT() {
+// Get morning Skew-T diagram
+(async () => {
     const date = now.toLocaleString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'}).split('/')
     const url = `https://climate.cod.edu/data/raob/KSLC/skewt/KSLC.skewt.${date[2]}${date[0]}${date[1]}.12.gif`
     document.getElementById('skew-t-img').src = url
