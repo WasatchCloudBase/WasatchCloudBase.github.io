@@ -13,10 +13,10 @@ const clientWidth = document.documentElement.clientWidth
 const visibleScreenWidth = clientWidth>1080 ? clientWidth*0.6 : clientWidth*0.89
 const visibleScreenHeight = visibleScreenWidth*0.679
 const margin = {
-    top: visibleScreenHeight*0.023,
-    right: visibleScreenWidth*0.028,
-    bottom: visibleScreenHeight*0.133,
-    left: visibleScreenWidth*0.09
+    top: visibleScreenHeight*0.05,
+    right: visibleScreenWidth*0.05,
+    bottom: visibleScreenHeight*0.05,
+    left: visibleScreenWidth*0.05
 }
 const width = visibleScreenWidth-margin.left-margin.right
 const height = visibleScreenHeight-margin.top-margin.bottom
