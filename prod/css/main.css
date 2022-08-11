@@ -8,8 +8,8 @@
 @media only screen and (max-width: 1080px) {
   body { width: 90%; }
   .container-fluid {
-    margin-left: 1%;
-    margin-left: 1%;
+    margin-left: 0%;
+    margin-left: 0%;
   }
 }
 body {

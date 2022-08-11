@@ -16,7 +16,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
 
     <!-- Page title and menu -->
-    <div class="container-fluid sticky-top bg-heading mx-0 px-0">
+    <div class="container-fluid sticky-top bg-heading">
         <div class="row">
             <div class="col display-2">Wasatch Wind Cloudbase fork</div>
         </div>
@@ -44,16 +44,18 @@
     <div class="mb-div-end" id="Site Readings">
 
         <!-- SLC STATION READINGS -->
-        <div class="container-fluid display-3 mt-2  mx-0 px-0">Salt Lake County</div>
+        <div class="container-fluid display-3 mt-2">Salt Lake County</div>
 
         <!-- KSLC SALT LAKE INTL AIRPORT -->
-        <div class="container-fluid mt-4 mx-0 px-0">
+        <div class="container-fluid mt-4">
             <div id="KSLC-main">
                 <div class="row rounded mt-1">
                     <div class="col-auto bg-black align-self-center display-4 text-warning clickable" onclick="toggleWindChart('KSLC-Forecast')">fcst</div>
                     <div class="bg-dark col mx-0 row rounded-4">
-                        <div class="col-auto row ps-3 text-start display-3">Salt Lake Airport</div>
-                        <div class="col-auto row fs-3 align-self-center text-info">&emsp;4,226 ft</div>
+                        <div class="col-auto row">
+                            <div class="row display-3">SLC Airport</div>
+                            <div class="row fs-3 text-info">4,226 ft</div>
+                        </div>
                         <div class="col-auto align-self-center display-4 text-warning clickable" onclick="toggleWindChart('KSLC-Pressure')">
                             <div class="col-auto row">
                                 <div class="col-auto fs-1 align-self-center">&emsp;Zone</div>
@@ -239,13 +241,15 @@
         </div>
 
         <!-- WIND OLYMPUS COVE (UTOLY)-->
-        <div class="container-fluid mt-4 mx-0 px-0">
+        <div class="container-fluid mt-4">
             <div id="UTOLY-main">
                 <div class="row rounded mt-1">
                     <div class="col-auto bg-black align-self-center display-4 text-warning clickable" onclick="toggleWindChart('UTOLY-Forecast')">fcst</div>
                     <div class="bg-dark col mx-0 row rounded-4">
-                        <div class="col-auto row ps-3 text-start display-3">Olympus Cove</div>
-                        <div class="col-auto row fs-3 align-self-center text-info">&emsp;4,972 ft</div>
+                        <div class="col-auto row">
+                            <div class="row display-3">Olympus Cove</div>
+                            <div class="row fs-3 text-info">4,972 ft</div>
+                        </div>
                         <div class="col align-self-end row justify-content-end">
                             <div class="col-auto fs-1 align-self-center" id="UTOLY-time">&nbsp;</div>
                             <div class="col-auto" id=""></div>
@@ -371,13 +375,15 @@
         </div>
 
         <!-- WIND SOUTH VALLEY AIRPORT 2 (KU42)-->
-        <div class="container-fluid mt-4 mx-0 px-0">
+        <div class="container-fluid mt-4">
             <div id="KU42-main">
                 <div class="row rounded mt-1">
                     <div class="col-auto bg-black align-self-center display-4 text-warning clickable" onclick="toggleWindChart('KU42-Forecast')">fcst</div>
                     <div class="bg-dark col mx-0 row rounded-4">
-                        <div class="col-auto row ps-3 text-start display-3">South Valley Airport</div>
-                        <div class="col-auto row fs-3 align-self-center text-info">&emsp;4,596 ft</div>
+                        <div class="col-auto row">
+                            <div class="row display-3">Airport 2</div>
+                            <div class="row fs-3 text-info">4,596 ft</div>
+                        </div>
                         <div class="col align-self-end row justify-content-end">
                             <div class="col-auto fs-1 align-self-center" id="KU42-time">&nbsp;</div>
                             <div class="col-auto" id=""></div>
@@ -500,7 +506,7 @@
                     </div>
                     <a href="http://online.saiawos.com/KU42/ios/cdisplay.html" target="_blank">
                         <div class="row">
-                            <div class="fs-1 py-4 text-warning text-decoration-underline">South Valley station - live</div>
+                            <div class="fs-1 py-4 text-warning text-decoration-underline">Airport 2 station - live</div>
                         </div>
                     </a>
                 </div>
@@ -508,13 +514,15 @@
         </div>
 
         <!-- WIND NORTHSIDE (HF012)-->
-        <div class="container-fluid mt-4 mx-0 px-0">
+        <div class="container-fluid mt-4">
             <div id="HF012-main">
                 <div class="row rounded mt-1">
                     <div class="col-auto bg-black align-self-center display-4 text-warning clickable" onclick="toggleWindChart('HF012-Forecast')">fcst</div>
                     <div class="bg-dark col mx-0 row rounded-4">
-                        <div class="col-auto row ps-3 text-start display-3">POTM North Side</div>
-                        <div class="col-auto row fs-3 align-self-center text-info">&emsp;6,194 ft</div>
+                        <div class="col-auto row">
+                            <div class="row display-3">POTM North</div>
+                            <div class="row fs-3 text-info">6,194 ft</div>
+                        </div>
                         <div class="col align-self-end row justify-content-end">
                             <div class="col-auto fs-1 align-self-center" id="HF012-time">&nbsp;</div>
                             <div class="col-auto" id=""></div>
@@ -645,13 +653,15 @@
         </div>
 
         <!-- WIND SOUTHSIDE (FPS)-->
-        <div class="container-fluid mt-4 mx-0 px-0">
+        <div class="container-fluid mt-4">
             <div id="FPS-main">
                 <div class="row rounded mt-1">
                     <div class="col-auto bg-black align-self-center display-4 text-warning clickable" onclick="toggleWindChart('FPS-Forecast')">fcst</div>
                     <div class="bg-dark col mx-0 row rounded-4">
-                        <div class="col-auto row ps-3 text-start display-3">POTM South Side</div>
-                        <div class="col-auto row fs-3 align-self-center text-info">&emsp;5,202 ft</div>
+                        <div class="col-auto row">
+                            <div class="row display-3">POTM South</div>
+                            <div class="row fs-3 text-info">5,202 ft</div>
+                        </div>
                         <div class="col align-self-end row justify-content-end">
                             <div class="col-auto fs-1 align-self-center" id="FPS-time">&nbsp;</div>
                             <div class="col-auto" id=""></div>
@@ -777,13 +787,15 @@
         </div>
 
         <!-- WIND REYNOLDS PEAK (REY) -->
-        <div class="container-fluid mt-4 mx-0 px-0">
+        <div class="container-fluid mt-4">
             <div id="REY-main">
                 <div class="row rounded mt-1">
                     <div class="col-auto bg-black align-self-center display-4 text-warning clickable" onclick="toggleWindChart('REY-Forecast')">fcst</div>
                     <div class="bg-dark col mx-0 row rounded-4">
-                        <div class="col-auto row ps-3 text-start display-3">Reynolds Peak</div>
-                        <div class="col-auto row fs-3 align-self-center text-info">&emsp;9,400 ft</div>
+                        <div class="col-auto row">
+                            <div class="row display-3">Reynolds Peak</div>
+                            <div class="row fs-3 text-info">9,400 ft</div>
+                        </div>
                         <div class="col align-self-end row justify-content-end">
                             <div class="col-auto fs-1 align-self-center" id="REY-time">&nbsp;</div>
                             <div class="col-auto" id=""></div>
@@ -861,13 +873,15 @@
         </div>
 
         <!-- WIND CARDIFF PEAK (IFF) -->
-        <div class="container-fluid mt-4 mx-0 px-0">
+        <div class="container-fluid mt-4">
             <div id="IFF-main">
                 <div class="row rounded mt-1">
                     <div class="col-auto bg-black align-self-center display-4 text-warning clickable" onclick="toggleWindChart('IFF-Forecast')">fcst</div>
                     <div class="bg-dark col mx-0 row rounded-4">
-                        <div class="col-auto row ps-3 text-start display-3">Cardiff Peak</div>
-                        <div class="col-auto row fs-3 align-self-center text-info">&emsp;10,059 ft</div>
+                        <div class="col-auto row">
+                            <div class="row display-3">Cardiff Peak</div>
+                            <div class="row fs-3 text-info">10,059 ft</div>
+                        </div>
                         <div class="col align-self-end row justify-content-end">
                             <div class="col-auto fs-1 align-self-center" id="IFF-time">&nbsp;</div>
                             <div class="col-auto" id=""></div>
@@ -945,13 +959,15 @@
         </div>
 
         <!-- WIND ALTA MT BALDY (AMB) -->
-        <div class="container-fluid mt-4 mx-0 px-0">
+        <div class="container-fluid mt-4">
             <div id="AMB-main">
                 <div class="row rounded mt-1">
                     <div class="col-auto bg-black align-self-center display-4 text-warning clickable" onclick="toggleWindChart('AMB-Forecast')">fcst</div>
                     <div class="bg-dark col mx-0 row rounded-4">
-                        <div class="col-auto row ps-3 text-start display-3">Alta Mt Baldy</div>
-                        <div class="col-auto row fs-3 align-self-center text-info">&emsp;11,066 ft</div>
+                        <div class="col-auto row">
+                            <div class="row display-3">Alta Mt Baldy</div>
+                            <div class="row fs-3 text-info">11,066 ft</div>
+                        </div>
                         <div class="col align-self-end row justify-content-end">
                             <div class="col-auto fs-1 align-self-center" id="AMB-time">&nbsp;</div>
                             <div class="col-auto" id=""></div>
@@ -1029,16 +1045,18 @@
         </div>
 
         <!-- DAVIS STATION READINGS -->
-        <div class="container-fluid display-3 mt-2 mx-0 px-0">Davis County</div>
+        <div class="container-fluid display-3 mt-2">Davis County</div>
 
         <!-- BOUNTIFUL BENCH (BBN)-->
-        <div class="container-fluid mt-4 mx-0 px-0">
+        <div class="container-fluid mt-4">
             <div id="BBN-main">
                 <div class="row rounded mt-1">
                     <div class="col-auto bg-black align-self-center display-4 text-warning clickable" onclick="toggleWindChart('BBN-Forecast')">fcst</div>
                     <div class="bg-dark col mx-0 row rounded-4">
-                        <div class="col-auto row ps-3 text-start display-3">Bountiful Bench</div>
-                        <div class="col-auto row fs-3 align-self-center text-info">&emsp;4,950 ft</div>
+                        <div class="col-auto row">
+                            <div class="row display-3">Bountiful Bench</div>
+                            <div class="row fs-3 text-info">4,950 ft</div>
+                        </div>
                         <div class="col align-self-end row justify-content-end">
                             <div class="col-auto fs-1 align-self-center" id="BBN-time">&nbsp;</div>
                             <div class="col-auto" id=""></div>
@@ -1116,13 +1134,15 @@
         </div>
 
         <!-- WIND CENTERVILLE (CEN)-->
-        <div class="container-fluid mt-4 mx-0 px-0">
+        <div class="container-fluid mt-4">
             <div id="CEN-main">
                 <div class="row rounded mt-1">
                     <div class="col-auto bg-black align-self-center display-4 text-warning clickable" onclick="toggleWindChart('CEN-Forecast')">fcst</div>
                     <div class="bg-dark col mx-0 row rounded-4">
-                        <div class="col-auto row ps-3 text-start display-3">Centerville</div>
-                        <div class="col-auto row fs-3 align-self-center text-info">&emsp;4,231 ft</div>
+                        <div class="col-auto row">
+                            <div class="row display-3">Centerville</div>
+                            <div class="row fs-3 text-info">4,231 ft</div>
+                        </div>
                         <div class="col align-self-end row justify-content-end">
                             <div class="col-auto fs-1 align-self-center" id="CEN-time">&nbsp;</div>
                             <div class="col-auto" id=""></div>
@@ -1248,16 +1268,18 @@
         </div>
 
         <!-- UTAH COUNTY STATION READINGS -->
-        <div class="container-fluid display-3 mt-2 mx-0 px-0">Utah County</div>
+        <div class="container-fluid display-3 mt-2">Utah County</div>
 
         <!-- WIND SUNDANCE RESORT ARROWHEAD PEAK (SND)-->
-        <div class="container-fluid mt-4 mx-0 px-0">
+        <div class="container-fluid mt-4">
             <div id="SND-main">
                 <div class="row rounded mt-1">
                     <div class="col-auto bg-black align-self-center display-4 text-warning clickable" onclick="toggleWindChart('SND-Forecast')">fcst</div>
                     <div class="bg-dark col mx-0 row rounded-4">
-                        <div class="col-auto row ps-3 text-start display-3">Sundance</div>
-                        <div class="col-auto row fs-3 align-self-center text-info">&emsp;8,250 ft</div>
+                        <div class="col-auto row">
+                            <div class="row display-3">Sundance</div>
+                            <div class="row fs-3 text-info">8,250 ft</div>
+                        </div>
                         <div class="col align-self-end row justify-content-end">
                             <div class="col-auto fs-1 align-self-center" id="SND-time">&nbsp;</div>
                             <div class="col-auto" id=""></div>
@@ -1335,13 +1357,15 @@
         </div>
 
         <!-- WIND PROVO AIRPORT (KPVU)-->
-        <div class="container-fluid mt-4 mx-0 px-0">
+        <div class="container-fluid mt-4">
             <div id="KPVU-main">
                 <div class="row rounded mt-1">
                     <div class="col-auto bg-black align-self-center display-4 text-warning clickable" onclick="toggleWindChart('KPVU-Forecast')">fcst</div>
                     <div class="bg-dark col mx-0 row rounded-4">
-                        <div class="col-auto row ps-3 text-start display-3">Provo Airport</div>
-                        <div class="col-auto row fs-3 align-self-center text-info">&emsp;4,498 ft</div>
+                        <div class="col-auto row">
+                            <div class="row display-3">Provo Airport</div>
+                            <div class="row fs-3 text-info">4,498 ft</div>
+                        </div>
                         <div class="col align-self-end row justify-content-end">
                             <div class="col-auto fs-1 align-self-center" id="KPVU-time">&nbsp;</div>
                             <div class="col-auto" id=""></div>
@@ -1467,16 +1491,18 @@
         </div>
 
         <!-- SEVIER COUNTY STATION READINGS -->
-        <div class="container-fluid display-3 mt-2 mx-0 px-0">SevierCounty</div>
+        <div class="container-fluid display-3 mt-2">SevierCounty</div>
 
          <!-- SIGNAL PEAK (SIGU1)-->
-         <div class="container-fluid mt-4 mx-0 px-0">
+         <div class="container-fluid mt-4">
             <div id="SIGU1-main">
                 <div class="row rounded mt-1">
                     <div class="col-auto bg-black align-self-center display-4 text-warning clickable" onclick="toggleWindChart('SIGU1-Forecast')">fcst</div>
                     <div class="bg-dark col mx-0 row rounded-4">
-                        <div class="col-auto row ps-3 text-start display-3">Signal Peak (Cove)</div>
-                        <div class="col-auto row fs-3 align-self-center text-info">&emsp;8,767 ft</div>
+                        <div class="col-auto row">
+                            <div class="row display-3">Signal Peak</div>
+                            <div class="row fs-3 text-info">8,767 ft</div>
+                        </div>
                         <div class="col align-self-end row justify-content-end">
                             <div class="col-auto fs-1 align-self-center" id="SIGU1-time">&nbsp;</div>
                             <div class="col-auto" id=""></div>
@@ -1562,12 +1588,15 @@
         </div>
 
         <!-- WIND MONROE PEAK, COVE, AND MONROE LZ (LINK)-->
-        <div class="container-fluid mt-4 mx-0 px-0">
+        <div class="container-fluid mt-4">
             <div id="CUASA-main">
                 <div class="row rounded mt-1">
                     <div class="col-auto bg-black align-self-center display-4 text-warning clickable" onclick="toggleWindChart('CUASA-Forecast')">fcst</div>
                     <div class="bg-dark col mx-0 row rounded-4">
-                        <div class="col-auto row ps-3 text-start display-3">Monroe Peak, Cove, Monroe LZ</div>
+                        <div class="col-auto row">
+                            <div class="row display-3">CUASA Stations</div>
+                            <div class="row fs-3 text-info">Various</div>
+                        </div>
                     </div>
                     <div class="col-auto bg-black">
                         <a href="http://sierragliding.us/cuasa/?fbclid=IwAR05nK2ckcqYRzVTToILrdifDjQqOOObv8usUXBa15LSQ6vVfUirQdLKCHM#duration=3600" target="_blank">
@@ -1587,7 +1616,7 @@
         </div>
 
         <!-- SURFACE WIND MAP PNG FROM GCP STORAGE -->
-        <div class="container-fluid display-3 mt-4 mx-0 px-0">Surface Wind Map</div>
+        <div class="container-fluid display-3 mt-4">Surface Wind Map</div>
         <div class="fs-3 text-info" id="wind-map-timestamp"></div>
         <a href="https://www.wrh.noaa.gov/map/?&zoom=10&center=40.65,-111.90&obs=true&obs_type=weather&elements=wind,gust&obs_density=10&&obs_popup=false&obs_provider=ALL" target="_blank">
             <img class="border wwborder border-4 border-warning" id="surface-wind-map" width="100%">
@@ -1599,7 +1628,7 @@
     <div class="collapse mb-div-end" id="Weather Actuals">
 
         <!-- CLOUDS & PRECIP GIF -->
-        <div class="container-fluid mx-0 px-0">
+        <div class="container-fluid p-0">
             <a href="https://www.accuweather.com/en/us/utah/weather-radar-rs?play=1" target="_blank">
                 <div class="display-3 py-4">Clouds & Precipitation (past hour)</div>
                 <img class="border wwborder border-4 border-warning" 
@@ -1608,7 +1637,7 @@
         </div>
 
         <!-- SATELLITE GIF -->
-        <div class="container-fluid mx-0 px-0">
+        <div class="container-fluid p-0">
             <a href="https://www.star.nesdis.noaa.gov/goes/sector.php?sat=G17&sector=psw" target="_blank">
                 <div class="display-3 py-4">Satellite (past 4 hours)</div>
                 <img class="border wwborder border-4 border-warning" 
@@ -1617,7 +1646,7 @@
         </div>
 
         <!-- JETSTREAM -->
-        <div class="container-fluid  mx-0 px-0">
+        <div class="container-fluid p-0">
             <a href="https://www.wunderground.com/maps/wind/jet-stream" target="_blank">
                 <div class="display-3 py-4">Jetstream (past 18 hours)</div>
                     <img class="border wwborder border-4 border-warning" 
@@ -1632,7 +1661,7 @@
     <div class="collapse mb-div-end" id="Weather Forecast">
 
         <!-- AREA FORECAST DISCUSSION -->
-        <div class="container-fluid  mx-0 px-0 mt-5 pb-3 display-3">SLC Area Forecast Discussion</div>
+        <div class="container-fluid p-0 mt-5 pb-3 display-3">SLC Area Forecast Discussion</div>
         <div class="container-fluid border wwborder border-4 border-warning display-5 rounded-4 bg-dark lh-base">
             <div class="row pt-3 pb-3">
                 <div class="col-auto text-warning">Forecast date:</div>
@@ -1647,7 +1676,7 @@
         </div>
 
         <!-- NEXT 3 DAYS -->
-        <div class="container-fluid  mx-0 px-0">
+        <div class="container-fluid p-0">
             <a href="https://forecast.weather.gov/MapClick.php?lat=40.76031000000006&lon=-111.88821999999999#.YSqo945KhhF" target="_blank">
                 <div class="display-3 py-4">Daily Forecast (3 days)</div>
                 <div class="border wwborder border-4 border-warning bg-dark py-3 lh-base">
@@ -1683,7 +1712,7 @@
         </div>        
 
         <!-- GRAPHICAL SKY COVER -->
-        <div class="display-3 mx-0 px-0 py-4" id="SKYCOVERTEST">Cloud Cover and Precipitation Forecast</div>
+        <div class="display-3 py-4" id="SKYCOVERTEST">Cloud Cover and Precipitation Forecast</div>
         <div class="fs-1 fw-bold text-info" id="sky-next-day"></div>
         <a href="https://graphical.weather.gov/sectors/slc.php#tabs" target="_blank">
             <div class="d-flex fs-1 fw-bold text-info justify-content-around">
@@ -1713,7 +1742,7 @@
         </a>
 
         <!-- CURRENT FRONTS -->
-        <div class="container-fluid mx-0 px-0">
+        <div class="container-fluid p-0">
             <div class="display-3 py-4">Current Fronts</div>
             <img class="border wwborder border-4 border-warning" 
                 src="https://uni.edu/storm/wximages/images/fronts.gif" width="100%">
@@ -1725,7 +1754,7 @@
     <div class="collapse mb-div-end" id="Soaring Forecast">
 
         <!-- WIND ALOFT FORECAST -->
-       <div class="container-fluid mx-0 px-0">
+       <div class="container-fluid p-0">
            <a id="wind-aloft-link" target="_blank">
                <div class="pt-4">
                    <div class="display-3 pb-4">Wind Aloft Forecast</div>
@@ -1774,7 +1803,7 @@
        </div>
 
         <!-- USER INPUT TEMP FOR TOL and SOUNDING SNAPSHOT -->
-        <div class="container-fluid mx-0 px-0 pt-5 pb-2">
+        <div class="container-fluid pt-5 pb-2">
             <div class="display-3 py-4">Alternate Max Temp for Lift Forecast and Sounding</div>
             <div class="container-fluid">
                <div class="row display-4">
@@ -1792,7 +1821,7 @@
        </div>
 
         <!-- NWS SOARING FORECAST -->
-        <div class="container-fluid  mx-0 px-0">
+        <div class="container-fluid p-0">
             <div class="display-3 pt-5 pb-3">Lift Forecast</div>
             <div class="collapse fs-1 pb-4" id="od-div">
                 <span>NWS Overdevelopment Time:&nbsp;</span>
@@ -1850,13 +1879,13 @@
         </div>
     
         <!-- MORNING SOUNDING SNAPSHOT -->
-        <div class="container-fluid mx-0 px-0">
+        <div class="container-fluid p-0">
             <div class="display-3 pt-5 pb-3">Morning Sounding Snapshot</div>
             <div class="border wwborder border-2 border-warning bg-dark" id="skew-t-d3"></div>
         </div>
 
         <!-- MORNING SOUNDING SKEW-T -->
-        <div class="container-fluid mx-0 px-0">
+        <div class="container-fluid p-0">
             <a href="https://climate.cod.edu/data/raob/KSLC/skewt" id="skew-t-href" target="_blank">
                 <div class="display-3 pt-5 pb-3">Morning Sounding Skew-T</div>
                     <img class="border wwborder border-4 border-warning" id="skew-t-img" width="100%">
@@ -1864,7 +1893,7 @@
         </div>
 
         <!-- GRAPHICAL SURFACE WIND FORECAST (SHOWN ONLY BEFORE 2PM LOCAL TIME) -->
-        <div class="collapse container-fluid mx-0 px-0" id="graphical-wind-div">
+        <div class="collapse container-fluid p-0" id="graphical-wind-div">
             <div class="display-3 pt-5 pb-3">Surface Wind Forecast</div>
             <div class="row fw-bold fs-1 justify-content-center">
                 <div class="col-4">Wind</div>
@@ -1885,7 +1914,7 @@
     <div class="collapse mb-div-end" id="Weather Cams">
 
         <!-- Salt Lake Valley -->
-        <div class="container-fluid display-3 mx-0 px-0 mt-5 mb-3">Salt Lake Valley</div>
+        <div class="container-fluid display-3 mt-5 mb-3">Salt Lake Valley</div>
         <div class="container-fluid p-0 display-5 pt-4 mb-5 rounded-4 bg-dark">
             <div class="row">
                 <div class="col">U of U looking West
@@ -1909,7 +1938,7 @@
             </div>
         </div>
         <!-- POTM -->
-        <div class="container-fluid display-3 mx-0 px-0 mt-5 mb-3">Point of the Mountain Flight Parks</div>
+        <div class="container-fluid display-3 mt-5 mb-3">Point of the Mountain Flight Parks</div>
         <div class="container-fluid p-0 display-5 pt-4 mb-5 rounded-4 bg-dark">
             <div class="row">
                 <div class="col">Point of the Mountain North Side
@@ -1927,7 +1956,7 @@
             </div>
         </div>
         <!-- Utah Valley -->
-        <div class="container-fluid display-3 mx-0 px-0 mt-5 mb-3">Utah Valley</div>
+        <div class="container-fluid display-3 mt-5 mb-3">Utah Valley</div>
         <div class="container-fluid p-0 display-5 pt-4 mb-5 rounded-4 bg-dark">
             <div class="row">
                 <div class="col">Saratoga Springs looking Northeast
@@ -1948,7 +1977,7 @@
 
     <!-- FLIGHT TRACKS ######################################################################################################################################################## -->
     <div class="collapse mb-div-end" id="Flight Tracks">
-        <div class="container-fluid mx-0 px-0 p-0">
+        <div class="container-fluid p-0">
             <div class="my-5">
                 <a href="https://xcfind.paraglide.us/map.html?id=15" target="_blank">
                     <img class="border wwborder border-4 border-warning" src="prod/images/xcfind.png" width="60%">
@@ -1981,7 +2010,7 @@
     <div class="collapse mb-div-end" id="About">
 
         <!-- ABOUT -->
-        <div class="container-fluid display-5 mx-0 px-0 mb-5">
+        <div class="container-fluid display-5 p-0 mb-5">
             <div class="pt-4">This is a fork of the outstanding work done by Matt Hansen.</div>
             <div class="pb-3">Send complaints regarding this fork to mike.del.brown@gmail.com.</div>
         </div>
