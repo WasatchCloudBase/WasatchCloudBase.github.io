@@ -123,7 +123,7 @@ function toggleWindChart(div) {
         const timeStr = (now.getHours()>18 || now.getHours()<7) ? 5 : 1
         const nextDay = now.getHours()>18 ? `( ${new Date(now.setHours(now.getHours()+24)).toLocaleString('en-us', {weekday: 'short'})} )` : null
         const nextDayClassCount = 3
-        if (nextDay) for (let i=0; i<nextDayClassCount; i++) document.getElementsByClassName('next-day')[i].innerHTML = nextDay
+        document.getElementById('sky-next-day').innerHTML = nextDay
         for (let i=0; i<4; i++) {
             document.getElementById(`graphical-sky-${i}`).src = `${url}Sky${timeStr+i}_slc.png`
             document.getElementById(`graphical-wx-${i}`).src = `${url}Wx${timeStr+i}_slc.png`
