@@ -2,10 +2,7 @@
 <html>
 
 <head>
-    <title>Wasatch Wind (Cloudbase fork)</title>
-
-    <!-- Set automatic refresh interval-->
-    <meta http-equiv="refresh" content="600">
+    <title>Wasatch Wind</title>
 
     <!-- Load scripts, libraries, and icons-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.3.1/d3.min.js"></script>
@@ -20,7 +17,7 @@
     <!-- Page title and menu -->
     <div class="container-fluid sticky-top bg-heading">
         <div class="row">
-            <div class="col display-2">Wasatch Wind Cloudbase fork</div>
+            <div class="col display-2">Wasatch Wind</div>
         </div>
         <div class="dropdown text-start border-top border-bottom mt-2">
             <div class="row">
@@ -33,7 +30,7 @@
                 <div class="py-3 display-3 clickable" onclick="toggleDiv('Weather Maps')">Weather Maps</div>
                 <div class="py-3 display-3 clickable" onclick="toggleDiv('Weather Forecast')">Weather Forecast</div>
                 <div class="py-3 display-3 clickable" onclick="toggleDiv('Soaring Forecast')">Soaring Forecast</div>
-                <div class="py-3 display-3 clickable" onclick="toggleDiv('Site RASPs')">Site RASPs</div>
+                <div class="py-3 display-3 clickable" onclick="toggleDiv('Site Windgrams')">Site Windgrams</div>
                 <div class="py-3 display-3 clickable" onclick="toggleDiv('Weather Cams')">Weather Cams</div>
                 <div class="py-3 display-3 clickable" onclick="toggleDiv('Flight Tracks')">Flight Tracks</div>
                 <div class="py-3 display-3 clickable" onclick="toggleDiv('About')">About</div>
@@ -45,6 +42,9 @@
 <body>
     <!-- WEATHER STATIONS DIV ############################################################################################################################################ -->
     <div class="mb-div-end" id="Weather Stations">
+    
+        <!-- SLC STATION READINGS -->
+        <div class="container-fluid display-5 fs-2 text-info mt-3 mb-3">Weather station data automatically refreshes every 30 seconds</div>
 
         <!-- SLC STATION READINGS -->
         <div class="container-fluid display-3 mt-2">Salt Lake County</div>
@@ -1924,14 +1924,14 @@
     </div>
     <!-- SOARING FORECAST DIV ############################################################################################################################################## -->
 
-    <!-- SITE RASPS DIV #################################################################################################################################################### -->
-    <div class="collapse mb-div-end" id="Site RASPs">
+    <!-- SITE WINDGRAMS DIV ################################################################################################################################################ -->
+    <div class="collapse mb-div-end" id="Site Windgrams">
 
-        <!-- Drop down to select RASP day -->
+        <!-- Drop down to select windgram day -->
         <div class="dropdown text-start border border-info rounded-4 bg-dark mx-5 mt-5">
             <div class="row">
                 <button class="col-auto btn-DayMenu border-0 fw-bold display-2 text-info bg-dark my-2 mx-5 py-3" id="btn-DayMenu" onclick="DayMenu()">&#9776;&#9662;</button>
-                <div class="col align-self-center display-3 text-end text-white pb-2">RASPs for:&nbsp;</div>
+                <div class="col align-self-center display-3 text-end text-white pb-2">Windgrams for:&nbsp;</div>
                 <div class="col align-self-center display-3 text-start text-info pb-2" id="current-day"></div>
             </div>
             <div class="dropdown-menu bg-dark border px-5 text-info" id="DayMenu">
@@ -2023,7 +2023,7 @@
         </div>
 
     </div>
-    <!-- SITE RASPS DIV ################################################################################################################################################## -->
+    <!-- SITE WINDGRAMS DIV ############################################################################################################################################## -->
 
     <!-- CAMS & TRACKERS DIV ############################################################################################################################################# -->
     <div class="collapse mb-div-end" id="Weather Cams">

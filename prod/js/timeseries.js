@@ -1,9 +1,25 @@
 'use strict';
-// IIFE ASYNC MESONET PRIVATE API FOR TIME SERIES: https://developers.synopticdata.com/mesonet
+// IIFE ASYNC CALL FUNCTION TO GET TIME SERIES DATA
 (async () => {
+    // Initial call on page load
+    var TimeSeriesCall = await getTimeSeries()
+    // Interval call to refresh station data
+    const interval_in_seconds = 30
+    const interval_in_milliseconds = interval_in_seconds*1000
+    setInterval(ReloadTimeSeries, interval_in_milliseconds)
+})();
+
+// Function to reload TimeSeries DIV values based on interval refresh
+async function ReloadTimeSeries() {
+    var TimeSeriesIntervalCall = await getTimeSeries()
+};
+
+// Function to get TimeSeries data from Mesonet API
+// MESONET PRIVATE API FOR TIME SERIES: https://developers.synopticdata.com/mesonet
+async function getTimeSeries() {
     const url = `https://api.mesowest.net/v2/station/timeseries?&stid=KSLC&stid=UTOLY&stid=AMB&stid=KU42&stid=FPS&stid=HF012&stid=REY&stid=IFF&stid=CEN&stid=BBN&stid=SND&stid=KPVU&stid=SIGU1&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&obtimezone=local&timeformat=%-I:%M%20%p&token=6243aadc536049fc9329c17ff2f88db3`
-    const response = await fetch(url)
-    const tsData = await response.json()
+    var response = await fetch(url)
+    var tsData = await response.json()
     if (tsData) {
         if (tsData.STATION[0].STID==='KSLC') kslcAltiTempZone(tsData.STATION[0].OBSERVATIONS)
         let stations = []
@@ -13,7 +29,7 @@
             windChart(stations[i])
         }
     }
-})();
+};
 
 function kslcAltiTempZone(data, time=[], alti=[], temp=[]) {
     const latestAlti = parseFloat(data.altimeter_set_1.slice(-1)).toFixed(2)
