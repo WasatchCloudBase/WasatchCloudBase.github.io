@@ -27,10 +27,11 @@
                 <img class="col-1 me-2 align-self-center clickable" src="prod/images/refresh.png" height="100%" width="100%" onclick="reload()">
             </div>
             <div class="dropdown-menu bg-dark border px-5 text-warning" id="menu">
-                <div class="py-3 display-3 clickable" onclick="toggleDiv('Site Readings')">Site Readings</div>
-                <div class="py-3 display-3 clickable" onclick="toggleDiv('Weather Actuals')">Weather Actuals</div>
+                <div class="py-3 display-3 clickable" onclick="toggleDiv('Weather Stations')">Weather Stations</div>
+                <div class="py-3 display-3 clickable" onclick="toggleDiv('Weather Maps')">Weather Maps</div>
                 <div class="py-3 display-3 clickable" onclick="toggleDiv('Weather Forecast')">Weather Forecast</div>
                 <div class="py-3 display-3 clickable" onclick="toggleDiv('Soaring Forecast')">Soaring Forecast</div>
+                <div class="py-3 display-3 clickable" onclick="toggleDiv('Site RASPs')">Site RASPs</div>
                 <div class="py-3 display-3 clickable" onclick="toggleDiv('Weather Cams')">Weather Cams</div>
                 <div class="py-3 display-3 clickable" onclick="toggleDiv('Flight Tracks')">Flight Tracks</div>
                 <div class="py-3 display-3 clickable" onclick="toggleDiv('About')">About</div>
@@ -40,8 +41,8 @@
 </head>
 
 <body>
-    <!-- SITE READINGS DIV ############################################################################################################################################ -->
-    <div class="mb-div-end" id="Site Readings">
+    <!-- WEATHER STATIONS DIV ############################################################################################################################################ -->
+    <div class="mb-div-end" id="Weather Stations">
 
         <!-- SLC STATION READINGS -->
         <div class="container-fluid display-3 mt-2">Salt Lake County</div>
@@ -1632,10 +1633,10 @@
             <img class="border wwborder border-4 border-warning" id="surface-wind-map" width="100%">
         </a>
     </div>    
-    <!-- SITE READINGS############################################################################################################################################## -->
+    <!-- WEATHER STATIONS DIV ############################################################################################################################################# -->
     
-    <!-- WEATHER ACTUALS DIV ###################################################################################################################################### -->
-    <div class="collapse mb-div-end" id="Weather Actuals">
+    <!-- WEATHER MAPS DIV ################################################################################################################################################ -->
+    <div class="collapse mb-div-end" id="Weather Maps">
 
         <!-- CLOUDS & PRECIP GIF -->
         <div class="container-fluid p-0">
@@ -1665,7 +1666,7 @@
         </div>
 
     </div>
-    <!-- WEATHER ACTUALS DIV ####################################################################################################################################### -->
+    <!-- WEATHER MAPS DIV ################################################################################################################################################# -->
 
     <!-- WEATHER FORECAST DIV ############################################################################################################################################## -->
     <div class="collapse mb-div-end" id="Weather Forecast">
@@ -1721,6 +1722,16 @@
             </a>
         </div>        
 
+        <!-- FRONTS FORECAST (12 HOURS) -->
+        <div class="container-fluid p-0">
+            <div class="display-3 py-4">Fronts Forecast (12 hours)</div>
+            <a href="https://www.wpc.ncep.noaa.gov/basicwx/92fndfd.gif" target="_blank">
+                <img class="border wwborder border-4 border-warning img-fluid" 
+                    src="https://www.wpc.ncep.noaa.gov/basicwx/92fndfd.gif"  width="100%" alt="Forecast unavailable">
+                    <!-- Prior source that was replaced: https://uni.edu/storm/wximages/images/fronts.gif  -->
+            </a>
+        </div>        
+
         <!-- GRAPHICAL SKY COVER (CLOUD COVER AND PRECIPITATION) FORECAST -->
         <div class="display-3 pt-4" id="SKYCOVERTEST">Cloud Cover and Precipitation Forecast</div>
         <div class="fs-1 fw-bold text-info" id="sky-next-day"></div>
@@ -1751,14 +1762,8 @@
             </div>
         </a>
 
-        <!-- CURRENT FRONTS -->
-        <div class="container-fluid p-0">
-            <div class="display-3 py-4">Current Fronts</div>
-            <img class="border wwborder border-4 border-warning" 
-                src="https://uni.edu/storm/wximages/images/fronts.gif" width="100%">
-        </div>        
-
     </div>
+    <!-- WEATHER FORECAST DIV ############################################################################################################################################## -->
 
     <!-- SOARING FORECAST DIV ###################################################################################################################################### -->
     <div class="collapse mb-div-end" id="Soaring Forecast">
@@ -1915,6 +1920,108 @@
         </div>
 
     </div>
+    <!-- SOARING FORECAST DIV ############################################################################################################################################## -->
+
+    <!-- SITE RASPS DIV #################################################################################################################################################### -->
+    <div class="collapse mb-div-end" id="Site RASPs">
+
+        <!-- Drop down to select RASP day -->
+        <div class="dropdown text-start border border-info rounded-4 bg-dark mx-5 mt-5">
+            <div class="row">
+                <button class="col-auto btn-DayMenu border-0 fw-bold display-2 text-info bg-dark my-2 mx-5 py-3" id="btn-DayMenu" onclick="DayMenu()">&#9776;&#9662;</button>
+                <div class="col align-self-center display-3 text-end text-white pb-2">RASPs for:&nbsp;</div>
+                <div class="col align-self-center display-3 text-start text-info pb-2" id="current-day"></div>
+            </div>
+            <div class="dropdown-menu bg-dark border px-5 text-info" id="DayMenu">
+                <div class="py-3 display-4 clickable" onclick="toggleDay('Today')">Today</div>
+                <div class="py-3 display-4 clickable" onclick="toggleDay('Today + 1')">Today + 1</div>
+                <div class="py-3 display-4 clickable" onclick="toggleDay('Today + 2')">Today + 2</div>
+            </div>
+        </div>
+
+        <!-- Crawford Ridge -->
+        <div class="container-fluid display-3 mt-5 mb-3">Crawford Ridge</div>
+        <div class="container-fluid p-0">
+            <a href="https://flymarshall.com/ut-4k/OUT/FCST/windgrams/Crawford_windgram.png" id="Crawford_windgram_href" target="_blank">
+                <img class="border wwborder border-4 border-warning" id="Crawford_windgram_src"
+                    src="https://flymarshall.com/ut-4k/OUT/FCST/windgrams/Crawford_windgram.png" width="100%">
+            </a>
+        </div>
+
+        <!-- Francis Peak -->
+        <div class="container-fluid display-3 mt-5 mb-3">Francis Peak</div>
+        <div class="container-fluid p-0">
+            <a href="https://flymarshall.com/ut-4k/OUT/FCST/windgrams/FrancisPeak_windgram.png" id="FrancisPeak_windgram_href" target="_blank">
+                <img class="border wwborder border-4 border-warning" id="FrancisPeak_windgram_src"
+                    src="https://flymarshall.com/ut-4k/OUT/FCST/windgrams/FrancisPeak_windgram.png" width="100%">
+            </a>
+        </div>
+
+        <!-- The V -->
+        <div class="container-fluid display-3 mt-5 mb-3">The V</div>
+        <div class="container-fluid p-0">
+            <a href="https://flymarshall.com/ut-4k/OUT/FCST/windgrams/TheV_windgram.png" id="TheV_windgram_href" target="_blank">
+                <img class="border wwborder border-4 border-warning" id="TheV_windgram_src"
+                    src="https://flymarshall.com/ut-4k/OUT/FCST/windgrams/TheV_windgram.png" width="100%">
+            </a>
+        </div>
+
+        <!-- Grandeur Peak -->
+        <div class="container-fluid display-3 mt-5 mb-3">Grandeur Peak</div>
+        <div class="container-fluid p-0">
+            <a href="https://flymarshall.com/ut-4k/OUT/FCST/windgrams/TheV_windgram.png" id="Grandeur_windgram_href" target="_blank">
+                <img class="border wwborder border-4 border-warning" id="Grandeur_windgram_src"
+                    src="https://flymarshall.com/ut-4k/OUT/FCST/windgrams/Grandeur_windgram.png" width="100%">
+            </a>
+        </div>
+
+        <!-- Cherry Canyon -->
+        <div class="container-fluid display-3 mt-5 mb-3">Cherry Canyon</div>
+        <div class="container-fluid p-0">
+            <a href="https://flymarshall.com/ut-4k/OUT/FCST/windgrams/TheV_windgram.png" id="Cherry_windgram_href" target="_blank">
+                <img class="border wwborder border-4 border-warning" id="Cherry_windgram_src"
+                    src="https://flymarshall.com/ut-4k/OUT/FCST/windgrams/Cherry_windgram.png" width="100%">
+            </a>
+        </div>
+
+        <!-- POTM -->
+        <div class="container-fluid display-3 mt-5 mb-3">Point of the Mountain</div>
+        <div class="container-fluid p-0">
+            <a href="https://flymarshall.com/ut-4k/OUT/FCST/windgrams/TheV_windgram.png" id="PointoftheMountainSS_href" target="_blank">
+                <img class="border wwborder border-4 border-warning" id="PointoftheMountainSS_src"
+                    src="https://flymarshall.com/ut-4k/OUT/FCST/windgrams/PointoftheMountainSS_windgram.png" width="100%">
+            </a>
+        </div>
+
+        <!-- Inspo -->
+        <div class="container-fluid display-3 mt-5 mb-3">Inspo</div>
+        <div class="container-fluid p-0">
+            <a href="https://flymarshall.com/ut-4k/OUT/FCST/windgrams/TheV_windgram.png" id="Inspo_href" target="_blank">
+                <img class="border wwborder border-4 border-warning" id="Inspo_src"
+                    src="https://flymarshall.com/ut-4k/OUT/FCST/windgrams/Inspo_windgram.png" width="100%">
+            </a>
+        </div>
+
+        <!-- Cove -->
+        <div class="container-fluid display-3 mt-5 mb-3">Cove</div>
+        <div class="container-fluid p-0">
+            <a href="https://flymarshall.com/ut-4k/OUT/FCST/windgrams/TheV_windgram.png" id="Cove_href" target="_blank">
+                <img class="border wwborder border-4 border-warning" id="Cove_src"
+                    src="https://flymarshall.com/ut-4k/OUT/FCST/windgrams/Cove_windgram.png" width="100%">
+            </a>
+        </div>
+
+        <!-- Monroe Peak -->
+        <div class="container-fluid display-3 mt-5 mb-3">Monroe Peak</div>
+        <div class="container-fluid p-0">
+            <a href="https://flymarshall.com/ut-4k/OUT/FCST/windgrams/TheV_windgram.png" id="MonroePeak_href" target="_blank">
+                <img class="border wwborder border-4 border-warning" id="MonroePeak_src"
+                    src="https://flymarshall.com/ut-4k/OUT/FCST/windgrams/MonroePeak_windgram.png" width="100%">
+            </a>
+        </div>
+
+    </div>
+    <!-- SITE RASPS DIV ################################################################################################################################################## -->
 
     <!-- CAMS & TRACKERS DIV ############################################################################################################################################# -->
     <div class="collapse mb-div-end" id="Weather Cams">

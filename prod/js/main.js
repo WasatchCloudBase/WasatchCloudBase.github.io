@@ -30,17 +30,25 @@ const svg = d3.select('#skew-t-d3')
 const x = d3.scaleLinear().range([-10, width]).domain([-10, 110])
 const y = d3.scaleLinear().range([height, 0]).domain([surfaceAlt, 18])
 let raobData = {}
-let currentDiv = 'Site Readings'
+let currentDiv = 'Weather Stations'
 document.getElementById('current-div').innerHTML = currentDiv
+let currentDay = 'Today'
+document.getElementById('current-day').innerHTML = currentDay
 
 window.onclick = function(event) {
     if (!event.target.matches('.btn-menu')) {
         const menu = document.getElementById('menu')
         if (menu.classList.contains('show')) menu.classList.remove('show')
     }
+    if (!event.target.matches('.btn-DayMenu')) {
+        const DayMenu = document.getElementById('DayMenu')
+        if (DayMenu.classList.contains('show')) DayMenu.classList.remove('show')
+    }
 }
 
 function menu() { document.getElementById('menu').classList.toggle('show') }
+
+function DayMenu() { document.getElementById('DayMenu').classList.toggle('show') }
 
 function reload() {
     history.scrollRestoration = 'manual'
@@ -53,6 +61,44 @@ function toggleDiv(newDiv) {
     document.getElementById(currentDiv).scrollTop = 0
     document.getElementById('current-div').innerHTML = currentDiv
     document.getElementById(currentDiv).style.display = 'block'
+}
+
+function toggleDay(newDay) {
+    var currentDay = newDay
+    document.getElementById('current-day').innerHTML = currentDay
+    // Determine windgram directory based on day selected
+    var windgram_url_dir = 'https://flymarshall.com/ut-4k/OUT'
+    if (currentDay === 'Today + 1') {windgram_url_dir = windgram_url_dir + '+1'}
+    if (currentDay === 'Today + 2') {windgram_url_dir = windgram_url_dir + '+2'}
+    windgram_url_dir = windgram_url_dir + '/FCST/windgrams/'
+    // Change windgram images
+    var windgram_url = windgram_url_dir + 'Crawford_windgram.png'
+    document.getElementById('Crawford_windgram_href').href = windgram_url
+    document.getElementById('Crawford_windgram_src').src = windgram_url
+    windgram_url = windgram_url_dir + 'FrancisPeak_windgram.png'
+    document.getElementById('FrancisPeak_windgram_href').href = windgram_url
+    document.getElementById('FrancisPeak_windgram_src').src = windgram_url
+    windgram_url = windgram_url_dir + 'TheV_windgram.png'
+    document.getElementById('TheV_windgram_href').href = windgram_url
+    document.getElementById('TheV_windgram_src').src = windgram_url
+    windgram_url = windgram_url_dir + 'Grandeur_windgram.png'
+    document.getElementById('Grandeur_windgram_href').href = windgram_url
+    document.getElementById('Grandeur_windgram_src').src = windgram_url
+    windgram_url = windgram_url_dir + 'Cherry_windgram.png'
+    document.getElementById('Cherry_windgram_href').href = windgram_url
+    document.getElementById('Cherry_windgram_src').src = windgram_url
+    windgram_url = windgram_url_dir + 'PointoftheMountainSS_windgram.png'
+    document.getElementById('PointoftheMountainSS_windgram_href').href = windgram_url
+    document.getElementById('PointoftheMountainSS_windgram_src').src = windgram_url
+    windgram_url = windgram_url_dir + 'Inspo_windgram.png'
+    document.getElementById('Inspo_windgram_href').href = windgram_url
+    document.getElementById('Inspo_windgram_src').src = windgram_url
+    windgram_url = windgram_url_dir + 'Cove_windgram.png'
+    document.getElementById('Cove_windgram_href').href = windgram_url
+    document.getElementById('Cove_windgram_src').src = windgram_url
+    windgram_url = windgram_url_dir + 'MonroePeak_windgram.png'
+    document.getElementById('MonroePeak_windgram_href').href = windgram_url
+    document.getElementById('MonroePeak_windgram_src').src = windgram_url
 }
 
 function toggleWindChart(div) {
@@ -122,7 +168,6 @@ function toggleWindChart(div) {
         const url = 'https://graphical.weather.gov/images/slc/'
         const timeStr = (now.getHours()>18 || now.getHours()<7) ? 5 : 1
         const nextDay = now.getHours()>18 ? `( ${new Date(now.setHours(now.getHours()+24)).toLocaleString('en-us', {weekday: 'short'})} )` : null
-        const nextDayClassCount = 3
         document.getElementById('sky-next-day').innerHTML = nextDay
         for (let i=0; i<4; i++) {
             document.getElementById(`graphical-sky-${i}`).src = `${url}Sky${timeStr+i}_slc.png`
@@ -140,26 +185,6 @@ function toggleWindChart(div) {
             document.getElementById('graphical-wind-img').src = 'https://graphical.weather.gov/images/slc/WindSpd3_slc.png'
             document.getElementById('graphical-gust-img').src = 'https://graphical.weather.gov/images/slc/WindGust3_slc.png'
             document.getElementById('graphical-wind-div').style.display = 'block'        
-        }
-    }
-)();
-
-// IIFE ASYNC Get SLC Forecast Discussion text
-(async () => 
-    {
-        const url = 'https://forecast.weather.gov/product.php?site=NWS&issuedby=SLC&product=AFD&format=txt&version=1&glossary=0'
-        const response = await fetch(url)
-        const ForecastDiscussionText = await response.json()
-        if (ForecastDiscussionText) {
-            let date_position_start = ForecastDiscussionText.search("National Weather Service Salt Lake City UT")+1
-            let date_position_end = ForecastDiscussionText.search(".SYNOPSIS.")-1
-            let synopsis_position_start = ForecastDiscussionText.search(".SYNOPSIS.")+12
-            let synopsis_position_end = ForecastDiscussionText.search(".SHORT TERM")-4
-            let aviation_position_start = ForecastDiscussionText.search(".AVIATION.")+19
-            let aviation_position_end = ForecastDiscussionText.search("REST OF UTAH AND SOUTHWEST WYOMING.")-1
-            document.getElementById("forecast-discussion-date").innerText = ForecastDiscussionText.substring(date_position_start, date_position_end)
-            document.getElementById("forecast-discussion-synopsis").innerText = ForecastDiscussionText.substring(synopsis_position_start, synopsis_position_end)
-            document.getElementById("forecast-discussion-aviation").innerText = ForecastDiscussionText.substring(aviation_position_start, aviation_position_end)
         }
     }
 )();
