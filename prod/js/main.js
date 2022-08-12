@@ -188,3 +188,18 @@ function toggleWindChart(div) {
         }
     }
 )();
+
+// IIFE ASYNC Get Soaring Forecast text
+(async () => 
+    {
+        const url = 'https://forecast.weather.gov/product.php?site=SLC&issuedby=SLC&product=SRG&format=TXT&version=1&glossary=0'
+        const response = await fetch(url)
+        const SoaringForecastText = await response.text()
+        if (SoaringForecastText) {
+            let ContentStart = SoaringForecastText.search("SRGSLC") + 7
+            let ContentEnd = SoaringForecastText.indexOf("THIS", ContentStart) - 1
+            let ContentText = SoaringForecastText.substring(ContentStart, ContentEnd) 
+            document.getElementById("soaring-forecast").innerText = ContentText
+        }
+    }
+)();
