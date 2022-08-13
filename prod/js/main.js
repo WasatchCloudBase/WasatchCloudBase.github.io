@@ -131,6 +131,21 @@ function toggleWindChart(div) {
     }
 })();
 
+// IIFE ASYNC Utah Weather Alerts (hidden if none)
+(async () => {
+    //     const url = 'https://wasatchwind.github.io/example_files/noaa_alerts_utah.json'
+        const url = 'https://api.weather.gov/alerts/active?area=UT'
+        const response = await fetch(url)
+        const AlertData = await response.json()
+        if (AlertData) {
+                document.getElementById('AlertAreaDesc').innerText = AlertData.features[0].properties.areaDesc
+                document.getElementById('AlertEvent').innerText = AlertData.features[0].properties.event
+                document.getElementById('AlertHeadline').innerText = AlertData.features[0].properties.headline
+                document.getElementById('UtahWeatherAlerts').style.display = 'block'
+        }
+     }
+)();    
+
 // IIFE ASYNC Get SLC Forecast Discussion text
 (async () => 
     {
@@ -140,7 +155,7 @@ function toggleWindChart(div) {
         if (ForecastDiscussionText) {
             let CleanText = ForecastDiscussionText.replace(/[\n\r]/g, " ")
             let date_position_start = CleanText.search("National Weather Service Salt Lake City UT")+43
-            let date_position_end = CleanText.search(".SYNOPSIS.")-1
+            let date_position_end = CleanText.indexOf(".", date_position_start)-1
             let synopsis_position_start = CleanText.search(".SYNOPSIS.")+12
             let synopsis_position_end = CleanText.search(".SHORT TERM")-4
             let aviation_position_start = CleanText.search(".AVIATION")+19
