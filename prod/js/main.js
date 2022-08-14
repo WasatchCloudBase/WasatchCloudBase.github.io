@@ -138,10 +138,14 @@ function toggleWindChart(div) {
         const response = await fetch(url)
         const AlertData = await response.json()
         if (AlertData) {
-                document.getElementById('AlertAreaDesc').innerText = AlertData.features[0].properties.areaDesc
-                document.getElementById('AlertEvent').innerText = AlertData.features[0].properties.event
-                document.getElementById('AlertHeadline').innerText = AlertData.features[0].properties.headline
-                document.getElementById('UtahWeatherAlerts').style.display = 'block'
+            document.getElementById('AlertAreaDesc').innerText = AlertData.features[0].properties.areaDesc
+            document.getElementById('AlertEvent').innerText = AlertData.features[0].properties.event
+            document.getElementById('AlertHeadline').innerText = AlertData.features[0].properties.headline
+            document.getElementById('UtahWeatherAlerts').style.display = 'block'
+        }
+        // only coded for one alert; show notification if there are more than one
+        if (AlertData.features[1]) {
+            document.getElementById('UtahWeatherMoreAlerts').style.display = 'block'
         }
      }
 )();    
