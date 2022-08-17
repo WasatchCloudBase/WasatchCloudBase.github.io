@@ -133,22 +133,31 @@ function toggleWindChart(div) {
 
 // IIFE ASYNC Utah Weather Alerts (hidden if none)
 (async () => {
-    //     const url = 'https://wasatchwind.github.io/example_files/noaa_alerts_utah.json'
-        const url = 'https://api.weather.gov/alerts/active?area=UT'
+        const url = 'https://wasatchwind.github.io/example_files/noaa_alerts_utah.json'
+    //    const url = 'https://api.weather.gov/alerts/active?area=UT'
         const response = await fetch(url)
         const AlertData = await response.json()
-        if (AlertData) {
-            document.getElementById('AlertAreaDesc').innerText = AlertData.features[0].properties.areaDesc
-            document.getElementById('AlertEvent').innerText = AlertData.features[0].properties.event
-            document.getElementById('AlertHeadline').innerText = AlertData.features[0].properties.headline
-            document.getElementById('UtahWeatherAlerts').style.display = 'block'
-        }
+//        let EachAlert = []
+//        for (let i=0; i<AlertData.features.length; i++) {
+//            document.getElementById('UtahWeatherAlerts').style.display = 'block'
+ //           EachAlert[i] = AlertData.features[i].properties
+ //           if i>0 {
+                // ADD LOGIC TO CLONE DIVISION
+ //           }
+ //           document.getElementById('AlertAreaDesc').innerText = AlertData.features[i].properties.areaDesc
+ //           document.getElementById('AlertEvent').innerText = AlertData.features[i].properties.event
+  //          document.getElementById('AlertHeadline').innerText = AlertData.features[i].properties.headline
+
+ //       }
         // only coded for one alert; show notification if there are more than one
-        if (AlertData.features[1]) {
-            document.getElementById('UtahWeatherMoreAlerts').style.display = 'block'
-        }
+        // TO BE REMOVED WHEN ABOVE WORKS
+        //if (AlertData.features[1]) {
+        //    document.getElementById('UtahWeatherMoreAlerts').style.display = 'block'
+        //}
      }
-)();    
+)();
+//**********************REMEMBER TO CHANGE FILE URL BACK **************************
+//*********************************************************************************
 
 // IIFE ASYNC Get SLC Forecast Discussion text
 (async () => 

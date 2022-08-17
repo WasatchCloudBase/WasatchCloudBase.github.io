@@ -17,7 +17,7 @@ async function ReloadTimeSeries() {
 // Function to get TimeSeries data from Mesonet API
 // MESONET PRIVATE API FOR TIME SERIES: https://developers.synopticdata.com/mesonet
 async function getTimeSeries() {
-    const url = `https://api.mesowest.net/v2/station/timeseries?&stid=KSLC&stid=UTOLY&stid=AMB&stid=KU42&stid=FPS&stid=HF012&stid=REY&stid=IFF&stid=CEN&stid=BBN&stid=SND&stid=KPVU&stid=SIGU1&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&obtimezone=local&timeformat=%-I:%M%20%p&token=6243aadc536049fc9329c17ff2f88db3`
+    const url = `https://api.mesowest.net/v2/station/timeseries?&stid=KSLC&stid=UTOLY&stid=AMB&stid=KU42&stid=FPS&stid=HF012&stid=REY&stid=IFF&stid=CEN&stid=BBN&stid=SND&stid=KPVU&stid=SIGU1&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&obtimezone=local&timeformat=%-I:%M%20%p&token=0030ed6480a4440eb29ec23ff37fe159`
     var response = await fetch(url)
     var tsData = await response.json()
     if (tsData) {
