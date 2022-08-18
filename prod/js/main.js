@@ -115,7 +115,7 @@ function toggleWindChart(div) {
 
 // IIFE ASYNC NOAA PUBLIC API FOR 3 DAY FORECAST
 (async () => {
-//     const url = 'https://wasatchwind.github.io/example_noaa_forecast.json'
+//     const url = 'https://wasatchcloudbase.github.io/example_noaa_forecast.json'
     const url = 'https://api.weather.gov/gridpoints/SLC/97,175/forecast'
 //     const response = await fetch(url, {mode: 'cors'})
     const response = await fetch(url)
@@ -132,32 +132,41 @@ function toggleWindChart(div) {
 })();
 
 // IIFE ASYNC Utah Weather Alerts (hidden if none)
-(async () => {
-        const url = 'https://wasatchwind.github.io/example_files/noaa_alerts_utah.json'
-    //    const url = 'https://api.weather.gov/alerts/active?area=UT'
+(async () => 
+    {
+    //    const url = 'https://wasatchcloudbase.github.io/example_files/noaa_alerts_utah.json'
+        const url = 'https://api.weather.gov/alerts/active?area=UT'
         const response = await fetch(url)
         const AlertData = await response.json()
-//        let EachAlert = []
-//        for (let i=0; i<AlertData.features.length; i++) {
-//            document.getElementById('UtahWeatherAlerts').style.display = 'block'
- //           EachAlert[i] = AlertData.features[i].properties
- //           if i>0 {
-                // ADD LOGIC TO CLONE DIVISION
- //           }
- //           document.getElementById('AlertAreaDesc').innerText = AlertData.features[i].properties.areaDesc
- //           document.getElementById('AlertEvent').innerText = AlertData.features[i].properties.event
-  //          document.getElementById('AlertHeadline').innerText = AlertData.features[i].properties.headline
-
- //       }
-        // only coded for one alert; show notification if there are more than one
-        // TO BE REMOVED WHEN ABOVE WORKS
-        //if (AlertData.features[1]) {
-        //    document.getElementById('UtahWeatherMoreAlerts').style.display = 'block'
-        //}
-     }
+        let EachAlert = []
+        for (let i=0; i<AlertData.features.length; i++) {
+            EachAlert = AlertData.features[i].properties
+            if (i==0) {
+                // Populate first alert
+                document.getElementById('UtahWeatherAlerts').style.display = 'block'
+                document.getElementById('AlertEvent').innerText = EachAlert.event
+                document.getElementById('AlertHeadline').innerText = EachAlert.headline
+                document.getElementById('AlertAreaDesc').innerText = EachAlert.areaDesc
+            } 
+            else {
+                // Clone division for additional alerts (as needed)
+                let cloned_alert = document.getElementById('AlertDiv').cloneNode(true)
+                //Rename parent and children IDs
+                cloned_alert.id = 'AlertDiv' + i
+                cloned_alert.children[0].id = 'AlertEvent' + i
+                cloned_alert.children[1].id = 'AlertHeadline' + i
+                cloned_alert.children[2].id = 'AlertAreaDesc' + i
+                //Add clone to page
+               document.getElementById('AlertGroupDiv').appendChild(cloned_alert)
+                //Populate additional alert
+                document.getElementById(`AlertDiv${i}`).style.display = 'block'
+                document.getElementById(`AlertEvent${i}`).innerText = EachAlert.event
+                document.getElementById(`AlertHeadline${i}`).innerText = EachAlert.headline
+                document.getElementById(`AlertAreaDesc${i}`).innerText = EachAlert.areaDesc
+            }
+        }
+    }
 )();
-//**********************REMEMBER TO CHANGE FILE URL BACK **************************
-//*********************************************************************************
 
 // IIFE ASYNC Get SLC Forecast Discussion text
 (async () => 
