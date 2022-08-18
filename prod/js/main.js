@@ -109,7 +109,11 @@ function toggleWindChart(div) {
     }
     else {
         element.style.display = 'none'
-        document.getElementById(`${div}-toggle`).innerHTML = '+'
+        if (div.includes('Forecast')) {
+            document.getElementById(`${div}-toggle`).innerHTML = 'fcst'
+        } else {
+            document.getElementById(`${div}-toggle`).innerHTML = '+'
+        }
     }
 }
 

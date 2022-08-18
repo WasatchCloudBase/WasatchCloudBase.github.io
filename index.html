@@ -53,7 +53,7 @@
         <div class="container-fluid mt-4">
             <div id="KSLC-main">
                 <div class="row rounded mt-1">
-                    <div class="col-auto bg-black align-self-center display-4 text-warning clickable" onclick="toggleWindChart('KSLC-Forecast')">fcst</div>
+                    <div class="col-auto bg-black align-self-center display-4 text-warning clickable" id="KSLC-Forecast-toggle" onclick="toggleWindChart('KSLC-Forecast')">fcst</div>
                     <div class="col row bg-dark mx-0 rounded-4">
                         <div class="col-auto">
                             <div class="row display-3">SLC Airport</div>
@@ -74,7 +74,7 @@
                             <div class="collapse col-auto display-4 align-self-center pink" id="KSLC-gust"></div>
                         </div>
                     </div>
-                    <div class="col-auto bg-black align-self-center display-2 text-warning clickable" onclick="toggleWindChart('KSLC')">+</div>
+                    <div class="col-auto bg-black align-self-center display-2 text-warning clickable" id="KSLC-toggle" onclick="toggleWindChart('KSLC')">+</div>
                 </div>
             </div>
             <!-- HOURLY FORECAST EXPANSION -->
@@ -263,7 +263,7 @@
                             <div class="collapse col-auto display-4 align-self-center pink" id="UTOLY-gust"></div>
                         </div>
                     </div>
-                    <div class="col-auto bg-black align-self-center display-2 text-warning clickable" onclick="toggleWindChart('UTOLY')">+</div>
+                    <div class="col-auto bg-black align-self-center display-2 text-warning clickable" id="UTOLY-toggle" onclick="toggleWindChart('UTOLY')">+</div>
                 </div>
             </div>
             <!-- HOURLY FORECAST EXPANSION -->
@@ -398,7 +398,7 @@
                             <div class="collapse col-auto display-4 align-self-center pink" id="KU42-gust"></div>
                         </div>
                     </div>
-                    <div class="col-auto bg-black align-self-center display-2 text-warning clickable" onclick="toggleWindChart('KU42')">+</div>
+                    <div class="col-auto bg-black align-self-center display-2 text-warning clickable" id="KU42-toggle" onclick="toggleWindChart('KU42')">+</div>
                 </div>
             </div>
             <!-- HOURLY FORECAST EXPANSION -->
@@ -538,7 +538,7 @@
                             <div class="collapse col-auto display-4 align-self-center pink" id="HF012-gust"></div>
                         </div>
                     </div>
-                    <div class="col-auto bg-black align-self-center display-2 text-warning clickable" onclick="toggleWindChart('HF012')">+</div>
+                    <div class="col-auto bg-black align-self-center display-2 text-warning clickable" id="HF012-toggle" onclick="toggleWindChart('HF012')">+</div>
                 </div>
             </div>
             <!-- HOURLY FORECAST EXPANSION -->
@@ -678,7 +678,7 @@
                             <div class="collapse col-auto display-4 align-self-center pink" id="FPS-gust"></div>
                         </div>
                     </div>
-                    <div class="col-auto bg-black align-self-center display-2 text-warning clickable" onclick="toggleWindChart('FPS')">+</div>
+                    <div class="col-auto bg-black align-self-center display-2 text-warning clickable" id="FPS-toggle" onclick="toggleWindChart('FPS')">+</div>
                 </div>
             </div>
             <!-- HOURLY FORECAST EXPANSION -->
