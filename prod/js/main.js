@@ -105,7 +105,11 @@ function toggleWindChart(div) {
     const element = document.getElementById(div)
     if (element.style.display==='' || element.style.display==='none') {
         element.style.display = 'block'
-        document.getElementById(`${div}-toggle`).innerHTML = '-'
+        if (div.includes('Forecast')) {
+            document.getElementById(`${div}-toggle`).innerHTML = '&#8212;' //Extended emdash
+        } else {
+            document.getElementById(`${div}-toggle`).innerHTML = '-'
+        }
     }
     else {
         element.style.display = 'none'
