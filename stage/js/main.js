@@ -1,7 +1,12 @@
 'use strict';
 const now = new Date();
-const nextDay = now.getHours() > 19 ? `&nbsp;&nbsp;(${new Date(now.setHours(now.getHours() + 24)).toLocaleString('en-us', {weekday: 'long'})})&nbsp;&nbsp;` : ''
+const titleDate = now.toLocaleString('en-us', {weekday: 'short', month: 'short', day: 'numeric'})
+document.getElementById('title-date').innerHTML = titleDate
+const nextDay = now.getHours() > 18 ? `&nbsp;&nbsp;(${new Date(now.setHours(now.getHours() + 24)).toLocaleString('en-us', {weekday: 'long'})})&nbsp;&nbsp;` : ''
 let currentDiv = 'wind'
+let liftParams = {}
+let soundingData = {}
+let maxTempF
 
 function reload() {
     history.scrollRestoration = 'manual'
@@ -10,9 +15,9 @@ function reload() {
 
 function toggleDiv(newDiv) {
     document.getElementById(currentDiv).style.display = 'none'
-    document.getElementById(`${currentDiv}-title`).className = 'display-3 fw-bold text-warning'
+    document.getElementById(`${currentDiv}-title`).className = 'display-3 fw-semibold text-warning'
     document.getElementById(`${currentDiv}-border`).className = 'tile-border tile-height overflow-hidden'
-    document.getElementById(`${newDiv}-title`).className = 'display-3 fw-bold'
+    document.getElementById(`${newDiv}-title`).className = 'display-3 fw-semibold text-info'
     document.getElementById(`${newDiv}-border`).className = 'tile-border-selected tile-height overflow-hidden'
     document.getElementById(newDiv).style.display = 'block'
     currentDiv = newDiv
@@ -60,8 +65,7 @@ function windSurfaceForecastGraphical() {
     document.getElementById('graphical-wind-div').style.display = 'block'
 };
 
-// Get graphical forecast images
-(async () => {
+(function getAllGraphicalForecastImages() {
     const url = 'https://graphical.weather.gov/images/slc/'
     const timeStr = (now.getHours() > 18 || now.getHours() < 7) ? 5 : 1
     document.getElementById('sky-next-day').innerHTML = nextDay
@@ -71,8 +75,7 @@ function windSurfaceForecastGraphical() {
     }
 })();
 
-// Get morning Skew-T diagram
-(async () => {
+(function getMorningSkewT() {
     const date = now.toLocaleString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'}).split('/')
     const url = `https://climate.cod.edu/data/raob/KSLC/skewt/KSLC.skewt.${date[2]}${date[0]}${date[1]}.12.gif`
     document.getElementById('skew-t-img').src = url
