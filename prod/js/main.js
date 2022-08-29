@@ -187,7 +187,11 @@ function toggleWindChart(div) {
             let date_position_start = CleanText.search("National Weather Service Salt Lake City UT")+43
             let date_position_end = CleanText.indexOf(".", date_position_start)-1
             let synopsis_position_start = CleanText.search(".SYNOPSIS.")+12
-            let synopsis_position_end = CleanText.search(".SHORT TERM")-4
+            // Look for start of DISCUSSION section if SHORT TERM section is missing 
+            let synopsis_position_end = CleanText.indexOf(".SHORT TERM", synopsis_position_start)-4 
+            if (synopsis_position_end < 0) {
+                synopsis_position_end = CleanText.indexOf(".DISCUSSION", synopsis_position_start)-4 
+            }
             let aviation_position_start = CleanText.search(".AVIATION")+19
             let aviation_position_end = CleanText.search("REST OF UTAH AND SOUTHWEST WYOMING.")-1
             document.getElementById("forecast-discussion-date").innerText = CleanText.substring(date_position_start, date_position_end)
