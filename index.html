@@ -43,7 +43,7 @@
     <!-- WEATHER STATIONS DIV ############################################################################################################################################ -->
     <div class="mb-div-end" id="Weather Stations">
     
-        <!-- SLC STATION READINGS -->
+        <!-- REFERESH NOTE -->
         <div class="container-fluid display-5 fs-2 text-info mt-3 mb-3">Weather station data automatically refreshes every 30 seconds</div>
 
         <!-- SLC STATION READINGS -->
@@ -1807,6 +1807,25 @@
     <!-- SOARING FORECAST DIV ###################################################################################################################################### -->
     <div class="collapse mb-div-end" id="Soaring Forecast">
 
+        <!-- TFRs FOR UTAH -->
+        <div class="collapse container-fluid p-0" id="UtahTFRs">
+            <a href="https://tfr.faa.gov/tfr_map_ims/html/ew/scale3/tile_2_2.html" target="_blank">
+                <div class="container-fluid p-0 mt-5 pb-3 text-danger display-3">Utah TFRs</div>
+                <div class="container-fluid border wwborder border-4 border-danger display-5 rounded-4 bg-dark lh-base">
+                    <div id="TFRGroupDiv">
+                        <div class="row pt-3 pb-3" id="TFRDiv">
+                            <div class="col-auto text-start fw-bold text-warning" id="TFRBeginDate"></div>
+                            <div class="col-auto text-start fw-bold text-warning" id="TFREndDate"></div>
+                            <div class="col-auto text-start fw-bold text-warning" id="TFRType"></div>
+                            <div class="fs-1 col-auto text-start" id="TFRLocation"></div>
+                            <div class="fs-1 col-auto text-start text-info" id="TFRReason"></div>
+                            <div><hr class="dash mt-3"></div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
         <!-- WIND ALOFT FORECAST -->
        <div class="container-fluid p-0">
            <a id="wind-aloft-link" target="_blank">
@@ -1978,6 +1997,10 @@
     <!-- SITE WINDGRAMS DIV ################################################################################################################################################ -->
     <div class="collapse mb-div-end" id="Site Windgrams">
 
+        <!-- REFERESH NOTE -->
+        <div class="container-fluid display-5 fs-2 text-info mt-3 mb-3">Windgrams refresh at approximately 9:30 am each day</div>
+
+
         <!-- Drop down to select windgram day -->
         <div class="dropdown text-start border border-info rounded-4 bg-dark mx-5 mt-5">
             <div class="row">
@@ -2084,19 +2107,19 @@
             <div class="row">
                 <div class="col">U of U looking West
                     <a href="https://meso1.chpc.utah.edu/station_cameras/wbbw_cam/wbbw_cam_hour.mp4" target="_blank">
-                        <img class="border wwborder border-4 border-warning img-fluid mt-4 mb-4" 
+                        <img class="border wwborder border-4 border-warning img-fluid bg-dark mt-4 mb-4" 
                             src="https://meso1.chpc.utah.edu/station_cameras/wbbw_cam/wbbw_cam_current.jpg" width="500" height="400" alt="Webcam unavailable">
                     </a>
                 </div>
                 <div class="col">U of U looking South
                     <a href="https://meso1.chpc.utah.edu/station_cameras/wbbs_cam/wbbs_cam_hour.mp4" target="_blank">
-                        <img class="border wwborder border-4 border-warning img-fluid mt-4 mb-4" 
+                        <img class="border wwborder border-4 border-warning img-fluid bg-dark mt-4 mb-4" 
                             src="https://meso1.chpc.utah.edu/station_cameras/wbbs_cam/wbbs_cam_current.jpg" width="500" height="400" alt="Webcam unavailable">
                     </a>
                 </div>
                 <div class="col">West Valley looking East
                     <a href="https://meso1.chpc.utah.edu/station_cameras/armstrong_cam/armstrong_cam_hour.mp4" target="_blank">
-                        <img class="border wwborder border-4 border-warning img-fluid mt-4 mb-4" 
+                        <img class="border wwborder border-4 border-warning img-fluid bg-dark mt-4 mb-4" 
                             src="https://meso1.chpc.utah.edu/station_cameras/armstrong_cam/armstrong_cam_current.jpg"  width="500" height="400" alt="Webcam unavailable">
                     </a>
                 </div>
@@ -2108,14 +2131,14 @@
             <div class="row">
                 <div class="col">Point of the Mountain North Side
                     <a href="http://northcam.uhgpga.org/view/view.shtml" target="_blank">
-                        <img class="border wwborder border-4 border-warning img-fluid mt-4 mb-4" 
-                            src="http://northcam.uhgpga.org/view/view.shtml"  width="500" height="400" alt="Webcam unavailable">
+                        <img class="border wwborder border-4 border-warning bg-dark img-fluid mt-4 mb-4 px-5 py-5" 
+                            src="prod/images/not-available--icon-red.png"  width="400" height="auto" alt="")>
                     </a>
                 </div>
                 <div class="col">Point of the Mountain South Side
                     <a href="http://southcam.uhgpga.org/#view" target="_blank">
-                        <img class="border wwborder border-4 border-warning img-fluid mt-4 mb-4" 
-                            src="http://southcam.uhgpga.org/#view"  width="500" height="400" alt="Webcam unavailable">
+                        <img class="border wwborder border-4 border-warning bg-warning bg-dark img-fluid mt-4 mb-4 px-5 py-5" 
+                            src="prod/images/play-white-icon.png"  width="400" height="auto" alt="">
                     </a>
                 </div>
             </div>
@@ -2126,14 +2149,14 @@
             <div class="row">
                 <div class="col">Saratoga Springs looking Northeast
                     <a href="https://www.wrh.noaa.gov/images/slc/camera/latest/UtahLake_5.latest.jpg" target="_blank">
-                        <img class="border wwborder border-4 border-warning img-fluid mt-4 mb-4" 
-                            src="https://www.wrh.noaa.gov/images/slc/camera/latest/UtahLake_5.latest.jpg"  width="500" height="400" alt="Webcam unavailable">
+                        <img class="border wwborder border-4 border-warning bg-dark img-fluid mt-4 mb-4" 
+                            src="https://www.wrh.noaa.gov/images/slc/camera/latest/UtahLake_5.latest.jpg"  width="500" height="400" alt="">
                     </a>
                 </div>
                 <div class="col">BYU looking Northeast (Timp)
                     <a href="http://lswebcam.byu.edu/mjpg/LSB" target="_blank">
-                        <img class="border wwborder border-4 border-warning img-fluid mt-4 mb-4" 
-                            src="https://utahagenda.com/wp-content/uploads/2021/10/byu-brigham-young-university-utah-friday-october-29-2021-1038-810x457.jpg"  width="500" height="400" alt="Webcam unavailable">
+                        <img class="border wwborder border-4 border-warning bg-dark img-fluid mt-4 mb-4 px-5 py-5" 
+                            src="prod/images/play-white-icon.png"  width="400" height="auto" alt="">
                     </a>
                 </div>
             </div>
@@ -2195,6 +2218,7 @@
     </div>
 
     <!-- LOCAL SCRIPTS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/superagent"></script>
     <script type="text/javascript" src="prod/js/main.js"></script>
     <script type="text/javascript" src="prod/js/timeseries.js"></script>
     <script type="text/javascript" src="prod/js/d3.js"></script>

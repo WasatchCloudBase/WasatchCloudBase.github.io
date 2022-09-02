@@ -252,3 +252,12 @@ function toggleWindChart(div) {
         }
     }
 )();
+
+// IIFE ASYNC Utah TFRs (hidden if none)
+(async () => 
+    {
+
+// TO BE CODED //
+
+    }
+)();
