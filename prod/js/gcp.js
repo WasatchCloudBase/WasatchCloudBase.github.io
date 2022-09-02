@@ -15,7 +15,7 @@
 
 // GCP WIND ALOFT FORECAST
 (async () => {
-//     const url = 'https://wasatchcloudbase.github.io/example_wind_aloft.json'
+//     const url = 'https://wasatchcloudbase.github.io/example_files/example_wind_aloft.json'
     const windAloftURL = 'https://us-west3-wasatchwind.cloudfunctions.net/wind-aloft-ftp'
     const windAloftResponse = await fetch(windAloftURL)
     const aloftData = await windAloftResponse.json()
@@ -45,7 +45,7 @@
 // FETCH OF GOOGLE API FILE IS FAILING, SO HAVE RE-CREATED SOARING FORECAST FROM NWS SOURCE (SEE MAIN.JS)
 // GCP SOARING FORECAST
 //(async () => {
-//     const url = 'https://wasatchcloudbase.github.io/example_soaring_forecast.json'
+//     const url = 'https://wasatchcloudbase.github.io/example_files/example_soaring_forecast.json'
 //    const SoaringForecastURL = 'https://storage.googleapis.com/wasatch-wind-static/soaring.json'
 //    const response = await fetch(SoaringForecastURL)
 //    const soarData = await response.json()
