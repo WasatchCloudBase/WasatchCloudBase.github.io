@@ -25,17 +25,18 @@ async function getTimeSeries() {
                 url = `https://api.mesowest.net/v2/station/timeseries?&stid=KSLC&stid=UTOLY&stid=AMB&stid=KU42&stid=FPS&stid=HF012&stid=REY&stid=IFF&stid=CEN&stid=BBN&stid=SND&stid=KPVU&stid=SIGU1&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&obtimezone=local&timeformat=%-I:%M%20%p&token=0030ed6480a4440eb29ec23ff37fe159`
                 break
             case 1: 
-                var url = `https://api.mesowest.net/v2/station/timeseries?&stid=KRIF&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&obtimezone=local&timeformat=%-I:%M%20%p&token=0030ed6480a4440eb29ec23ff37fe159`
+                var url = `https://api.mesowest.net/v2/station/timeseries?&stid=KRIF&stid=KHIF&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&obtimezone=local&timeformat=%-I:%M%20%p&token=0030ed6480a4440eb29ec23ff37fe159`
                 break
         } 
         var response = await fetch(url)
         var tsData = await response.json()
         if (tsData) {
-            // Get pressure readings for airport stations
-            if (tsData.STATION[0].STID==='KSLC' || tsData.STATION[0].STID==='KRIF') AltiTempZone(tsData.STATION[0].STID, tsData.STATION[0].OBSERVATIONS)
-            // Get observations for all stations
+            const AirportStations = ['KSLC', 'KRIF', 'KPVU', 'KHIF']
             let stations = []
             for (let i=0; i<tsData.STATION.length; i++) {
+                // Get pressure readings for each airport station
+                if (AirportStations.includes(tsData.STATION[i].STID)) AltiTempZone(tsData.STATION[i].STID, tsData.STATION[i].OBSERVATIONS)
+                // Get observations for all stations
                 stations[i] = tsData.STATION[i].OBSERVATIONS
                 stations[i].stid = tsData.STATION[i].STID
                 windChart(stations[i])
@@ -54,7 +55,13 @@ function AltiTempZone(stationID, data, time=[], alti=[], temp=[]) {
     document.getElementById(StationZoneElementName).innerHTML = latestZone
     document.getElementById(StationZoneElementName).style.color = zoneColor
     for (let i=0; i<data.date_time.length; i++) {
-        if (data.date_time[i].slice(-5,-3)==='00') {
+        // Using :00 readings, except for those that don't have :00 readings:
+        // :15 readings for Richfield airport
+        // :56 readings for Hill Air Force Base
+        if ((data.date_time[i].slice(-5,-3)==='00') ||
+            (stationID==='KRIF' & (data.date_time[i].slice(-5,-3)==='15')) ||
+            (stationID==='KHIF' & (data.date_time[i].slice(-5,-3)==='56')) 
+        ){
             time.push(data.date_time[i].toLowerCase().replace(/:\d{2}/g, ''))
             temp.push(`${Math.round(data.air_temp_set_1[i])}&deg;`)
             alti.push(data.altimeter_set_1[i].toFixed(2))

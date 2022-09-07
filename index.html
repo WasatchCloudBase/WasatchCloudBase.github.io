@@ -1058,6 +1058,161 @@
         <!-- DAVIS STATION READINGS -->
         <div class="container-fluid display-3 mt-2">Davis County</div>
 
+        <!-- WIND HILL AIR FORCE BASE (KHIF) -->
+        <div class="container-fluid mt-4">
+            <div id="KHIF-main">
+                <div class="row rounded mt-1">
+                    <div class="col-auto bg-black align-self-center display-4 text-warning clickable" id="KHIF-Forecast-toggle" onclick="toggleWindChart('KHIF-Forecast')">fcst</div>
+                    <div class="col row bg-dark mx-0 rounded-4">
+                        <div class="col-auto">
+                            <div class="row display-3">Hill Air Force Base</div>
+                            <div class="col-auto row">
+                                <div class="col-auto fs-3 align-self-center text-info">4,783 ft&nbsp;&nbsp;&nbsp;</div>
+                                <div class="col-auto fs-1 align-self-center justify-content-end" id="KHIF-time"></div>
+                            </div>
+                        </div>
+                        <div class="col-auto align-self-center display-4 text-warning clickable" onclick="toggleWindChart('KHIF-Pressure')">
+                            <div class="col-auto row">
+                                <div class="fs-2">Zone</div>
+                                <div class="display-3" id="KHIF-zone"></div>
+                            </div>
+                        </div>
+                        <div class="col row align-self-end justify-content-end">
+                            <div class="col-auto display-1" id="KHIF-wdir"></div>
+                            <div class="col-auto display-1 align-self-center" id="KHIF-wind">&nbsp;</div>
+                            <div class="collapse col-auto display-4 align-self-center pink" id="KHIF-gust"></div>
+                        </div>
+                    </div>
+                    <div class="col-auto bg-black align-self-center display-2 text-warning clickable" id="KHIF-toggle" onclick="toggleWindChart('KHIF')">+</div>
+                </div>
+            </div>
+            <!-- HOURLY FORECAST EXPANSION -->
+            <div class="collapse" id="KHIF-Forecast">
+                <div class="container-fluid p-0 mx-0 mt-2">
+                    <a href="https://forecast.weather.gov/MapClick.php?w0=t&w3=sfcwind&w3u=1&w4=sky&w5=pop&w7=rain&w9=snow&w13u=0&w16u=1&w17u=1&AheadHour=0&Submit=Submit&FcstType=graphical&textField1=41.11112&textField2=-111.96229&site=all&unit=0&dd=&bw=" target="_blank">
+                        <img class="border border-dark" src="https://forecast.weather.gov/meteograms/Plotter.php?lat=41.11112&lon=-111.96229&wfo=SLC&zcode=UTZ003&gset=30&gdiff=10&unit=0&tinfo=MY7&ahour=0&pcmd=10001110101000000000000000000000000000000000000000000000000&lg=en&indu=1!1!1!&dd=&bw=&hrspan=48&pqpfhr=6&psnwhr=6" width="100%">
+                    </a>
+                </div>
+            </div>    
+            <!-- KHIF READINGS EXPANSION -->
+            <a href="https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=KHIF&table=1&banner=off" target="_blank">
+                <div class="collapse" id="KHIF">
+                    <div class="row align-items-end bg-dark rounded-4 mx-0 mt-2">
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="KHIF-gust-0"></div>
+                            <div class="bg-danger" id="KHIF-gbar-0"></div>
+                            <div id="KHIF-wbar-0"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="KHIF-wind-0"></div>
+                            <div><div class="display-4" id="KHIF-wdir-0"></div></div>
+                            <div class="fs-4" id="KHIF-time-0"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="KHIF-gust-1"></div>
+                            <div class="bg-danger" id="KHIF-gbar-1"></div>
+                            <div id="KHIF-wbar-1"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="KHIF-wind-1"></div>
+                            <div><div class="display-4" id="KHIF-wdir-1"></div></div>
+                            <div class="fs-4" id="KHIF-time-1"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="KHIF-gust-2"></div>
+                            <div class="bg-danger" id="KHIF-gbar-2"></div>
+                            <div id="KHIF-wbar-2"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="KHIF-wind-2"></div>
+                            <div><div class="display-4" id="KHIF-wdir-2"></div></div>
+                            <div class="fs-4" id="KHIF-time-2"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="KHIF-gust-3"></div>
+                            <div class="bg-danger" id="KHIF-gbar-3"></div>
+                            <div id="KHIF-wbar-3"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="KHIF-wind-3"></div>
+                            <div><div class="display-4" id="KHIF-wdir-3"></div></div>
+                            <div class="fs-4" id="KHIF-time-3"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="KHIF-gust-4"></div>
+                            <div class="bg-danger" id="KHIF-gbar-4"></div>
+                            <div id="KHIF-wbar-4"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="KHIF-wind-4"></div>
+                            <div><div class="display-4" id="KHIF-wdir-4"></div></div>
+                            <div class="fs-4" id="KHIF-time-4"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="KHIF-gust-5"></div>
+                            <div class="bg-danger" id="KHIF-gbar-5"></div>
+                            <div id="KHIF-wbar-5"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="KHIF-wind-5"></div>
+                            <div><div class="display-4" id="KHIF-wdir-5"></div></div>
+                            <div class="fs-4" id="KHIF-time-5"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="KHIF-gust-6"></div>
+                            <div class="bg-danger" id="KHIF-gbar-6"></div>
+                            <div id="KHIF-wbar-6"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="KHIF-wind-6"></div>
+                            <div><div class="display-4" id="KHIF-wdir-6"></div></div>
+                            <div class="fs-4" id="KHIF-time-6"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+        <!-- PRESSURE HISTORY EXPANSION -->
+        <div class="collapse" id="KHIF-Pressure">
+            <div class="container-fluid p-0">
+                <a href="https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=KHIF&table=1&banner=off" target="_blank">
+                    <div class="rounded-4 row align-items-end bg-dark mx-0 mt-2">
+                        <div class="col px-1">
+                            <div class="fs-1 mb-2"><div id="KHIF-alti-0"></div></div>
+                            <div class="bg-info" id="KHIF-altibar-0"></div>
+                            <div class="display-5 bg-secondary py-3" id="KHIF-temp-0"></div>
+                            <div class="display-2" id="KHIF-zone-0"></div>
+                            <div class="fs-4" id="KHIF-alti-time-0"></div>
+                        </div>
+                        <div class="col px-1">
+                            <div class="fs-1 mb-2"><div id="KHIF-alti-1"></div></div>
+                            <div class="bg-info" id="KHIF-altibar-1"></div>
+                            <div class="display-5 bg-secondary py-3" id="KHIF-temp-1"></div>
+                            <div class="display-2" id="KHIF-zone-1"></div>
+                            <div class="fs-4" id="KHIF-alti-time-1"></div>
+                        </div>
+                        <div class="col px-1">
+                            <div class="fs-1 mb-2"><div id="KHIF-alti-2"></div></div>
+                            <div class="bg-info" id="KHIF-altibar-2"></div>
+                            <div class="display-5 bg-secondary py-3" id="KHIF-temp-2"></div>
+                            <div class="display-2" id="KHIF-zone-2"></div>
+                            <div class="fs-4" id="KHIF-alti-time-2"></div>
+                        </div>
+                        <div class="col px-1">
+                            <div class="fs-1 mb-2"><div id="KHIF-alti-3"></div></div>
+                            <div class="bg-info" id="KHIF-altibar-3"></div>
+                            <div class="display-5 bg-secondary py-3" id="KHIF-temp-3"></div>
+                            <div class="display-2" id="KHIF-zone-3"></div>
+                            <div class="fs-4" id="KHIF-alti-time-3"></div>
+                        </div>
+                        <div class="col px-1">
+                            <div class="fs-1 mb-2"><div id="KHIF-alti-4"></div></div>
+                            <div class="bg-info" id="KHIF-altibar-4"></div>
+                            <div class="display-5 bg-secondary py-3" id="KHIF-temp-4"></div>
+                            <div class="display-2" id="KHIF-zone-4"></div>
+                            <div class="fs-4" id="KHIF-alti-time-4"></div>
+                        </div>
+                        <div class="col px-1">
+                            <div class="fs-1 mb-2"><div id="KHIF-alti-5"></div></div>
+                            <div class="bg-info" id="KHIF-altibar-5"></div>
+                            <div class="display-5 bg-secondary py-3" id="KHIF-temp-5"></div>
+                            <div class="display-2" id="KHIF-zone-5"></div>
+                            <div class="fs-4" id="KHIF-alti-time-5"></div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <a href="https://ambrosephoto.com/gauging-that-pressure/" target="_blank">
+                <div class="fs-1 mt-2 text-info text-decoration-underline">Explanation of pressure zones</div>
+            </a>    
+        </div>
+
         <!-- BOUNTIFUL BENCH (BBN)-->
         <div class="container-fluid mt-4">
             <div id="BBN-main">
@@ -1375,7 +1530,7 @@
             <div id="KPVU-main">
                 <div class="row rounded mt-1">
                     <div class="col-auto bg-black align-self-center display-4 text-warning clickable" id="KPVU-Forecast-toggle" onclick="toggleWindChart('KPVU-Forecast')">fcst</div>
-                    <div class="bg-dark col mx-0 row rounded-4">
+                    <div class="col row bg-dark mx-0 rounded-4">
                         <div class="col-auto">
                             <div class="row display-3">Provo Airport</div>
                             <div class="col-auto row">
@@ -1383,7 +1538,13 @@
                                 <div class="col-auto fs-1 align-self-center justify-content-end" id="KPVU-time"></div>
                             </div>
                         </div>
-                        <div class="col align-self-end row justify-content-end">
+                        <div class="col-auto align-self-center display-4 text-warning clickable" onclick="toggleWindChart('KPVU-Pressure')">
+                            <div class="col-auto row">
+                                <div class="fs-2">Zone</div>
+                                <div class="display-3" id="KPVU-zone"></div>
+                            </div>
+                        </div>
+                        <div class="col row align-self-end justify-content-end">
                             <div class="col-auto display-1" id="KPVU-wdir"></div>
                             <div class="col-auto display-1 align-self-center" id="KPVU-wind">&nbsp;</div>
                             <div class="collapse col-auto display-4 align-self-center pink" id="KPVU-gust"></div>
@@ -1399,8 +1560,8 @@
                         <img class="border border-dark" src="https://forecast.weather.gov/meteograms/Plotter.php?lat=40.2181&lon=-111.7218&wfo=SLC&zcode=UTZ003&gset=30&gdiff=10&unit=0&tinfo=MY7&ahour=0&pcmd=10001110101000000000000000000000000000000000000000000000000&lg=en&indu=1!1!1!&dd=&bw=&hrspan=48&pqpfhr=6&psnwhr=6" width="100%">
                     </a>
                 </div>
-            </div>
-            <!-- WIND HISTORY EXPANSION -->
+            </div>    
+            <!-- KPVU READINGS EXPANSION -->
             <a href="https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=KPVU&table=1&banner=off" target="_blank">
                 <div class="collapse" id="KPVU">
                     <div class="row align-items-end bg-dark rounded-4 mx-0 mt-2">
@@ -1502,7 +1663,61 @@
                         </div>
                     </div>
                 </div>
-            </a>
+            </div>
+        </a>
+        <!-- PRESSURE HISTORY EXPANSION -->
+        <div class="collapse" id="KPVU-Pressure">
+            <div class="container-fluid p-0">
+                <a href="https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=KPVU&table=1&banner=off" target="_blank">
+                    <div class="rounded-4 row align-items-end bg-dark mx-0 mt-2">
+                        <div class="col px-1">
+                            <div class="fs-1 mb-2"><div id="KPVU-alti-0"></div></div>
+                            <div class="bg-info" id="KPVU-altibar-0"></div>
+                            <div class="display-5 bg-secondary py-3" id="KPVU-temp-0"></div>
+                            <div class="display-2" id="KPVU-zone-0"></div>
+                            <div class="fs-4" id="KPVU-alti-time-0"></div>
+                        </div>
+                        <div class="col px-1">
+                            <div class="fs-1 mb-2"><div id="KPVU-alti-1"></div></div>
+                            <div class="bg-info" id="KPVU-altibar-1"></div>
+                            <div class="display-5 bg-secondary py-3" id="KPVU-temp-1"></div>
+                            <div class="display-2" id="KPVU-zone-1"></div>
+                            <div class="fs-4" id="KPVU-alti-time-1"></div>
+                        </div>
+                        <div class="col px-1">
+                            <div class="fs-1 mb-2"><div id="KPVU-alti-2"></div></div>
+                            <div class="bg-info" id="KPVU-altibar-2"></div>
+                            <div class="display-5 bg-secondary py-3" id="KPVU-temp-2"></div>
+                            <div class="display-2" id="KPVU-zone-2"></div>
+                            <div class="fs-4" id="KPVU-alti-time-2"></div>
+                        </div>
+                        <div class="col px-1">
+                            <div class="fs-1 mb-2"><div id="KPVU-alti-3"></div></div>
+                            <div class="bg-info" id="KPVU-altibar-3"></div>
+                            <div class="display-5 bg-secondary py-3" id="KPVU-temp-3"></div>
+                            <div class="display-2" id="KPVU-zone-3"></div>
+                            <div class="fs-4" id="KPVU-alti-time-3"></div>
+                        </div>
+                        <div class="col px-1">
+                            <div class="fs-1 mb-2"><div id="KPVU-alti-4"></div></div>
+                            <div class="bg-info" id="KPVU-altibar-4"></div>
+                            <div class="display-5 bg-secondary py-3" id="KPVU-temp-4"></div>
+                            <div class="display-2" id="KPVU-zone-4"></div>
+                            <div class="fs-4" id="KPVU-alti-time-4"></div>
+                        </div>
+                        <div class="col px-1">
+                            <div class="fs-1 mb-2"><div id="KPVU-alti-5"></div></div>
+                            <div class="bg-info" id="KPVU-altibar-5"></div>
+                            <div class="display-5 bg-secondary py-3" id="KPVU-temp-5"></div>
+                            <div class="display-2" id="KPVU-zone-5"></div>
+                            <div class="fs-4" id="KPVU-alti-time-5"></div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <a href="https://ambrosephoto.com/gauging-that-pressure/" target="_blank">
+                <div class="fs-1 mt-2 text-info text-decoration-underline">Explanation of pressure zones</div>
+            </a>    
         </div>
 
         <!-- SEVIER COUNTY STATION READINGS -->
@@ -2164,7 +2379,7 @@
 
         <!-- MORNING SOUNDING SKEW-T -->
         <div class="container-fluid p-0">
-            <a href="https://climate.cod.edu/data/raob/KSLC/skewt" id="skew-t-href" target="_blank">
+            <a href="https://climate.cod.edu/data/raob/KPVU/skewt" id="skew-t-href" target="_blank">
                 <div class="display-3 pt-5 pb-3">Morning Sounding Skew-T</div>
                     <img class="border wwborder border-4 border-warning" id="skew-t-img" width="100%">
             </a>
