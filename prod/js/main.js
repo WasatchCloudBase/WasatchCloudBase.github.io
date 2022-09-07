@@ -253,123 +253,94 @@ function toggleWindChart(div) {
     }
 )();
 
+// Test URL fetch
+// Uncomment to show debugging block
+/*
+(async () => {
+
+    document.getElementById('URLCheck').style.display = 'block'
+    document.getElementById('URLMessage').innerText = 'Starting debugging block';
+
+    const url = "https://wasatchcloudbase.github.io/example_files/tfr_faa_gov_tfr2_list_jsp.html";
+    var headers = {}
+    document.getElementById('URLMessage').innerText = 'Established URL and headers';
+
+    fetch(url, {
+        method : "GET",
+        mode: 'cors',
+        headers: headers
+    })
+    .then((response) => {
+        if (!response.ok) {
+            document.getElementById('URLMessage').innerHTML = response.status + ": " + response.type + ": " + response.statustext;
+            throw new Error(response.error)
+        }
+        document.getElementById('URLMessage').innerHTML = 'Response received - data below';
+        document.getElementById('URLResponse').innerHTML = response.json();
+    })
+    .then(data => {
+        document.getElementById('URLMessage').innerHTML = 'Received data';
+        document.getElementById('URLResponse').innerHTML = data;
+    })
+    .catch(function(error) {
+        document.getElementById('URLResponse').innerHTML = error + ": " + error.stack;
+    });
+})();
+*/
+
 // IIFE ASYNC Utah TFRs (hidden if none)
+/* Currenty commented out due to CORS issues accessing data
 (async () => 
     {
-
-        document.getElementById('UtahTFRs').style.display = 'block'         //-------------------------------------
-        document.getElementById('TFRType').innerText = 'START'      //-------------------------------------
-        
         try { 
-            //tfrs.list = async () => {
-            //const response = await 
-            //superagent
-            const url = './example_files/soaring_forecast_summer_format.txt'
-
-//            const url = 'example_files/soaring_forecast_full_page_winter.html'
-            //example_files/tfr_faa_gov_tfr2_list_jsp.html'
-            
-            //https://tfr.faa.gov/tfr2/list.jsp'
-     //       let result = ''
+        //    const url = 'https://wasatchcloudbase.github.io/example_files/tfr_faa_gov_tfr2_list_jsp.html'
+            const url = 'https://tfr.faa.gov/tfr2/list.jsp'
             const response = await fetch(url, {
                 mode: 'cors',
-                method: 'POST',
+                method: 'GET',
                 cache: 'no-cache',
-                credentials: 'same-origin'
-                //,
-       //         headers: {
-       //             'Content-Type': 'text/html'
-       //         },
-       //         body: result
-              })
-            const TFRText = await response.text()
-
-//              body: result,
-
-            document.getElementById('TFRType').innerText = 'ACCESSED URL' +  TFRText    //-------------------------------------
-            
-       //     .get('https://tfr.faa.gov/tfr2/list.jsp')
-       //     document.getElementById('TFRType').innerText = 'ACCESSED SUPERAGENT COMPLETE'      //-------------------------------------
-
-         //       
-         //       document.getElementById('TFRType').innerText = 'GET COMPLETE'      //-------------------------------------
-
-         //       .buffer()     
-         //       document.getElementById('TFRType').innerText = 'BUFFER COMPLETE'      //-------------------------------------
-        //}
+                credentials: 'same-origin',
+                headers: {'Content-Type': 'text/html; charset=windows-1252',}
+            } )
+            const TFRText = await response.text() // May need to use response.json() instead
         } catch (err) {
             document.getElementById('TFRType').innerText = 'FETCH/PARSING FAILED: ' + err
         }
+        if (TFRText) {
+            let EachTFR = []
+            for (let i=0; i<TFRData.features.length; i++) {
+                EachTFR = TFRData.features[i].properties
+                if (i==0) {
+                // Populate first TFR
+                    document.getElementById('UtahTFRs').style.display = 'block'
+                    document.getElementById('TFRBeginDate').innerText = EachTFR.BeginDate
+                    document.getElementById('TFREndDate').innerText = EachTFR.EndDate
+                    document.getElementById('TFRType').innerText = EachTFR.Type
+                    document.getElementById('TFRLocation').innerText = EachTFR.Location
+                    document.getElementById('TFRReason').innerText = EachTFR.Reason
+                } else if (i==1) {
+                    // REMEMBER TO REMOVE i==1 and add logic to filter for Utah only
+                    // Clone division for additional TFRs (as needed)
+                    let cloned_TFR = document.getElementById('TFRDiv').cloneNode(true)
+                    //Rename parent and children IDs
+                    cloned_TFR.id = 'TFRDiv' + i
+                    cloned_TFR.children[0].id = 'TFRBeginDate' + i
+                    cloned_TFR.children[1].id = 'TFREndDate' + i
+                    cloned_TFR.children[2].id = 'TFRType' + i
+                    cloned_TFR.children[3].id = 'TFRLocation' + i
+                    cloned_TFR.children[4].id = 'TFRReason' + i
+                    //Add clone to page
+                    document.getElementById('TFRGroupDiv').appendChild(cloned_TFR)
+                    //Populate additional TFR
+                    document.getElementById(`TFRDiv${i}`).style.display = 'block'
+                    document.getElementById(`TFRBeginDate${i}`).innerText = EachTFR.BeginDate
+                    document.getElementById(`TFREndDate${i}`).innerText = EachTFR.EndDate
+                    document.getElementById(`TFRType${i}`).innerText = EachTFR.Type
+                    document.getElementById(`TFRLocation${i}`).innerText = EachTFR.Location
+                    document.getElementById(`TFRReason${i}`).innerText = EachTFR.Reason
+                }
+            }
+        }
     }
-
-        
-        //        try {
-        //        const url = 'http://tfr.faa.gov/tfr2/list.jsp'
-        //        let response = await fetch(url)
-        //        if (response.ok) { // if HTTP-status is 200-299
-                    // get the response body (the method explained below)
-         //           let json = await response.json();
-        // document.getElementById('TFRType').innerText = 'SHOULD BE GOOD'      //-------------------------------------
-        
-         //         } else {
-         //           alert("HTTP-Error: " + response.status);
-         //         }
-        
-        //document.getElementById('TFRType').innerText = 'FETCHED'      //-------------------------------------
-        
-         //       const TFRText = await response.text()
-        
-        //document.getElementById('TFRType').innerText = 'RESPONDED'      //-------------------------------------
-        
-        
-        //        if (TFRText) {
-        
-       // document.getElementById('TFRType').innerText = 'GOT TFR TEXT'      //-------------------------------------
-        
-        //        } catch (err) {
-        //            document.getElementById('TFRType').innerText = 'FETCH/PARSING FAILED: ' + err
-        //        }
-       //     }
-          //      tfrs.list().then (results => { TFRData = results.json() })
-                //const response = await fetch(url)
-                //const TFRData = await response.json()
-         //       let EachTFR = []
-         //       for (let i=0; i<TFRData.features.length; i++) {
-         //           EachTFR = TFRData.features[i].properties
-         //           if (i==0) {
-                        // Populate first TFR
-         //               document.getElementById('UtahTFRs').style.display = 'block'
-         //               document.getElementById('TFRBeginDate').innerText = EachTFR.BeginDate
-         //               document.getElementById('TFREndDate').innerText = EachTFR.EndDate
-         //               document.getElementById('TFRType').innerText = EachTFR.Type
-          //              document.getElementById('TFRLocation').innerText = EachTFR.Location
-          //              document.getElementById('TFRReason').innerText = EachTFR.Reason
-          //          } 
-          //          else if (i==1) {
-        
-        // REMEMBER TO REMOVE i==1
-        //!!!!!!!!!!!!!!!!!!!!!!!!!
-        
-                        // Clone division for additional TFRs (as needed)
-        //                let cloned_TFR = document.getElementById('TFRDiv').cloneNode(true)
-                        //Rename parent and children IDs
-        //                cloned_TFR.id = 'TFRDiv' + i
-        //                cloned_TFR.children[0].id = 'TFRBeginDate' + i
-        //                cloned_TFR.children[1].id = 'TFREndDate' + i
-        //                cloned_TFR.children[2].id = 'TFRType' + i
-        //                cloned_TFR.children[3].id = 'TFRLocation' + i
-        //                cloned_TFR.children[4].id = 'TFRReason' + i
-                        //Add clone to page
-        //               document.getElementById('TFRGroupDiv').appendChild(cloned_TFR)
-                        //Populate additional TFR
-        //                document.getElementById(`TFRDiv${i}`).style.display = 'block'
-        //                document.getElementById(`TFRBeginDate${i}`).innerText = EachTFR.BeginDate
-        //                document.getElementById(`TFREndDate${i}`).innerText = EachTFR.EndDate
-        //                document.getElementById(`TFRType${i}`).innerText = EachTFR.Type
-        //                document.getElementById(`TFRLocation${i}`).innerText = EachTFR.Location
-        //                document.getElementById(`TFRReason${i}`).innerText = EachTFR.Reason
-        //            }
-        //        }
-        //    }
-
 )();
+*/

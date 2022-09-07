@@ -17,28 +17,42 @@ async function ReloadTimeSeries() {
 // Function to get TimeSeries data from Mesonet API
 // MESONET PRIVATE API FOR TIME SERIES: https://developers.synopticdata.com/mesonet
 async function getTimeSeries() {
-    const url = `https://api.mesowest.net/v2/station/timeseries?&stid=KSLC&stid=UTOLY&stid=AMB&stid=KU42&stid=FPS&stid=HF012&stid=REY&stid=IFF&stid=CEN&stid=BBN&stid=SND&stid=KPVU&stid=SIGU1&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&obtimezone=local&timeformat=%-I:%M%20%p&token=0030ed6480a4440eb29ec23ff37fe159`
-    var response = await fetch(url)
-    var tsData = await response.json()
-    if (tsData) {
-        if (tsData.STATION[0].STID==='KSLC') kslcAltiTempZone(tsData.STATION[0].OBSERVATIONS)
-        let stations = []
-        for (let i=0; i<tsData.STATION.length; i++) {
-            stations[i] = tsData.STATION[i].OBSERVATIONS
-            stations[i].stid = tsData.STATION[i].STID
-            windChart(stations[i])
+    //Perform multiple loops as the Mesowest API seems to be limited to 10 stations per query
+    var url = ""
+    for (let i=0; i<2; i++) {
+        switch(i) {
+            case 0:
+                url = `https://api.mesowest.net/v2/station/timeseries?&stid=KSLC&stid=UTOLY&stid=AMB&stid=KU42&stid=FPS&stid=HF012&stid=REY&stid=IFF&stid=CEN&stid=BBN&stid=SND&stid=KPVU&stid=SIGU1&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&obtimezone=local&timeformat=%-I:%M%20%p&token=0030ed6480a4440eb29ec23ff37fe159`
+                break
+            case 1: 
+                var url = `https://api.mesowest.net/v2/station/timeseries?&stid=KRIF&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&obtimezone=local&timeformat=%-I:%M%20%p&token=0030ed6480a4440eb29ec23ff37fe159`
+                break
+        } 
+        var response = await fetch(url)
+        var tsData = await response.json()
+        if (tsData) {
+            // Get pressure readings for airport stations
+            if (tsData.STATION[0].STID==='KSLC' || tsData.STATION[0].STID==='KRIF') AltiTempZone(tsData.STATION[0].STID, tsData.STATION[0].OBSERVATIONS)
+            // Get observations for all stations
+            let stations = []
+            for (let i=0; i<tsData.STATION.length; i++) {
+                stations[i] = tsData.STATION[i].OBSERVATIONS
+                stations[i].stid = tsData.STATION[i].STID
+                windChart(stations[i])
+            }
         }
     }
 };
 
-function kslcAltiTempZone(data, time=[], alti=[], temp=[]) {
+function AltiTempZone(stationID, data, time=[], alti=[], temp=[]) {
     const latestAlti = parseFloat(data.altimeter_set_1.slice(-1)).toFixed(2)
     const latestTemp = Math.round(data.air_temp_set_1.slice(-1))
     let latestZone = calculateZone(latestAlti, latestTemp)
     const zoneColor = (latestZone===0 || latestZone===7) ? wwRed : (latestZone===1 || latestZone===6) ? wwOrg : (latestZone===2 || latestZone===5) ? wwYlw : wwGrn
     latestZone = latestZone===0 ? '&#9471;' : (latestZone==='LoP') ? 'LoP' : `&#1010${latestZone+1}`
-    document.getElementById('KSLC-zone').innerHTML = latestZone
-    document.getElementById('KSLC-zone').style.color = zoneColor
+    let StationZoneElementName = stationID + '-zone'
+    document.getElementById(StationZoneElementName).innerHTML = latestZone
+    document.getElementById(StationZoneElementName).style.color = zoneColor
     for (let i=0; i<data.date_time.length; i++) {
         if (data.date_time[i].slice(-5,-3)==='00') {
             time.push(data.date_time[i].toLowerCase().replace(/:\d{2}/g, ''))
@@ -47,7 +61,7 @@ function kslcAltiTempZone(data, time=[], alti=[], temp=[]) {
         }
     }
     const hourlyData = {'time':time.slice(-6), 'temp':temp.slice(-6), 'alti':alti.slice(-6)}
-    zone(hourlyData)
+    zone(stationID, hourlyData)
 }
 
 function calculateZone(alti, temp, currentZones = []) {
@@ -58,7 +72,7 @@ function calculateZone(alti, temp, currentZones = []) {
     return alti===currentZones[3] ? 'LoP' : zone
 }
 
-function zone(data, zDigit=[]) {
+function zone(stationID, data, zDigit=[]) {
     for (let i=0; i<data.alti.length; i++) zDigit.push(calculateZone(parseFloat(data.alti[i]), parseInt(data.temp[i])))
     const zColor = zDigit.map(d => (d===0 || d===7) ? wwRed : (d===1 || d===6) ? wwOrg : (d===2 || d===5) ? wwYlw : wwGrn)
     const zFormatted = zDigit.map(d => d===0 ? '&#9471;' : d==='LoP' ? '<span class="display-3 fw-bold">LoP</span>' : `&#1010${d+1}`)
@@ -66,13 +80,13 @@ function zone(data, zDigit=[]) {
     const max = Math.max(...data.alti)
     const barHeight = data.alti.map(d => `${(((d-min)*80)/(max-min))+10}px`)
     for (let i=0; i<6; i++) {
-        const element = document.getElementById(`KSLC-zone-${i}`)
+        const element = document.getElementById(stationID + `-zone-${i}`)
         element.innerHTML = zFormatted[i]
         element.style.color = zColor[i]
-        document.getElementById(`KSLC-alti-${i}`).innerHTML = data.alti[i]
-        document.getElementById(`KSLC-temp-${i}`).innerHTML = data.temp[i]
-        document.getElementById(`KSLC-alti-time-${i}`).innerHTML = data.time[i]
-        document.getElementById(`KSLC-altibar-${i}`).style.height = barHeight[i]
+        document.getElementById(stationID + `-alti-${i}`).innerHTML = data.alti[i]
+        document.getElementById(stationID + `-temp-${i}`).innerHTML = data.temp[i]
+        document.getElementById(stationID + `-alti-time-${i}`).innerHTML = data.time[i]
+        document.getElementById(stationID + `-altibar-${i}`).style.height = barHeight[i]
     }
 }
 

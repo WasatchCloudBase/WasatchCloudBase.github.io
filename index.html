@@ -1508,6 +1508,201 @@
         <!-- SEVIER COUNTY STATION READINGS -->
         <div class="container-fluid display-3 mt-2">SevierCounty</div>
 
+        <!-- KRIF RICHFIELD AIRPORT -->
+        <div class="container-fluid mt-4">
+            <div id="KRIF-main">
+                <div class="row rounded mt-1">
+                    <div class="col-auto bg-black align-self-center display-4 text-warning clickable" id="KRIF-Forecast-toggle" onclick="toggleWindChart('KRIF-Forecast')">fcst</div>
+                    <div class="col row bg-dark mx-0 rounded-4">
+                        <div class="col-auto">
+                            <div class="row display-3">Richfield Airport</div>
+                            <div class="col-auto row">
+                                <div class="col-auto fs-3 align-self-center text-info">5,318 ft&nbsp;&nbsp;&nbsp;</div>
+                                <div class="col-auto fs-1 align-self-center justify-content-end" id="KRIF-time"></div>
+                            </div>
+                        </div>
+                        <div class="col-auto align-self-center display-4 text-warning clickable" onclick="toggleWindChart('KRIF-Pressure')">
+                            <div class="col-auto row">
+                                <div class="fs-2">Zone</div>
+                                <div class="display-3" id="KRIF-zone"></div>
+                            </div>
+                        </div>
+                        <div class="col row align-self-end justify-content-end">
+                            <div class="col-auto display-1" id="KRIF-wdir"></div>
+                            <div class="col-auto display-1 align-self-center" id="KRIF-wind">&nbsp;</div>
+                            <div class="collapse col-auto display-4 align-self-center pink" id="KRIF-gust"></div>
+                        </div>
+                    </div>
+                    <div class="col-auto bg-black align-self-center display-2 text-warning clickable" id="KRIF-toggle" onclick="toggleWindChart('KRIF')">+</div>
+                </div>
+            </div>
+            <!-- HOURLY FORECAST EXPANSION -->
+            <div class="collapse" id="KRIF-Forecast">
+                <div class="container-fluid p-0 mx-0 mt-2">
+                    <a href="https://forecast.weather.gov/MapClick.php?w0=t&w3=sfcwind&w3u=1&w4=sky&w5=pop&w7=rain&w9=snow&w13u=0&w16u=1&w17u=1&AheadHour=0&Submit=Submit&FcstType=graphical&textField1=38.7364&textField2=-112.1002&site=all&unit=0&dd=&bw=" target="_blank">
+                        <img class="border border-dark" src="https://forecast.weather.gov/meteograms/Plotter.php?lat=38.7364&lon=-112.1002&wfo=SLC&zcode=UTZ003&gset=30&gdiff=10&unit=0&tinfo=MY7&ahour=0&pcmd=10001110101000000000000000000000000000000000000000000000000&lg=en&indu=1!1!1!&dd=&bw=&hrspan=48&pqpfhr=6&psnwhr=6" width="100%">
+                    </a>
+                </div>
+            </div>    
+            <!-- KRIF READINGS EXPANSION -->
+            <a href="https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=KRIF&table=1&banner=off" target="_blank">
+                <div class="collapse" id="KRIF">
+                    <div class="row align-items-end bg-dark rounded-4 mx-0 mt-2">
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="KRIF-gust-0"></div>
+                            <div class="bg-danger" id="KRIF-gbar-0"></div>
+                            <div id="KRIF-wbar-0"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="KRIF-wind-0"></div>
+                            <div><div class="display-4" id="KRIF-wdir-0"></div></div>
+                            <div class="fs-4" id="KRIF-time-0"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="KRIF-gust-1"></div>
+                            <div class="bg-danger" id="KRIF-gbar-1"></div>
+                            <div id="KRIF-wbar-1"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="KRIF-wind-1"></div>
+                            <div><div class="display-4" id="KRIF-wdir-1"></div></div>
+                            <div class="fs-4" id="KRIF-time-1"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="KRIF-gust-2"></div>
+                            <div class="bg-danger" id="KRIF-gbar-2"></div>
+                            <div id="KRIF-wbar-2"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="KRIF-wind-2"></div>
+                            <div><div class="display-4" id="KRIF-wdir-2"></div></div>
+                            <div class="fs-4" id="KRIF-time-2"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="KRIF-gust-3"></div>
+                            <div class="bg-danger" id="KRIF-gbar-3"></div>
+                            <div id="KRIF-wbar-3"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="KRIF-wind-3"></div>
+                            <div><div class="display-4" id="KRIF-wdir-3"></div></div>
+                            <div class="fs-4" id="KRIF-time-3"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="KRIF-gust-4"></div>
+                            <div class="bg-danger" id="KRIF-gbar-4"></div>
+                            <div id="KRIF-wbar-4"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="KRIF-wind-4"></div>
+                            <div><div class="display-4" id="KRIF-wdir-4"></div></div>
+                            <div class="fs-4" id="KRIF-time-4"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="KRIF-gust-5"></div>
+                            <div class="bg-danger" id="KRIF-gbar-5"></div>
+                            <div id="KRIF-wbar-5"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="KRIF-wind-5"></div>
+                            <div><div class="display-4" id="KRIF-wdir-5"></div></div>
+                            <div class="fs-4" id="KRIF-time-5"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="KRIF-gust-6"></div>
+                            <div class="bg-danger" id="KRIF-gbar-6"></div>
+                            <div id="KRIF-wbar-6"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="KRIF-wind-6"></div>
+                            <div><div class="display-4" id="KRIF-wdir-6"></div></div>
+                            <div class="fs-4" id="KRIF-time-6"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="KRIF-gust-7"></div>
+                            <div class="bg-danger" id="KRIF-gbar-7"></div>
+                            <div id="KRIF-wbar-7"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="KRIF-wind-7"></div>
+                            <div><div class="display-4" id="KRIF-wdir-7"></div></div>
+                            <div class="fs-4" id="KRIF-time-7"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="KRIF-gust-8"></div>
+                            <div class="bg-danger" id="KRIF-gbar-8"></div>
+                            <div id="KRIF-wbar-8"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="KRIF-wind-8"></div>
+                            <div><div class="display-4" id="KRIF-wdir-8"></div></div>
+                            <div class="fs-4" id="KRIF-time-8"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="KRIF-gust-9"></div>
+                            <div class="bg-danger" id="KRIF-gbar-9"></div>
+                            <div id="KRIF-wbar-9"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="KRIF-wind-9"></div>
+                            <div><div class="display-4" id="KRIF-wdir-9"></div></div>
+                            <div class="fs-4" id="KRIF-time-9"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="KRIF-gust-10"></div>
+                            <div class="bg-danger" id="KRIF-gbar-10"></div>
+                            <div id="KRIF-wbar-10"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="KRIF-wind-10"></div>
+                            <div><div class="display-4" id="KRIF-wdir-10"></div></div>
+                            <div class="fs-4" id="KRIF-time-10"></div>
+                        </div>
+                        <div class="col ps-0 pe-0">
+                            <div class="pink h2" id="KRIF-gust-11"></div>
+                            <div class="bg-danger" id="KRIF-gbar-11"></div>
+                            <div id="KRIF-wbar-11"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="KRIF-wind-11"></div>
+                            <div><div class="display-4" id="KRIF-wdir-11"></div></div>
+                            <div class="fs-4" id="KRIF-time-11"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+        <!-- PRESSURE HISTORY EXPANSION -->
+        <div class="collapse" id="KRIF-Pressure">
+            <div class="container-fluid p-0">
+                <a href="https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=KRIF&table=1&banner=off" target="_blank">
+                    <div class="rounded-4 row align-items-end bg-dark mx-0 mt-2">
+                        <div class="col px-1">
+                            <div class="fs-1 mb-2"><div id="KRIF-alti-0"></div></div>
+                            <div class="bg-info" id="KRIF-altibar-0"></div>
+                            <div class="display-5 bg-secondary py-3" id="KRIF-temp-0"></div>
+                            <div class="display-2" id="KRIF-zone-0"></div>
+                            <div class="fs-4" id="KRIF-alti-time-0"></div>
+                        </div>
+                        <div class="col px-1">
+                            <div class="fs-1 mb-2"><div id="KRIF-alti-1"></div></div>
+                            <div class="bg-info" id="KRIF-altibar-1"></div>
+                            <div class="display-5 bg-secondary py-3" id="KRIF-temp-1"></div>
+                            <div class="display-2" id="KRIF-zone-1"></div>
+                            <div class="fs-4" id="KRIF-alti-time-1"></div>
+                        </div>
+                        <div class="col px-1">
+                            <div class="fs-1 mb-2"><div id="KRIF-alti-2"></div></div>
+                            <div class="bg-info" id="KRIF-altibar-2"></div>
+                            <div class="display-5 bg-secondary py-3" id="KRIF-temp-2"></div>
+                            <div class="display-2" id="KRIF-zone-2"></div>
+                            <div class="fs-4" id="KRIF-alti-time-2"></div>
+                        </div>
+                        <div class="col px-1">
+                            <div class="fs-1 mb-2"><div id="KRIF-alti-3"></div></div>
+                            <div class="bg-info" id="KRIF-altibar-3"></div>
+                            <div class="display-5 bg-secondary py-3" id="KRIF-temp-3"></div>
+                            <div class="display-2" id="KRIF-zone-3"></div>
+                            <div class="fs-4" id="KRIF-alti-time-3"></div>
+                        </div>
+                        <div class="col px-1">
+                            <div class="fs-1 mb-2"><div id="KRIF-alti-4"></div></div>
+                            <div class="bg-info" id="KRIF-altibar-4"></div>
+                            <div class="display-5 bg-secondary py-3" id="KRIF-temp-4"></div>
+                            <div class="display-2" id="KRIF-zone-4"></div>
+                            <div class="fs-4" id="KRIF-alti-time-4"></div>
+                        </div>
+                        <div class="col px-1">
+                            <div class="fs-1 mb-2"><div id="KRIF-alti-5"></div></div>
+                            <div class="bg-info" id="KRIF-altibar-5"></div>
+                            <div class="display-5 bg-secondary py-3" id="KRIF-temp-5"></div>
+                            <div class="display-2" id="KRIF-zone-5"></div>
+                            <div class="fs-4" id="KRIF-alti-time-5"></div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <a href="https://ambrosephoto.com/gauging-that-pressure/" target="_blank">
+                <div class="fs-1 mt-2 text-info text-decoration-underline">Explanation of pressure zones</div>
+            </a>    
+        </div>        
+
          <!-- SIGNAL PEAK (SIGU1)-->
          <div class="container-fluid mt-4">
             <div id="SIGU1-main">
@@ -2124,6 +2319,26 @@
                     </a>
                 </div>
             </div>
+            <div class="row">
+                <div class="col">Daybreak looking West
+                    <a href="https://www.wrh.noaa.gov/images/slc/camera/latest/darrenS.latest.jpg" target="_blank">
+                        <img class="border wwborder border-4 border-warning img-fluid bg-dark mt-4 mb-4" 
+                            src="https://www.wrh.noaa.gov/images/slc/camera/latest/darrenS.latest.jpg"  width="500" height="400" alt="Webcam unavailable">
+                    </a>
+                </div>
+                <div class="col">Daybreak looking East
+                    <a href="https://www.wrh.noaa.gov/images/slc/camera/latest/darren2.latest.jpg" target="_blank">
+                        <img class="border wwborder border-4 border-warning img-fluid bg-dark mt-4 mb-4" 
+                            src="https://www.wrh.noaa.gov/images/slc/camera/latest/darren2.latest.jpg"  width="500" height="400" alt="Webcam unavailable">
+                    </a>
+                </div>
+                <div class="col">Olympus Cove looking West
+                    <a href="https://www.wrh.noaa.gov/images/slc/camera/latest/olympuscove.latest.jpg" target="_blank">
+                        <img class="border wwborder border-4 border-warning img-fluid bg-dark mt-4 mb-4" 
+                            src="https://www.wrh.noaa.gov/images/slc/camera/latest/olympuscove.latest.jpg"  width="500" height="400" alt="Webcam unavailable">
+                    </a>
+                </div>
+            </div>
         </div>
         <!-- POTM -->
         <div class="container-fluid display-3 mt-5 mb-3">Point of the Mountain Flight Parks</div>
@@ -2147,6 +2362,12 @@
         <div class="container-fluid display-3 mt-5 mb-3">Utah Valley</div>
         <div class="container-fluid p-0 display-5 pt-4 mb-5 rounded-4 bg-dark">
             <div class="row">
+                <div class="col">Saratoga Springs looking Southeast
+                    <a href="https://www.wrh.noaa.gov/images/slc/camera/latest/UtahLake_4.latest.jpg" target="_blank">
+                        <img class="border wwborder border-4 border-warning bg-dark img-fluid mt-4 mb-4" 
+                            src="https://www.wrh.noaa.gov/images/slc/camera/latest/UtahLake_4.latest.jpg"  width="500" height="400" alt="">
+                    </a>
+                </div>
                 <div class="col">Saratoga Springs looking Northeast
                     <a href="https://www.wrh.noaa.gov/images/slc/camera/latest/UtahLake_5.latest.jpg" target="_blank">
                         <img class="border wwborder border-4 border-warning bg-dark img-fluid mt-4 mb-4" 
@@ -2155,8 +2376,8 @@
                 </div>
                 <div class="col">BYU looking Northeast (Timp)
                     <a href="http://lswebcam.byu.edu/mjpg/LSB" target="_blank">
-                        <img class="border wwborder border-4 border-warning bg-dark img-fluid mt-4 mb-4 px-5 py-5" 
-                            src="prod/images/play-white-icon.png"  width="400" height="auto" alt="">
+                        <img class="border wwborder border-4 border-warning bg-dark img-fluid mt-4 mb-4" 
+                            src="http://lswebcam.byu.edu/mjpg/LSB" width="500" height="auto" alt="">
                     </a>
                 </div>
             </div>
@@ -2191,6 +2412,11 @@
                     <img class="border wwborder border-4 border-warning" src="https://freeflightcomp.appspot.com/static/lonepeak_header2.jpg" width="60%">
                 </a>
             </div>
+            <div class="my-5">
+                <a href="https://www.sportstracklive.com/en" target="_blank">
+                    <img class="border wwborder border-4 border-warning" src="prod/images/SportsTrackLive.png" width="60%">
+                </a>
+            </div>
         </div>
     </div>
 
@@ -2217,8 +2443,17 @@
         </div>
     </div>
 
+    <!-- Debugging block for URL fetch checks -->
+    <div class="collapse container-fluid p-0" id="URLCheck">
+        <div class="container-fluid p-0 mt-5 pb-3 text-info display-3">URL Check</div>
+        <div class="container-fluid border wwborder border-4 border-info display-5 rounded-4 bg-dark lh-base">
+            <div class="col-auto text-start text-info" id="URLMessage"></div>
+            <div><hr class="dash mt-3"></div>
+            <div class="col-auto text-start text-info display-5"id="URLResponse"></div>
+        </div>
+    </div>
+
     <!-- LOCAL SCRIPTS -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/superagent"></script>
     <script type="text/javascript" src="prod/js/main.js"></script>
     <script type="text/javascript" src="prod/js/timeseries.js"></script>
     <script type="text/javascript" src="prod/js/d3.js"></script>
