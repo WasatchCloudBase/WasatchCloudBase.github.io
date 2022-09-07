@@ -19,13 +19,18 @@ async function ReloadTimeSeries() {
 async function getTimeSeries() {
     //Perform multiple loops as the Mesowest API seems to be limited to 10 stations per query
     var url = ""
-    for (let i=0; i<2; i++) {
+    for (let i=0; i<3; i++) {
         switch(i) {
             case 0:
                 url = `https://api.mesowest.net/v2/station/timeseries?&stid=KSLC&stid=UTOLY&stid=AMB&stid=KU42&stid=FPS&stid=HF012&stid=REY&stid=IFF&stid=CEN&stid=BBN&stid=SND&stid=KPVU&stid=SIGU1&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&obtimezone=local&timeformat=%-I:%M%20%p&token=0030ed6480a4440eb29ec23ff37fe159`
                 break
             case 1: 
-                var url = `https://api.mesowest.net/v2/station/timeseries?&stid=KRIF&stid=KHIF&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&obtimezone=local&timeformat=%-I:%M%20%p&token=0030ed6480a4440eb29ec23ff37fe159`
+                // Richfield API call only works correctly by itself
+                var url = `https://api.mesowest.net/v2/station/timeseries?&stid=KRIF&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&obtimezone=local&timeformat=%-I:%M%20%p&token=0030ed6480a4440eb29ec23ff37fe159`
+                break
+            case 2: 
+                // Add additional stations here (up to 10)
+                var url = `https://api.mesowest.net/v2/station/timeseries?&stid=KHIF&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&obtimezone=local&timeformat=%-I:%M%20%p&token=0030ed6480a4440eb29ec23ff37fe159`
                 break
         } 
         var response = await fetch(url)
