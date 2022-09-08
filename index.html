@@ -46,8 +46,8 @@
         <!-- REFERESH NOTE -->
         <div class="container-fluid display-5 fs-2 text-info mt-3 mb-3">Weather station data automatically refreshes every 30 seconds</div>
 
-        <!-- SLC STATION READINGS -->
-        <div class="container-fluid display-3 mt-2">Salt Lake County</div>
+        <!-- CENTRAL WASATCH STATION READINGS -->
+        <div class="container-fluid display-3 mt-2">Central Wasatch</div>
 
         <!-- KSLC SALT LAKE INTL AIRPORT -->
         <div class="container-fluid mt-4">
@@ -56,9 +56,10 @@
                     <div class="col-auto bg-black align-self-center display-4 text-warning clickable" id="KSLC-Forecast-toggle" onclick="toggleWindChart('KSLC-Forecast')">fcst</div>
                     <div class="col row bg-dark mx-0 rounded-4">
                         <div class="col-auto">
-                            <div class="row display-3">SLC Airport</div>
+                            <div class="row display-3" id="KSLC-Name"></div>
                             <div class="col-auto row">
-                                <div class="col-auto fs-3 align-self-center text-info">4,226 ft&nbsp;&nbsp;&nbsp;</div>
+                                <div class="col-auto fs-3 align-self-center text-info" id="KSLC-Elevation"></div>
+                                <div class="col-auto fs-3 align-self-center text-info"></div>
                                 <div class="col-auto fs-1 align-self-center justify-content-end" id="KSLC-time"></div>
                             </div>
                         </div>
@@ -80,8 +81,8 @@
             <!-- HOURLY FORECAST EXPANSION -->
             <div class="collapse" id="KSLC-Forecast">
                 <div class="container-fluid p-0 mx-0 mt-2">
-                    <a href="https://forecast.weather.gov/MapClick.php?w0=t&w3=sfcwind&w3u=1&w4=sky&w5=pop&w7=rain&w9=snow&w13u=0&w16u=1&w17u=1&AheadHour=0&Submit=Submit&FcstType=graphical&textField1=40.7862&textField2=-111.9801&site=all&unit=0&dd=&bw=" target="_blank">
-                        <img class="border border-dark" src="https://forecast.weather.gov/meteograms/Plotter.php?lat=40.7862&lon=-111.9801&wfo=SLC&zcode=UTZ003&gset=30&gdiff=10&unit=0&tinfo=MY7&ahour=0&pcmd=10001110101000000000000000000000000000000000000000000000000&lg=en&indu=1!1!1!&dd=&bw=&hrspan=48&pqpfhr=6&psnwhr=6" width="100%">
+                    <a href="https://forecast.weather.gov/Map" id="KSLC-Forecast-URL" target="_blank">
+                        <img class="border border-dark" src="https://forecast.weather.gov" id="KSLC-Forecast-Image" width="100%">
                     </a>
                 </div>
             </div>    
@@ -251,9 +252,10 @@
                     <div class="col-auto bg-black align-self-center display-4 text-warning clickable" id="UTOLY-Forecast-toggle" onclick="toggleWindChart('UTOLY-Forecast')">fcst</div>
                     <div class="bg-dark col mx-0 row rounded-4">
                         <div class="col-auto">
-                            <div class="row display-3">Olympus Cove</div>
+                            <div class="row display-3" id="UTOLY-Name"></div>
                             <div class="col-auto row">
-                                <div class="col-auto fs-3 align-self-center text-info">4,972 ft&nbsp;&nbsp;&nbsp;</div>
+                                <div class="col-auto fs-3 align-self-center text-info" id="UTOLY-Elevation"></div>
+                                <div class="col-auto fs-3 align-self-center text-info"></div>
                                 <div class="col-auto fs-1 align-self-center justify-content-end" id="UTOLY-time"></div>
                             </div>
                         </div>
@@ -269,8 +271,8 @@
             <!-- HOURLY FORECAST EXPANSION -->
             <div class="collapse" id="UTOLY-Forecast">
                 <div class="container-fluid p-0 mx-0 mt-2">
-                    <a href="https://forecast.weather.gov/MapClick.php?w0=t&w3=sfcwind&w3u=1&w4=sky&w5=pop&w7=rain&w9=snow&w13u=0&w16u=1&w17u=1&AheadHour=0&Submit=Submit&FcstType=graphical&textField1=40.681&textField2=-111.7982&site=all&unit=0&dd=&bw=" target="_blank">
-                        <img class="border border-dark" src="https://forecast.weather.gov/meteograms/Plotter.php?lat=40.681&lon=-111.7982&wfo=SLC&zcode=UTZ003&gset=30&gdiff=10&unit=0&tinfo=MY7&ahour=0&pcmd=10001110101000000000000000000000000000000000000000000000000&lg=en&indu=1!1!1!&dd=&bw=&hrspan=48&pqpfhr=6&psnwhr=6" width="100%">
+                    <a href="https://forecast.weather.gov/Map" id="UTOLY-Forecast-URL" target="_blank">
+                        <img class="border border-dark" src="https://forecast.weather.gov" id="UTOLY-Forecast-Image" width="100%">
                     </a>
                 </div>
             </div>    
@@ -386,9 +388,10 @@
                     <div class="col-auto bg-black align-self-center display-4 text-warning clickable" id="KU42-Forecast-toggle" onclick="toggleWindChart('KU42-Forecast')">fcst</div>
                     <div class="bg-dark col mx-0 row rounded-4">
                         <div class="col-auto">
-                            <div class="row display-3">Airport 2</div>
+                            <div class="row display-3" id="KU42-Name"></div>
                             <div class="col-auto row">
-                                <div class="col-auto fs-3 align-self-center text-info">4,596 ft&nbsp;&nbsp;&nbsp;</div>
+                                <div class="col-auto fs-3 align-self-center text-info" id="KU42-Elevation"></div>
+                                <div class="col-auto fs-3 align-self-center text-info"></div>
                                 <div class="col-auto fs-1 align-self-center justify-content-end" id="KU42-time"></div>
                             </div>
                         </div>
@@ -404,11 +407,11 @@
             <!-- HOURLY FORECAST EXPANSION -->
             <div class="collapse" id="KU42-Forecast">
                 <div class="container-fluid p-0 mx-0 mt-2">
-                    <a href="https://forecast.weather.gov/MapClick.php?w0=t&w3=sfcwind&w3u=1&w4=sky&w5=pop&w7=rain&w9=snow&w13u=0&w16u=1&w17u=1&AheadHour=0&Submit=Submit&FcstType=graphical&textField1=40.6232&textField2=-111.994&site=all&unit=0&dd=&bw=" target="_blank">
-                        <img class="border border-dark" src="https://forecast.weather.gov/meteograms/Plotter.php?lat=40.6232&lon=-111.994&wfo=SLC&zcode=UTZ003&gset=30&gdiff=10&unit=0&tinfo=MY7&ahour=0&pcmd=10001110101000000000000000000000000000000000000000000000000&lg=en&indu=1!1!1!&dd=&bw=&hrspan=48&pqpfhr=6&psnwhr=6" width="100%">
+                    <a href="https://forecast.weather.gov/Map" id="KU42-Forecast-URL" target="_blank">
+                        <img class="border border-dark" src="https://forecast.weather.gov" id="KU42-Forecast-Image" width="100%">
                     </a>
                 </div>
-            </div>
+            </div>    
             <!-- WIND HISTORY EXPANSION -->
             <a href="https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=KU42&table=1&banner=off" target="_blank">
                 <div class="collapse" id="KU42">
@@ -485,30 +488,6 @@
                             <div><div class="display-4" id="KU42-wdir-8"></div></div>
                             <div class="fs-4" id="KU42-time-8"></div>
                         </div>
-                        <div class="col ps-0 pe-1">
-                            <div class="pink h2" id="KU42-gust-9"></div>
-                            <div class="bg-danger" id="KU42-gbar-9"></div>
-                            <div id="KU42-wbar-9"></div>
-                            <div class="fs-1 fw-bold bg-secondary" id="KU42-wind-9"></div>
-                            <div><div class="display-4" id="KU42-wdir-9"></div></div>
-                            <div class="fs-4" id="KU42-time-9"></div>
-                        </div>
-                        <div class="col ps-0 pe-1">
-                            <div class="pink h2" id="KU42-gust-10"></div>
-                            <div class="bg-danger" id="KU42-gbar-10"></div>
-                            <div id="KU42-wbar-10"></div>
-                            <div class="fs-1 fw-bold bg-secondary" id="KU42-wind-10"></div>
-                            <div><div class="display-4" id="KU42-wdir-10"></div></div>
-                            <div class="fs-4" id="KU42-time-10"></div>
-                        </div>
-                        <div class="col ps-0 pe-0">
-                            <div class="pink h2" id="KU42-gust-11"></div>
-                            <div class="bg-danger" id="KU42-gbar-11"></div>
-                            <div id="KU42-wbar-11"></div>
-                            <div class="fs-1 fw-bold bg-secondary" id="KU42-wind-11"></div>
-                            <div><div class="display-4" id="KU42-wdir-11"></div></div>
-                            <div class="fs-4" id="KU42-time-11"></div>
-                        </div>
                     </div>
                     <a href="http://online.saiawos.com/KU42/ios/cdisplay.html" target="_blank">
                         <div class="row">
@@ -526,9 +505,10 @@
                     <div class="col-auto bg-black align-self-center display-4 text-warning clickable" id="HF012-Forecast-toggle" onclick="toggleWindChart('HF012-Forecast')">fcst</div>
                     <div class="bg-dark col mx-0 row rounded-4">
                         <div class="col-auto">
-                            <div class="row display-3">POTM North</div>
+                            <div class="row display-3" id='HF012-Name'></div>
                             <div class="col-auto row">
-                                <div class="col-auto fs-3 align-self-center text-info">6,194 ft&nbsp;&nbsp;&nbsp;</div>
+                                <div class="col-auto fs-3 align-self-center text-info" id='HF012-Elevation'></div>
+                                <div class="col-auto fs-3 align-self-center text-info"></div>
                                 <div class="col-auto fs-1 align-self-center justify-content-end" id="HF012-time"></div>
                             </div>
                         </div>
@@ -544,8 +524,8 @@
             <!-- HOURLY FORECAST EXPANSION -->
             <div class="collapse" id="HF012-Forecast">
                 <div class="container-fluid p-0 mx-0 mt-2">
-                    <a href="https://forecast.weather.gov/MapClick.php?w0=t&w3=sfcwind&w3u=1&w4=sky&w5=pop&w7=rain&w9=snow&w13u=0&w16u=1&w17u=1&AheadHour=0&Submit=Submit&FcstType=graphical&textField1=40.4739&textField2=-111.8795&site=all&unit=0&dd=&bw=" target="_blank">
-                        <img class="border border-dark" src="https://forecast.weather.gov/meteograms/Plotter.php?lat=40.4739&lon=-111.8795&wfo=SLC&zcode=UTZ003&gset=30&gdiff=10&unit=0&tinfo=MY7&ahour=0&pcmd=10001110101000000000000000000000000000000000000000000000000&lg=en&indu=1!1!1!&dd=&bw=&hrspan=48&pqpfhr=6&psnwhr=6" width="100%">
+                    <a href="https://forecast.weather.gov/Map" id="HF012-Forecast-URL" target="_blank">
+                        <img class="border border-dark" src="https://forecast.weather.gov" id="HF012-Forecast-Image" width="100%">
                     </a>
                 </div>
             </div>
@@ -625,30 +605,6 @@
                             <div><div class="display-4" id="HF012-wdir-8"></div></div>
                             <div class="fs-4" id="HF012-time-8"></div>
                         </div>
-                        <div class="col ps-0 pe-1">
-                            <div class="pink h2" id="HF012-gust-9"></div>
-                            <div class="bg-danger" id="HF012-gbar-9"></div>
-                            <div id="HF012-wbar-9"></div>
-                            <div class="fs-1 fw-bold bg-secondary" id="HF012-wind-9"></div>
-                            <div><div class="display-4" id="HF012-wdir-9"></div></div>
-                            <div class="fs-4" id="HF012-time-9"></div>
-                        </div>
-                        <div class="col ps-0 pe-1">
-                            <div class="pink h2" id="HF012-gust-10"></div>
-                            <div class="bg-danger" id="HF012-gbar-10"></div>
-                            <div id="HF012-wbar-10"></div>
-                            <div class="fs-1 fw-bold bg-secondary" id="HF012-wind-10"></div>
-                            <div><div class="display-4" id="HF012-wdir-10"></div></div>
-                            <div class="fs-4" id="HF012-time-10"></div>
-                        </div>
-                        <div class="col ps-0 pe-0">
-                            <div class="pink h2" id="HF012-gust-11"></div>
-                            <div class="bg-danger" id="HF012-gbar-11"></div>
-                            <div id="HF012-wbar-11"></div>
-                            <div class="fs-1 fw-bold bg-secondary" id="HF012-wind-11"></div>
-                            <div><div class="display-4" id="HF012-wdir-11"></div></div>
-                            <div class="fs-4" id="HF012-time-11"></div>
-                        </div>
                     </div>
                     <a href="https://holfuy.com/en/weather/1414?fbclid=IwAR2Z0PlNws0582bSXEwgCvozw1wB33FS7Rp_H6RgoPuR4JXHbbWka6Qecgg" target="_blank">
                         <div class="row">
@@ -666,9 +622,10 @@
                     <div class="col-auto bg-black align-self-center display-4 text-warning clickable" id="FPS-Forecast-toggle" onclick="toggleWindChart('FPS-Forecast')">fcst</div>
                     <div class="bg-dark col mx-0 row rounded-4">
                         <div class="col-auto">
-                            <div class="row display-3">POTM South</div>
+                            <div class="row display-3" id="FPS-Name"></div>
                             <div class="col-auto row">
-                                <div class="col-auto fs-3 align-self-center text-info">5,202 ft&nbsp;&nbsp;&nbsp;</div>
+                                <div class="col-auto fs-3 align-self-center text-info" id="FPS-Elevation"></div>
+                                <div class="col-auto fs-3 align-self-center text-info"></div>
                                 <div class="col-auto fs-1 align-self-center justify-content-end" id="FPS-time"></div>
                             </div>
                         </div>
@@ -684,8 +641,8 @@
             <!-- HOURLY FORECAST EXPANSION -->
             <div class="collapse" id="FPS-Forecast">
                 <div class="container-fluid p-0 mx-0 mt-2">
-                    <a href="https://forecast.weather.gov/MapClick.php?w0=t&w3=sfcwind&w3u=1&w4=sky&w5=pop&w7=rain&w9=snow&w13u=0&w16u=1&w17u=1&AheadHour=0&Submit=Submit&FcstType=graphical&textField1=40.4576&textField2=-111.9019&site=all&unit=0&dd=&bw=" target="_blank">
-                        <img class="border border-dark" src="https://forecast.weather.gov/meteograms/Plotter.php?lat=40.4576&lon=-111.9019&wfo=SLC&zcode=UTZ003&gset=30&gdiff=10&unit=0&tinfo=MY7&ahour=0&pcmd=10001110101000000000000000000000000000000000000000000000000&lg=en&indu=1!1!1!&dd=&bw=&hrspan=48&pqpfhr=6&psnwhr=6" width="100%">
+                    <a href="https://forecast.weather.gov/Map" id="FPS-Forecast-URL" target="_blank">
+                        <img class="border border-dark" src="https://forecast.weather.gov" id="FPS-Forecast-Image" width="100%">
                     </a>
                 </div>
             </div>
@@ -801,9 +758,10 @@
                     <div class="col-auto bg-black align-self-center display-4 text-warning clickable" id="REY-Forecast-toggle" onclick="toggleWindChart('REY-Forecast')">fcst</div>
                     <div class="bg-dark col mx-0 row rounded-4">
                         <div class="col-auto">
-                            <div class="row display-3">Reynolds Peak</div>
+                            <div class="row display-3" id="REY-Name"></div>
                             <div class="col-auto row">
-                                <div class="col-auto fs-3 align-self-center text-info">9,400 ft&nbsp;&nbsp;&nbsp;</div>
+                                <div class="col-auto fs-3 align-self-center text-info" id="REY-Elevation"></div>
+                                <div class="col-auto fs-3 align-self-center text-info"></div>
                                 <div class="col-auto fs-1 align-self-center justify-content-end" id="REY-time"></div>
                             </div>
                         </div>
@@ -819,8 +777,8 @@
             <!-- HOURLY FORECAST EXPANSION -->
             <div class="collapse" id="REY-Forecast">
                 <div class="container-fluid p-0 mx-0 mt-2">
-                    <a href="https://forecast.weather.gov/MapClick.php?w0=t&w3=sfcwind&w3u=1&w4=sky&w5=pop&w7=rain&w9=snow&w13u=0&w16u=1&w17u=1&AheadHour=0&Submit=Submit&FcstType=graphical&textField1=40.6521&textField2=-111.6456&site=all&unit=0&dd=&bw=" target="_blank">
-                        <img class="border border-dark" src="https://forecast.weather.gov/meteograms/Plotter.php?lat=40.6621&lon=-111.6456&wfo=SLC&zcode=UTZ003&gset=30&gdiff=10&unit=0&tinfo=MY7&ahour=0&pcmd=10001110101000000000000000000000000000000000000000000000000&lg=en&indu=1!1!1!&dd=&bw=&hrspan=48&pqpfhr=6&psnwhr=6" width="100%">
+                    <a href="https://forecast.weather.gov/Map" id="REY-Forecast-URL" target="_blank">
+                        <img class="border border-dark" src="https://forecast.weather.gov" id="REY-Forecast-Image" width="100%">
                     </a>
                 </div>
             </div>
@@ -876,6 +834,54 @@
                             <div><div class="display-4" id="REY-wdir-5"></div></div>
                             <div class="fs-4" id="REY-time-5"></div>
                         </div>
+                        <div class="col px-1">
+                            <div class="pink h2" id="REY-gust-6"></div>
+                            <div class="bg-danger" id="REY-gbar-6"></div>
+                            <div id="REY-wbar-6"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="REY-wind-6"></div>
+                            <div><div class="display-4" id="REY-wdir-6"></div></div>
+                            <div class="fs-4" id="REY-time-6"></div>
+                        </div>
+                        <div class="col px-1">
+                            <div class="pink h2" id="REY-gust-7"></div>
+                            <div class="bg-danger" id="REY-gbar-7"></div>
+                            <div id="REY-wbar-7"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="REY-wind-7"></div>
+                            <div><div class="display-4" id="REY-wdir-7"></div></div>
+                            <div class="fs-4" id="REY-time-7"></div>
+                        </div>
+                        <div class="col px-1">
+                            <div class="pink h2" id="REY-gust-8"></div>
+                            <div class="bg-danger" id="REY-gbar-8"></div>
+                            <div id="REY-wbar-8"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="REY-wind-8"></div>
+                            <div><div class="display-4" id="REY-wdir-8"></div></div>
+                            <div class="fs-4" id="REY-time-8"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="REY-gust-9"></div>
+                            <div class="bg-danger" id="REY-gbar-9"></div>
+                            <div id="REY-wbar-9"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="REY-wind-9"></div>
+                            <div><div class="display-4" id="REY-wdir-9"></div></div>
+                            <div class="fs-4" id="REY-time-9"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="REY-gust-10"></div>
+                            <div class="bg-danger" id="REY-gbar-10"></div>
+                            <div id="REY-wbar-10"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="REY-wind-10"></div>
+                            <div><div class="display-4" id="REY-wdir-10"></div></div>
+                            <div class="fs-4" id="REY-time-10"></div>
+                        </div>
+                        <div class="col ps-0 pe-0">
+                            <div class="pink h2" id="REY-gust-11"></div>
+                            <div class="bg-danger" id="REY-gbar-11"></div>
+                            <div id="REY-wbar-11"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="REY-wind-11"></div>
+                            <div><div class="display-4" id="REY-wdir-11"></div></div>
+                            <div class="fs-4" id="REY-time-11"></div>
+                        </div>
                     </div>
                 </div>
             </a>
@@ -888,9 +894,10 @@
                     <div class="col-auto bg-black align-self-center display-4 text-warning clickable" id="IFF-Forecast-toggle" onclick="toggleWindChart('IFF-Forecast')">fcst</div>
                     <div class="bg-dark col mx-0 row rounded-4">
                         <div class="col-auto">
-                            <div class="row display-3">Cardiff Peak</div>
+                            <div class="row display-3" id="IFF-Name"></div>
                             <div class="col-auto row">
-                                <div class="col-auto fs-3 align-self-center text-info">10,059 ft&nbsp;&nbsp;&nbsp;</div>
+                                <div class="col-auto fs-3 align-self-center text-info" id="IFF-Elevation"></div>
+                                <div class="col-auto fs-3 align-self-center text-info"></div>
                                 <div class="col-auto fs-1 align-self-center justify-content-end" id="IFF-time"></div>
                             </div>
                         </div>
@@ -906,8 +913,8 @@
             <!-- HOURLY FORECAST EXPANSION -->
             <div class="collapse" id="IFF-Forecast">
                 <div class="container-fluid p-0 mx-0 mt-2">
-                    <a href="https://forecast.weather.gov/MapClick.php?w0=t&w3=sfcwind&w3u=1&w4=sky&w5=pop&w7=rain&w9=snow&w13u=0&w16u=1&w17u=1&AheadHour=0&Submit=Submit&FcstType=graphical&textField1=40.5952&textField2=-111.6526&site=all&unit=0&dd=&bw=" target="_blank">
-                        <img class="border border-dark" src="https://forecast.weather.gov/meteograms/Plotter.php?lat=40.5952&lon=-111.6526&wfo=SLC&zcode=UTZ003&gset=30&gdiff=10&unit=0&tinfo=MY7&ahour=0&pcmd=10001110101000000000000000000000000000000000000000000000000&lg=en&indu=1!1!1!&dd=&bw=&hrspan=48&pqpfhr=6&psnwhr=6" width="100%">
+                    <a href="https://forecast.weather.gov/Map" id="IFF-Forecast-URL" target="_blank">
+                        <img class="border border-dark" src="https://forecast.weather.gov" id="IFF-Forecast-Image" width="100%">
                     </a>
                 </div>
             </div>
@@ -963,6 +970,54 @@
                             <div><div class="display-4" id="IFF-wdir-5"></div></div>
                             <div class="fs-4" id="IFF-time-5"></div>
                         </div>
+                        <div class="col px-1">
+                            <div class="pink h2" id="IFF-gust-6"></div>
+                            <div class="bg-danger" id="IFF-gbar-6"></div>
+                            <div id="IFF-wbar-6"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="IFF-wind-6"></div>
+                            <div><div class="display-4" id="IFF-wdir-6"></div></div>
+                            <div class="fs-4" id="IFF-time-6"></div>
+                        </div>
+                        <div class="col px-1">
+                            <div class="pink h2" id="IFF-gust-7"></div>
+                            <div class="bg-danger" id="IFF-gbar-7"></div>
+                            <div id="IFF-wbar-7"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="IFF-wind-7"></div>
+                            <div><div class="display-4" id="IFF-wdir-7"></div></div>
+                            <div class="fs-4" id="IFF-time-7"></div>
+                        </div>
+                        <div class="col px-1">
+                            <div class="pink h2" id="IFF-gust-8"></div>
+                            <div class="bg-danger" id="IFF-gbar-8"></div>
+                            <div id="IFF-wbar-8"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="IFF-wind-8"></div>
+                            <div><div class="display-4" id="IFF-wdir-8"></div></div>
+                            <div class="fs-4" id="IFF-time-8"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="IFF-gust-9"></div>
+                            <div class="bg-danger" id="IFF-gbar-9"></div>
+                            <div id="IFF-wbar-9"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="IFF-wind-9"></div>
+                            <div><div class="display-4" id="IFF-wdir-9"></div></div>
+                            <div class="fs-4" id="IFF-time-9"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="IFF-gust-10"></div>
+                            <div class="bg-danger" id="IFF-gbar-10"></div>
+                            <div id="IFF-wbar-10"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="IFF-wind-10"></div>
+                            <div><div class="display-4" id="IFF-wdir-10"></div></div>
+                            <div class="fs-4" id="IFF-time-10"></div>
+                        </div>
+                        <div class="col ps-0 pe-0">
+                            <div class="pink h2" id="IFF-gust-11"></div>
+                            <div class="bg-danger" id="IFF-gbar-11"></div>
+                            <div id="IFF-wbar-11"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="IFF-wind-11"></div>
+                            <div><div class="display-4" id="IFF-wdir-11"></div></div>
+                            <div class="fs-4" id="IFF-time-11"></div>
+                        </div>
                     </div>
                 </div>
             </a>
@@ -975,9 +1030,10 @@
                     <div class="col-auto bg-black align-self-center display-4 text-warning clickable" id="AMB-Forecast-toggle" onclick="toggleWindChart('AMB-Forecast')">fcst</div>
                     <div class="bg-dark col mx-0 row rounded-4">
                         <div class="col-auto">
-                            <div class="row display-3">Alta Mt Baldy</div>
+                            <div class="row display-3" id="AMB-Name"></div>
                             <div class="col-auto row">
-                                <div class="col-auto fs-3 align-self-center text-info">11,066 ft&nbsp;&nbsp;&nbsp;</div>
+                                <div class="col-auto fs-3 align-self-center text-info" id="AMB-Elevation"></div>
+                                <div class="col-auto fs-3 align-self-center text-info"></div>
                                 <div class="col-auto fs-1 align-self-center justify-content-end" id="AMB-time"></div>
                             </div>
                         </div>
@@ -993,8 +1049,8 @@
             <!-- HOURLY FORECAST EXPANSION -->
             <div class="collapse" id="AMB-Forecast">
                 <div class="container-fluid p-0 mx-0 mt-2">
-                    <a href="https://forecast.weather.gov/MapClick.php?w0=t&w3=sfcwind&w3u=1&w4=sky&w5=pop&w7=rain&w9=snow&w13u=0&w16u=1&w17u=1&AheadHour=0&Submit=Submit&FcstType=graphical&textField1=40.5682&textField2=-111.6378&site=all&unit=0&dd=&bw=" target="_blank">
-                        <img class="border border-dark" src="https://forecast.weather.gov/meteograms/Plotter.php?lat=40.5682&lon=-111.6378&wfo=SLC&zcode=UTZ003&gset=30&gdiff=10&unit=0&tinfo=MY7&ahour=0&pcmd=10001110101000000000000000000000000000000000000000000000000&lg=en&indu=1!1!1!&dd=&bw=&hrspan=48&pqpfhr=6&psnwhr=6" width="100%">
+                    <a href="https://forecast.weather.gov/Map" id="AMB-Forecast-URL" target="_blank">
+                        <img class="border border-dark" src="https://forecast.weather.gov" id="AMB-Forecast-Image" width="100%">
                     </a>
                 </div>
             </div>
@@ -1042,21 +1098,13 @@
                             <div><div class="display-4" id="AMB-wdir-4"></div></div>
                             <div class="fs-4" id="AMB-time-4"></div>
                         </div>
-                        <div class="col px-1">
-                            <div class="pink h2" id="AMB-gust-5"></div>
-                            <div class="bg-danger" id="AMB-gbar-5"></div>
-                            <div id="AMB-wbar-5"></div>
-                            <div class="fs-1 fw-bold bg-secondary" id="AMB-wind-5"></div>
-                            <div><div class="display-4" id="AMB-wdir-5"></div></div>
-                            <div class="fs-4" id="AMB-time-5"></div>
-                        </div>
                     </div>
                 </div>
             </a>
         </div>
 
-        <!-- DAVIS STATION READINGS -->
-        <div class="container-fluid display-3 mt-2">Davis County</div>
+        <!-- NORTHERN WASATCH STATION READINGS -->
+        <div class="container-fluid display-3 mt-2">Northern Wasatch</div>
 
         <!-- WIND HILL AIR FORCE BASE (KHIF) -->
         <div class="container-fluid mt-4">
@@ -1065,9 +1113,10 @@
                     <div class="col-auto bg-black align-self-center display-4 text-warning clickable" id="KHIF-Forecast-toggle" onclick="toggleWindChart('KHIF-Forecast')">fcst</div>
                     <div class="col row bg-dark mx-0 rounded-4">
                         <div class="col-auto">
-                            <div class="row display-3">Hill AFB</div>
+                            <div class="row display-3" id="KHIF-Name"></div>
                             <div class="col-auto row">
-                                <div class="col-auto fs-3 align-self-center text-info">4,783 ft&nbsp;&nbsp;&nbsp;</div>
+                                <div class="col-auto fs-3 align-self-center text-info" id="KHIF-Elevation"></div>
+                                <div class="col-auto fs-3 align-self-center text-info"></div>
                                 <div class="col-auto fs-1 align-self-center justify-content-end" id="KHIF-time"></div>
                             </div>
                         </div>
@@ -1089,11 +1138,11 @@
             <!-- HOURLY FORECAST EXPANSION -->
             <div class="collapse" id="KHIF-Forecast">
                 <div class="container-fluid p-0 mx-0 mt-2">
-                    <a href="https://forecast.weather.gov/MapClick.php?w0=t&w3=sfcwind&w3u=1&w4=sky&w5=pop&w7=rain&w9=snow&w13u=0&w16u=1&w17u=1&AheadHour=0&Submit=Submit&FcstType=graphical&textField1=41.11112&textField2=-111.96229&site=all&unit=0&dd=&bw=" target="_blank">
-                        <img class="border border-dark" src="https://forecast.weather.gov/meteograms/Plotter.php?lat=41.11112&lon=-111.96229&wfo=SLC&zcode=UTZ003&gset=30&gdiff=10&unit=0&tinfo=MY7&ahour=0&pcmd=10001110101000000000000000000000000000000000000000000000000&lg=en&indu=1!1!1!&dd=&bw=&hrspan=48&pqpfhr=6&psnwhr=6" width="100%">
+                    <a href="https://forecast.weather.gov/Map" id="KHIF-Forecast-URL" target="_blank">
+                        <img class="border border-dark" src="https://forecast.weather.gov" id="KHIF-Forecast-Image" width="100%">
                     </a>
                 </div>
-            </div>    
+            </div>
             <!-- KHIF READINGS EXPANSION -->
             <a href="https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=KHIF&table=1&banner=off" target="_blank">
                 <div class="collapse" id="KHIF">
@@ -1154,6 +1203,22 @@
                             <div><div class="display-4" id="KHIF-wdir-6"></div></div>
                             <div class="fs-4" id="KHIF-time-6"></div>
                         </div>
+                        <div class="col px-1">
+                            <div class="pink h2" id="KHIF-gust-7"></div>
+                            <div class="bg-danger" id="KHIF-gbar-7"></div>
+                            <div id="KHIF-wbar-7"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="KHIF-wind-7"></div>
+                            <div><div class="display-4" id="KHIF-wdir-7"></div></div>
+                            <div class="fs-4" id="KHIF-time-7"></div>
+                        </div>
+                        <div class="col px-1">
+                            <div class="pink h2" id="KHIF-gust-8"></div>
+                            <div class="bg-danger" id="KHIF-gbar-8"></div>
+                            <div id="KHIF-wbar-8"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="KHIF-wind-8"></div>
+                            <div><div class="display-4" id="KHIF-wdir-8"></div></div>
+                            <div class="fs-4" id="KHIF-time-8"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1212,94 +1277,7 @@
                 <div class="fs-1 mt-2 text-info text-decoration-underline">Explanation of pressure zones</div>
             </a>    
         </div>
-
-        <!-- BOUNTIFUL BENCH (BBN)-->
-        <div class="container-fluid mt-4">
-            <div id="BBN-main">
-                <div class="row rounded mt-1">
-                    <div class="col-auto bg-black align-self-center display-4 text-warning clickable" id="BBN-Forecast-toggle" onclick="toggleWindChart('BBN-Forecast')">fcst</div>
-                    <div class="bg-dark col mx-0 row rounded-4">
-                        <div class="col-auto">
-                            <div class="row display-3">Bountiful Bench</div>
-                            <div class="col-auto row">
-                                <div class="col-auto fs-3 align-self-center text-info">4,950 ft&nbsp;&nbsp;&nbsp;</div>
-                                <div class="col-auto fs-1 align-self-center justify-content-end" id="BBN-time"></div>
-                            </div>
-                        </div>
-                        <div class="col align-self-end row justify-content-end">
-                            <div class="col-auto display-1" id="BBN-wdir"></div>
-                            <div class="col-auto display-1 align-self-center" id="BBN-wind">&nbsp;</div>
-                            <div class="collapse col-auto display-4 align-self-center pink" id="BBN-gust"></div>
-                        </div>
-                    </div>
-                    <div class="col-auto bg-black align-self-center display-2 text-warning clickable" id="BBN-toggle" onclick="toggleWindChart('BBN')">+</div>
-                </div>
-            </div>
-            <!-- HOURLY FORECAST EXPANSION -->
-            <div class="collapse" id="BBN-Forecast">
-                <div class="container-fluid p-0 mx-0 mt-2">
-                    <a href="https://forecast.weather.gov/MapClick.php?w0=t&w3=sfcwind&w3u=1&w4=sky&w5=pop&w7=rain&w9=snow&w13u=0&w16u=1&w17u=1&AheadHour=0&Submit=Submit&FcstType=graphical&textField1=40.89089&textField2=-111.850578&site=all&unit=0&dd=&bw=" target="_blank">
-                        <img class="border border-dark" src="https://forecast.weather.gov/meteograms/Plotter.php?lat=40.89089&lon=-111.850578&wfo=SLC&zcode=UTZ003&gset=30&gdiff=10&unit=0&tinfo=MY7&ahour=0&pcmd=10001110101000000000000000000000000000000000000000000000000&lg=en&indu=1!1!1!&dd=&bw=&hrspan=48&pqpfhr=6&psnwhr=6" width="100%">
-                    </a>
-                </div>
-            </div>
-            <!-- WIND HISTORY EXPANSION -->
-            <a href="https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=BBN&table=1&banner=off" target="_blank">
-                <div class="collapse" id="BBN">
-                    <div class="row align-items-end bg-dark rounded-4 mx-0 mt-2">
-                        <div class="col ps-0 pe-1">
-                            <div class="pink h2" id="BBN-gust-0"></div>
-                            <div class="bg-danger" id="BBN-gbar-0"></div>
-                            <div id="BBN-wbar-0"></div>
-                            <div class="fs-1 fw-bold bg-secondary" id="BBN-wind-0"></div>
-                            <div><div class="display-4" id="BBN-wdir-0"></div></div>
-                            <div class="fs-4" id="BBN-time-0"></div>
-                        </div>
-                        <div class="col ps-0 pe-1">
-                            <div class="pink h2" id="BBN-gust-1"></div>
-                            <div class="bg-danger" id="BBN-gbar-1"></div>
-                            <div id="BBN-wbar-1"></div>
-                            <div class="fs-1 fw-bold bg-secondary" id="BBN-wind-1"></div>
-                            <div><div class="display-4" id="BBN-wdir-1"></div></div>
-                            <div class="fs-4" id="BBN-time-1"></div>
-                        </div>
-                        <div class="col ps-0 pe-1">
-                            <div class="pink h2" id="BBN-gust-2"></div>
-                            <div class="bg-danger" id="BBN-gbar-2"></div>
-                            <div id="BBN-wbar-2"></div>
-                            <div class="fs-1 fw-bold bg-secondary" id="BBN-wind-2"></div>
-                            <div><div class="display-4" id="BBN-wdir-2"></div></div>
-                            <div class="fs-4" id="BBN-time-2"></div>
-                        </div>
-                        <div class="col ps-0 pe-1">
-                            <div class="pink h2" id="BBN-gust-3"></div>
-                            <div class="bg-danger" id="BBN-gbar-3"></div>
-                            <div id="BBN-wbar-3"></div>
-                            <div class="fs-1 fw-bold bg-secondary" id="BBN-wind-3"></div>
-                            <div><div class="display-4" id="BBN-wdir-3"></div></div>
-                            <div class="fs-4" id="BBN-time-3"></div>
-                        </div>
-                        <div class="col ps-0 pe-1">
-                            <div class="pink h2" id="BBN-gust-4"></div>
-                            <div class="bg-danger" id="BBN-gbar-4"></div>
-                            <div id="BBN-wbar-4"></div>
-                            <div class="fs-1 fw-bold bg-secondary" id="BBN-wind-4"></div>
-                            <div><div class="display-4" id="BBN-wdir-4"></div></div>
-                            <div class="fs-4" id="BBN-time-4"></div>
-                        </div>
-                        <div class="col ps-0 pe-1">
-                            <div class="pink h2" id="BBN-gust-5"></div>
-                            <div class="bg-danger" id="BBN-gbar-5"></div>
-                            <div id="BBN-wbar-5"></div>
-                            <div class="fs-1 fw-bold bg-secondary" id="BBN-wind-5"></div>
-                            <div><div class="display-4" id="BBN-wdir-5"></div></div>
-                            <div class="fs-4" id="BBN-time-5"></div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-
+        
         <!-- WIND CENTERVILLE (CEN)-->
         <div class="container-fluid mt-4">
             <div id="CEN-main">
@@ -1307,9 +1285,10 @@
                     <div class="col-auto bg-black align-self-center display-4 text-warning clickable" id="CEN-Forecast-toggle" onclick="toggleWindChart('CEN-Forecast')">fcst</div>
                     <div class="bg-dark col mx-0 row rounded-4">
                         <div class="col-auto">
-                            <div class="row display-3">Centerville</div>
+                            <div class="row display-3" id="CEN-Name"></div>
                             <div class="col-auto row">
-                                <div class="col-auto fs-3 align-self-center text-info">4,231 ft&nbsp;&nbsp;&nbsp;</div>
+                                <div class="col-auto fs-3 align-self-center text-info" id="CEN-Elevation"></div>
+                                <div class="col-auto fs-3 align-self-center text-info"></div>
                                 <div class="col-auto fs-1 align-self-center justify-content-end" id="CEN-time"></div>
                             </div>
                         </div>
@@ -1325,8 +1304,8 @@
             <!-- HOURLY FORECAST EXPANSION -->
             <div class="collapse" id="CEN-Forecast">
                 <div class="container-fluid p-0 mx-0 mt-2">
-                    <a href="https://forecast.weather.gov/MapClick.php?w0=t&w3=sfcwind&w3u=1&w4=sky&w5=pop&w7=rain&w9=snow&w13u=0&w16u=1&w17u=1&AheadHour=0&Submit=Submit&FcstType=graphical&textField1=40.9517&textField2=-111.8888&site=all&unit=0&dd=&bw=" target="_blank">
-                        <img class="border border-dark" src="https://forecast.weather.gov/meteograms/Plotter.php?lat=40.9517&lon=-111.8888&wfo=SLC&zcode=UTZ003&gset=30&gdiff=10&unit=0&tinfo=MY7&ahour=0&pcmd=10001110101000000000000000000000000000000000000000000000000&lg=en&indu=1!1!1!&dd=&bw=&hrspan=48&pqpfhr=6&psnwhr=6" width="100%">
+                    <a href="https://forecast.weather.gov/Map" id="CEN-Forecast-URL" target="_blank">
+                        <img class="border border-dark" src="https://forecast.weather.gov" id="CEN-Forecast-Image" width="100%">
                     </a>
                 </div>
             </div>
@@ -1435,95 +1414,256 @@
             </a>
         </div>
 
-        <!-- UTAH COUNTY STATION READINGS -->
-        <div class="container-fluid display-3 mt-2">Utah County</div>
-
-        <!-- WIND SUNDANCE RESORT ARROWHEAD PEAK (SND)-->
+        <!-- BOUNTIFUL BENCH (BBN)-->
         <div class="container-fluid mt-4">
-            <div id="SND-main">
+            <div id="BBN-main">
                 <div class="row rounded mt-1">
-                    <div class="col-auto bg-black align-self-center display-4 text-warning clickable" id="SND-Forecast-toggle" onclick="toggleWindChart('SND-Forecast')">fcst</div>
+                    <div class="col-auto bg-black align-self-center display-4 text-warning clickable" id="BBN-Forecast-toggle" onclick="toggleWindChart('BBN-Forecast')">fcst</div>
                     <div class="bg-dark col mx-0 row rounded-4">
                         <div class="col-auto">
-                            <div class="row display-3">Sundance</div>
+                            <div class="row display-3" id="BBN-Name"></div>
                             <div class="col-auto row">
-                                <div class="col-auto fs-3 align-self-center text-info">8,250 ft&nbsp;&nbsp;&nbsp;</div>
-                                <div class="col-auto fs-1 align-self-center justify-content-end" id="SND-time"></div>
+                                <div class="col-auto fs-3 align-self-center text-info" id="BBN-Elevation"></div>
+                                <div class="col-auto fs-3 align-self-center text-info"></div>
+                                <div class="col-auto fs-1 align-self-center justify-content-end" id="BBN-time"></div>
                             </div>
                         </div>
                         <div class="col align-self-end row justify-content-end">
-                            <div class="col-auto display-1" id="SND-wdir"></div>
-                            <div class="col-auto display-1 align-self-center" id="SND-wind">&nbsp;</div>
-                            <div class="collapse col-auto display-4 align-self-center pink" id="SND-gust"></div>
+                            <div class="col-auto display-1" id="BBN-wdir"></div>
+                            <div class="col-auto display-1 align-self-center" id="BBN-wind">&nbsp;</div>
+                            <div class="collapse col-auto display-4 align-self-center pink" id="BBN-gust"></div>
                         </div>
                     </div>
-                    <div class="col-auto bg-black align-self-center display-2 text-warning clickable" id="SND-toggle" onclick="toggleWindChart('SND')">+</div>
+                    <div class="col-auto bg-black align-self-center display-2 text-warning clickable" id="BBN-toggle" onclick="toggleWindChart('BBN')">+</div>
                 </div>
             </div>
             <!-- HOURLY FORECAST EXPANSION -->
-            <div class="collapse" id="SND-Forecast">
+            <div class="collapse" id="BBN-Forecast">
                 <div class="container-fluid p-0 mx-0 mt-2">
-                    <a href="https://forecast.weather.gov/MapClick.php?w0=t&w3=sfcwind&w3u=1&w4=sky&w5=pop&w7=rain&w9=snow&w13u=0&w16u=1&w17u=1&AheadHour=0&Submit=Submit&FcstType=graphical&textField1=40.381&textField2=-111.5843&site=all&unit=0&dd=&bw=" target="_blank">
-                        <img class="border border-dark" src="https://forecast.weather.gov/meteograms/Plotter.php?lat=40.381&lon=-111.5843&wfo=SLC&zcode=UTZ003&gset=30&gdiff=10&unit=0&tinfo=MY7&ahour=0&pcmd=10001110101000000000000000000000000000000000000000000000000&lg=en&indu=1!1!1!&dd=&bw=&hrspan=48&pqpfhr=6&psnwhr=6" width="100%">
+                    <a href="https://forecast.weather.gov/Map" id="BBN-Forecast-URL" target="_blank">
+                        <img class="border border-dark" src="https://forecast.weather.gov" id="BBN-Forecast-Image" width="100%">
                     </a>
                 </div>
             </div>
             <!-- WIND HISTORY EXPANSION -->
-            <a href="https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=SND&table=1&banner=off" target="_blank">
-                <div class="collapse" id="SND">
+            <a href="https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=BBN&table=1&banner=off" target="_blank">
+                <div class="collapse" id="BBN">
                     <div class="row align-items-end bg-dark rounded-4 mx-0 mt-2">
                         <div class="col ps-0 pe-1">
-                            <div class="pink h2" id="SND-gust-0"></div>
-                            <div class="bg-danger" id="SND-gbar-0"></div>
-                            <div id="SND-wbar-0"></div>
-                            <div class="fs-1 fw-bold bg-secondary" id="SND-wind-0"></div>
-                            <div><div class="display-4" id="SND-wdir-0"></div></div>
-                            <div class="fs-4" id="SND-time-0"></div>
+                            <div class="pink h2" id="BBN-gust-0"></div>
+                            <div class="bg-danger" id="BBN-gbar-0"></div>
+                            <div id="BBN-wbar-0"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="BBN-wind-0"></div>
+                            <div><div class="display-4" id="BBN-wdir-0"></div></div>
+                            <div class="fs-4" id="BBN-time-0"></div>
                         </div>
                         <div class="col ps-0 pe-1">
-                            <div class="pink h2" id="SND-gust-1"></div>
-                            <div class="bg-danger" id="SND-gbar-1"></div>
-                            <div id="SND-wbar-1"></div>
-                            <div class="fs-1 fw-bold bg-secondary" id="SND-wind-1"></div>
-                            <div><div class="display-4" id="SND-wdir-1"></div></div>
-                            <div class="fs-4" id="SND-time-1"></div>
+                            <div class="pink h2" id="BBN-gust-1"></div>
+                            <div class="bg-danger" id="BBN-gbar-1"></div>
+                            <div id="BBN-wbar-1"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="BBN-wind-1"></div>
+                            <div><div class="display-4" id="BBN-wdir-1"></div></div>
+                            <div class="fs-4" id="BBN-time-1"></div>
                         </div>
                         <div class="col ps-0 pe-1">
-                            <div class="pink h2" id="SND-gust-2"></div>
-                            <div class="bg-danger" id="SND-gbar-2"></div>
-                            <div id="SND-wbar-2"></div>
-                            <div class="fs-1 fw-bold bg-secondary" id="SND-wind-2"></div>
-                            <div><div class="display-4" id="SND-wdir-2"></div></div>
-                            <div class="fs-4" id="SND-time-2"></div>
+                            <div class="pink h2" id="BBN-gust-2"></div>
+                            <div class="bg-danger" id="BBN-gbar-2"></div>
+                            <div id="BBN-wbar-2"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="BBN-wind-2"></div>
+                            <div><div class="display-4" id="BBN-wdir-2"></div></div>
+                            <div class="fs-4" id="BBN-time-2"></div>
                         </div>
                         <div class="col ps-0 pe-1">
-                            <div class="pink h2" id="SND-gust-3"></div>
-                            <div class="bg-danger" id="SND-gbar-3"></div>
-                            <div id="SND-wbar-3"></div>
-                            <div class="fs-1 fw-bold bg-secondary" id="SND-wind-3"></div>
-                            <div><div class="display-4" id="SND-wdir-3"></div></div>
-                            <div class="fs-4" id="SND-time-3"></div>
+                            <div class="pink h2" id="BBN-gust-3"></div>
+                            <div class="bg-danger" id="BBN-gbar-3"></div>
+                            <div id="BBN-wbar-3"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="BBN-wind-3"></div>
+                            <div><div class="display-4" id="BBN-wdir-3"></div></div>
+                            <div class="fs-4" id="BBN-time-3"></div>
                         </div>
                         <div class="col ps-0 pe-1">
-                            <div class="pink h2" id="SND-gust-4"></div>
-                            <div class="bg-danger" id="SND-gbar-4"></div>
-                            <div id="SND-wbar-4"></div>
-                            <div class="fs-1 fw-bold bg-secondary" id="SND-wind-4"></div>
-                            <div><div class="display-4" id="SND-wdir-4"></div></div>
-                            <div class="fs-4" id="SND-time-4"></div>
+                            <div class="pink h2" id="BBN-gust-4"></div>
+                            <div class="bg-danger" id="BBN-gbar-4"></div>
+                            <div id="BBN-wbar-4"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="BBN-wind-4"></div>
+                            <div><div class="display-4" id="BBN-wdir-4"></div></div>
+                            <div class="fs-4" id="BBN-time-4"></div>
                         </div>
                         <div class="col ps-0 pe-1">
-                            <div class="pink h2" id="SND-gust-5"></div>
-                            <div class="bg-danger" id="SND-gbar-5"></div>
-                            <div id="SND-wbar-5"></div>
-                            <div class="fs-1 fw-bold bg-secondary" id="SND-wind-5"></div>
-                            <div><div class="display-4" id="SND-wdir-5"></div></div>
-                            <div class="fs-4" id="SND-time-5"></div>
+                            <div class="pink h2" id="BBN-gust-5"></div>
+                            <div class="bg-danger" id="BBN-gbar-5"></div>
+                            <div id="BBN-wbar-5"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="BBN-wind-5"></div>
+                            <div><div class="display-4" id="BBN-wdir-5"></div></div>
+                            <div class="fs-4" id="BBN-time-5"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="BBN-gust-6"></div>
+                            <div class="bg-danger" id="BBN-gbar-6"></div>
+                            <div id="BBN-wbar-6"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="BBN-wind-6"></div>
+                            <div><div class="display-4" id="BBN-wdir-6"></div></div>
+                            <div class="fs-4" id="BBN-time-6"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="BBN-gust-7"></div>
+                            <div class="bg-danger" id="BBN-gbar-7"></div>
+                            <div id="BBN-wbar-7"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="BBN-wind-7"></div>
+                            <div><div class="display-4" id="BBN-wdir-7"></div></div>
+                            <div class="fs-4" id="BBN-time-7"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="BBN-gust-8"></div>
+                            <div class="bg-danger" id="BBN-gbar-8"></div>
+                            <div id="BBN-wbar-8"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="BBN-wind-8"></div>
+                            <div><div class="display-4" id="BBN-wdir-8"></div></div>
+                            <div class="fs-4" id="BBN-time-8"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="BBN-gust-9"></div>
+                            <div class="bg-danger" id="BBN-gbar-9"></div>
+                            <div id="BBN-wbar-9"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="BBN-wind-9"></div>
+                            <div><div class="display-4" id="BBN-wdir-9"></div></div>
+                            <div class="fs-4" id="BBN-time-9"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="BBN-gust-10"></div>
+                            <div class="bg-danger" id="BBN-gbar-10"></div>
+                            <div id="BBN-wbar-10"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="BBN-wind-10"></div>
+                            <div><div class="display-4" id="BBN-wdir-10"></div></div>
+                            <div class="fs-4" id="BBN-time-10"></div>
+                        </div>
+                        <div class="col ps-0 pe-0">
+                            <div class="pink h2" id="BBN-gust-11"></div>
+                            <div class="bg-danger" id="BBN-gbar-11"></div>
+                            <div id="BBN-wbar-11"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="BBN-wind-11"></div>
+                            <div><div class="display-4" id="BBN-wdir-11"></div></div>
+                            <div class="fs-4" id="BBN-time-11"></div>
                         </div>
                     </div>
                 </div>
             </a>
         </div>
+
+        <!-- WIND OGDEN PEAK (OGP)-->
+        <div class="container-fluid mt-4">
+            <div id="OGP-main">
+                <div class="row rounded mt-1">
+                    <div class="col-auto bg-black align-self-center display-4 text-warning clickable" id="OGP-Forecast-toggle" onclick="toggleWindChart('OGP-Forecast')">fcst</div>
+                    <div class="bg-dark col mx-0 row rounded-4">
+                        <div class="col-auto">
+                            <div class="row display-3" id="OGP-Name"></div>
+                            <div class="col-auto row">
+                                <div class="col-auto fs-3 align-self-center text-info" id="OGP-Elevation"></div>
+                                <div class="col-auto fs-3 align-self-center text-info"></div>
+                                <div class="col-auto fs-1 align-self-center justify-content-end" id="OGP-time"></div>
+                            </div>
+                        </div>
+                        <div class="col align-self-end row justify-content-end">
+                            <div class="col-auto display-1" id="OGP-wdir"></div>
+                            <div class="col-auto display-1 align-self-center" id="OGP-wind">&nbsp;</div>
+                            <div class="collapse col-auto display-4 align-self-center pink" id="OGP-gust"></div>
+                        </div>
+                    </div>
+                    <div class="col-auto bg-black align-self-center display-2 text-warning clickable" id="OGP-toggle" onclick="toggleWindChart('OGP')">+</div>
+                </div>
+            </div>
+            <!-- HOURLY FORECAST EXPANSION -->
+            <div class="collapse" id="OGP-Forecast">
+                <div class="container-fluid p-0 mx-0 mt-2">
+                    <a href="https://forecast.weather.gov/Map" id="OGP-Forecast-URL" target="_blank">
+                        <img class="border border-dark" src="https://forecast.weather.gov" id="OGP-Forecast-Image" width="100%">
+                    </a>
+                </div>
+            </div>
+            <!-- WIND HISTORY EXPANSION -->
+            <a href="https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=OGP&table=1&banner=off" target="_blank">
+                <div class="collapse" id="OGP">
+                    <div class="row align-items-end bg-dark rounded-4 mx-0 mt-2">
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="OGP-gust-0"></div>
+                            <div class="bg-danger" id="OGP-gbar-0"></div>
+                            <div id="OGP-wbar-0"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="OGP-wind-0"></div>
+                            <div><div class="display-4" id="OGP-wdir-0"></div></div>
+                            <div class="fs-4" id="OGP-time-0"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="OGP-gust-1"></div>
+                            <div class="bg-danger" id="OGP-gbar-1"></div>
+                            <div id="OGP-wbar-1"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="OGP-wind-1"></div>
+                            <div><div class="display-4" id="OGP-wdir-1"></div></div>
+                            <div class="fs-4" id="OGP-time-1"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="OGP-gust-2"></div>
+                            <div class="bg-danger" id="OGP-gbar-2"></div>
+                            <div id="OGP-wbar-2"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="OGP-wind-2"></div>
+                            <div><div class="display-4" id="OGP-wdir-2"></div></div>
+                            <div class="fs-4" id="OGP-time-2"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="OGP-gust-3"></div>
+                            <div class="bg-danger" id="OGP-gbar-3"></div>
+                            <div id="OGP-wbar-3"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="OGP-wind-3"></div>
+                            <div><div class="display-4" id="OGP-wdir-3"></div></div>
+                            <div class="fs-4" id="OGP-time-3"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="OGP-gust-4"></div>
+                            <div class="bg-danger" id="OGP-gbar-4"></div>
+                            <div id="OGP-wbar-4"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="OGP-wind-4"></div>
+                            <div><div class="display-4" id="OGP-wdir-4"></div></div>
+                            <div class="fs-4" id="OGP-time-4"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="OGP-gust-5"></div>
+                            <div class="bg-danger" id="OGP-gbar-5"></div>
+                            <div id="OGP-wbar-5"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="OGP-wind-5"></div>
+                            <div><div class="display-4" id="OGP-wdir-5"></div></div>
+                            <div class="fs-4" id="OGP-time-5"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="OGP-gust-6"></div>
+                            <div class="bg-danger" id="OGP-gbar-6"></div>
+                            <div id="OGP-wbar-6"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="OGP-wind-6"></div>
+                            <div><div class="display-4" id="OGP-wdir-6"></div></div>
+                            <div class="fs-4" id="OGP-time-6"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="OGP-gust-7"></div>
+                            <div class="bg-danger" id="OGP-gbar-7"></div>
+                            <div id="OGP-wbar-7"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="OGP-wind-7"></div>
+                            <div><div class="display-4" id="OGP-wdir-7"></div></div>
+                            <div class="fs-4" id="OGP-time-7"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="OGP-gust-8"></div>
+                            <div class="bg-danger" id="OGP-gbar-8"></div>
+                            <div id="OGP-wbar-8"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="OGP-wind-8"></div>
+                            <div><div class="display-4" id="OGP-wdir-8"></div></div>
+                            <div class="fs-4" id="OGP-time-8"></div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>        
+
+        <!-- SOUTHERN WASATCH STATION READINGS -->
+        <div class="container-fluid display-3 mt-2">Southern Wasatch</div>
 
         <!-- WIND PROVO AIRPORT (KPVU)-->
         <div class="container-fluid mt-4">
@@ -1532,9 +1672,10 @@
                     <div class="col-auto bg-black align-self-center display-4 text-warning clickable" id="KPVU-Forecast-toggle" onclick="toggleWindChart('KPVU-Forecast')">fcst</div>
                     <div class="col row bg-dark mx-0 rounded-4">
                         <div class="col-auto">
-                            <div class="row display-3">Provo Airport</div>
+                            <div class="row display-3" id="KPVU-Name"></div>
                             <div class="col-auto row">
-                                <div class="col-auto fs-3 align-self-center text-info">4,498 ft&nbsp;&nbsp;&nbsp;</div>
+                                <div class="col-auto fs-3 align-self-center text-info" id="KPVU-Elevation"></div>
+                                <div class="col-auto fs-3 align-self-center text-info"></div>
                                 <div class="col-auto fs-1 align-self-center justify-content-end" id="KPVU-time"></div>
                             </div>
                         </div>
@@ -1556,11 +1697,11 @@
             <!-- HOURLY FORECAST EXPANSION -->
             <div class="collapse" id="KPVU-Forecast">
                 <div class="container-fluid p-0 mx-0 mt-2">
-                    <a href="https://forecast.weather.gov/MapClick.php?w0=t&w3=sfcwind&w3u=1&w4=sky&w5=pop&w7=rain&w9=snow&w13u=0&w16u=1&w17u=1&AheadHour=0&Submit=Submit&FcstType=graphical&textField1=40.2181&textField2=-111.7218&site=all&unit=0&dd=&bw=" target="_blank">
-                        <img class="border border-dark" src="https://forecast.weather.gov/meteograms/Plotter.php?lat=40.2181&lon=-111.7218&wfo=SLC&zcode=UTZ003&gset=30&gdiff=10&unit=0&tinfo=MY7&ahour=0&pcmd=10001110101000000000000000000000000000000000000000000000000&lg=en&indu=1!1!1!&dd=&bw=&hrspan=48&pqpfhr=6&psnwhr=6" width="100%">
+                    <a href="https://forecast.weather.gov/Map" id="KPVU-Forecast-URL" target="_blank">
+                        <img class="border border-dark" src="https://forecast.weather.gov" id="KPVU-Forecast-Image" width="100%">
                     </a>
                 </div>
-            </div>    
+            </div>
             <!-- KPVU READINGS EXPANSION -->
             <a href="https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=KPVU&table=1&banner=off" target="_blank">
                 <div class="collapse" id="KPVU">
@@ -1720,8 +1861,280 @@
             </a>    
         </div>
 
-        <!-- SEVIER COUNTY STATION READINGS -->
-        <div class="container-fluid display-3 mt-2">SevierCounty</div>
+        <!-- WIND OREM I-15 (UTORM)-->
+        <div class="container-fluid mt-4">
+            <div id="UTORM-main">
+                <div class="row rounded mt-1">
+                    <div class="col-auto bg-black align-self-center display-4 text-warning clickable" id="UTORM-Forecast-toggle" onclick="toggleWindChart('UTORM-Forecast')">fcst</div>
+                    <div class="bg-dark col mx-0 row rounded-4">
+                        <div class="col-auto">
+                            <div class="row display-3" id="UTORM-Name"></div>
+                            <div class="col-auto row">
+                                <div class="col-auto fs-3 align-self-center text-info" id="UTORM-Elevation"></div>
+                                <div class="col-auto fs-3 align-self-center text-info"></div>
+                                <div class="col-auto fs-1 align-self-center justify-content-end" id="UTORM-time"></div>
+                            </div>
+                        </div>
+                        <div class="col align-self-end row justify-content-end">
+                            <div class="col-auto display-1" id="UTORM-wdir"></div>
+                            <div class="col-auto display-1 align-self-center" id="UTORM-wind">&nbsp;</div>
+                            <div class="collapse col-auto display-4 align-self-center pink" id="UTORM-gust"></div>
+                        </div>
+                    </div>
+                    <div class="col-auto bg-black align-self-center display-2 text-warning clickable" id="UTORM-toggle" onclick="toggleWindChart('UTORM')">+</div>
+                </div>
+            </div>
+            <!-- HOURLY FORECAST EXPANSION -->
+            <div class="collapse" id="UTORM-Forecast">
+                <div class="container-fluid p-0 mx-0 mt-2">
+                    <a href="https://forecast.weather.gov/Map" id="UTORM-Forecast-URL" target="_blank">
+                        <img class="border border-dark" src="https://forecast.weather.gov" id="UTORM-Forecast-Image" width="100%">
+                    </a>
+                </div>
+            </div>
+            <!-- WIND HISTORY EXPANSION -->
+            <a href="https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=UTORM&table=1&banner=off" target="_blank">
+                <div class="collapse" id="UTORM">
+                    <div class="row align-items-end bg-dark rounded-4 mx-0 mt-2">
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="UTORM-gust-0"></div>
+                            <div class="bg-danger" id="UTORM-gbar-0"></div>
+                            <div id="UTORM-wbar-0"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="UTORM-wind-0"></div>
+                            <div><div class="display-4" id="UTORM-wdir-0"></div></div>
+                            <div class="fs-4" id="UTORM-time-0"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="UTORM-gust-1"></div>
+                            <div class="bg-danger" id="UTORM-gbar-1"></div>
+                            <div id="UTORM-wbar-1"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="UTORM-wind-1"></div>
+                            <div><div class="display-4" id="UTORM-wdir-1"></div></div>
+                            <div class="fs-4" id="UTORM-time-1"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="UTORM-gust-2"></div>
+                            <div class="bg-danger" id="UTORM-gbar-2"></div>
+                            <div id="UTORM-wbar-2"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="UTORM-wind-2"></div>
+                            <div><div class="display-4" id="UTORM-wdir-2"></div></div>
+                            <div class="fs-4" id="UTORM-time-2"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="UTORM-gust-3"></div>
+                            <div class="bg-danger" id="UTORM-gbar-3"></div>
+                            <div id="UTORM-wbar-3"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="UTORM-wind-3"></div>
+                            <div><div class="display-4" id="UTORM-wdir-3"></div></div>
+                            <div class="fs-4" id="UTORM-time-3"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="UTORM-gust-4"></div>
+                            <div class="bg-danger" id="UTORM-gbar-4"></div>
+                            <div id="UTORM-wbar-4"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="UTORM-wind-4"></div>
+                            <div><div class="display-4" id="UTORM-wdir-4"></div></div>
+                            <div class="fs-4" id="UTORM-time-4"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="UTORM-gust-5"></div>
+                            <div class="bg-danger" id="UTORM-gbar-5"></div>
+                            <div id="UTORM-wbar-5"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="UTORM-wind-5"></div>
+                            <div><div class="display-4" id="UTORM-wdir-5"></div></div>
+                            <div class="fs-4" id="UTORM-time-5"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="UTORM-gust-6"></div>
+                            <div class="bg-danger" id="UTORM-gbar-6"></div>
+                            <div id="UTORM-wbar-6"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="UTORM-wind-6"></div>
+                            <div><div class="display-4" id="UTORM-wdir-6"></div></div>
+                            <div class="fs-4" id="UTORM-time-6"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="UTORM-gust-7"></div>
+                            <div class="bg-danger" id="UTORM-gbar-7"></div>
+                            <div id="UTORM-wbar-7"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="UTORM-wind-7"></div>
+                            <div><div class="display-4" id="UTORM-wdir-7"></div></div>
+                            <div class="fs-4" id="UTORM-time-7"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="UTORM-gust-8"></div>
+                            <div class="bg-danger" id="UTORM-gbar-8"></div>
+                            <div id="UTORM-wbar-8"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="UTORM-wind-8"></div>
+                            <div><div class="display-4" id="UTORM-wdir-8"></div></div>
+                            <div class="fs-4" id="UTORM-time-8"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="UTORM-gust-9"></div>
+                            <div class="bg-danger" id="UTORM-gbar-9"></div>
+                            <div id="UTORM-wbar-9"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="UTORM-wind-9"></div>
+                            <div><div class="display-4" id="UTORM-wdir-9"></div></div>
+                            <div class="fs-4" id="UTORM-time-9"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="UTORM-gust-10"></div>
+                            <div class="bg-danger" id="UTORM-gbar-10"></div>
+                            <div id="UTORM-wbar-10"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="UTORM-wind-10"></div>
+                            <div><div class="display-4" id="UTORM-wdir-10"></div></div>
+                            <div class="fs-4" id="UTORM-time-10"></div>
+                        </div>
+                        <div class="col ps-0 pe-0">
+                            <div class="pink h2" id="UTORM-gust-11"></div>
+                            <div class="bg-danger" id="UTORM-gbar-11"></div>
+                            <div id="UTORM-wbar-11"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="UTORM-wind-11"></div>
+                            <div><div class="display-4" id="UTORM-wdir-11"></div></div>
+                            <div class="fs-4" id="UTORM-time-11"></div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- WIND SUNDANCE RESORT ARROWHEAD PEAK (SND)-->
+        <div class="container-fluid mt-4">
+            <div id="SND-main">
+                <div class="row rounded mt-1">
+                    <div class="col-auto bg-black align-self-center display-4 text-warning clickable" id="SND-Forecast-toggle" onclick="toggleWindChart('SND-Forecast')">fcst</div>
+                    <div class="bg-dark col mx-0 row rounded-4">
+                        <div class="col-auto">
+                            <div class="row display-3" id="SND-Name"></div>
+                            <div class="col-auto row">
+                                <div class="col-auto fs-3 align-self-center text-info" id="SND-Elevation"></div>
+                                <div class="col-auto fs-3 align-self-center text-info"></div>
+                                <div class="col-auto fs-1 align-self-center justify-content-end" id="SND-time"></div>
+                            </div>
+                        </div>
+                        <div class="col align-self-end row justify-content-end">
+                            <div class="col-auto display-1" id="SND-wdir"></div>
+                            <div class="col-auto display-1 align-self-center" id="SND-wind">&nbsp;</div>
+                            <div class="collapse col-auto display-4 align-self-center pink" id="SND-gust"></div>
+                        </div>
+                    </div>
+                    <div class="col-auto bg-black align-self-center display-2 text-warning clickable" id="SND-toggle" onclick="toggleWindChart('SND')">+</div>
+                </div>
+            </div>
+            <!-- HOURLY FORECAST EXPANSION -->
+            <div class="collapse" id="SND-Forecast">
+                <div class="container-fluid p-0 mx-0 mt-2">
+                    <a href="https://forecast.weather.gov/Map" id="SND-Forecast-URL" target="_blank">
+                        <img class="border border-dark" src="https://forecast.weather.gov" id="SND-Forecast-Image" width="100%">
+                    </a>
+                </div>
+            </div>
+            <!-- WIND HISTORY EXPANSION -->
+            <a href="https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=SND&table=1&banner=off" target="_blank">
+                <div class="collapse" id="SND">
+                    <div class="row align-items-end bg-dark rounded-4 mx-0 mt-2">
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="SND-gust-0"></div>
+                            <div class="bg-danger" id="SND-gbar-0"></div>
+                            <div id="SND-wbar-0"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="SND-wind-0"></div>
+                            <div><div class="display-4" id="SND-wdir-0"></div></div>
+                            <div class="fs-4" id="SND-time-0"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="SND-gust-1"></div>
+                            <div class="bg-danger" id="SND-gbar-1"></div>
+                            <div id="SND-wbar-1"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="SND-wind-1"></div>
+                            <div><div class="display-4" id="SND-wdir-1"></div></div>
+                            <div class="fs-4" id="SND-time-1"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="SND-gust-2"></div>
+                            <div class="bg-danger" id="SND-gbar-2"></div>
+                            <div id="SND-wbar-2"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="SND-wind-2"></div>
+                            <div><div class="display-4" id="SND-wdir-2"></div></div>
+                            <div class="fs-4" id="SND-time-2"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="SND-gust-3"></div>
+                            <div class="bg-danger" id="SND-gbar-3"></div>
+                            <div id="SND-wbar-3"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="SND-wind-3"></div>
+                            <div><div class="display-4" id="SND-wdir-3"></div></div>
+                            <div class="fs-4" id="SND-time-3"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="SND-gust-4"></div>
+                            <div class="bg-danger" id="SND-gbar-4"></div>
+                            <div id="SND-wbar-4"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="SND-wind-4"></div>
+                            <div><div class="display-4" id="SND-wdir-4"></div></div>
+                            <div class="fs-4" id="SND-time-4"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="SND-gust-5"></div>
+                            <div class="bg-danger" id="SND-gbar-5"></div>
+                            <div id="SND-wbar-5"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="SND-wind-5"></div>
+                            <div><div class="display-4" id="SND-wdir-5"></div></div>
+                            <div class="fs-4" id="SND-time-5"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="SND-gust-6"></div>
+                            <div class="bg-danger" id="SND-gbar-6"></div>
+                            <div id="SND-wbar-6"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="SND-wind-6"></div>
+                            <div><div class="display-4" id="SND-wdir-6"></div></div>
+                            <div class="fs-4" id="SND-time-6"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="SND-gust-7"></div>
+                            <div class="bg-danger" id="SND-gbar-7"></div>
+                            <div id="SND-wbar-7"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="SND-wind-7"></div>
+                            <div><div class="display-4" id="SND-wdir-7"></div></div>
+                            <div class="fs-4" id="SND-time-7"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="SND-gust-8"></div>
+                            <div class="bg-danger" id="SND-gbar-8"></div>
+                            <div id="SND-wbar-8"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="SND-wind-8"></div>
+                            <div><div class="display-4" id="SND-wdir-8"></div></div>
+                            <div class="fs-4" id="SND-time-8"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="SND-gust-9"></div>
+                            <div class="bg-danger" id="SND-gbar-9"></div>
+                            <div id="SND-wbar-9"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="SND-wind-9"></div>
+                            <div><div class="display-4" id="SND-wdir-9"></div></div>
+                            <div class="fs-4" id="SND-time-9"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="SND-gust-10"></div>
+                            <div class="bg-danger" id="SND-gbar-10"></div>
+                            <div id="SND-wbar-10"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="SND-wind-10"></div>
+                            <div><div class="display-4" id="SND-wdir-10"></div></div>
+                            <div class="fs-4" id="SND-time-10"></div>
+                        </div>
+                        <div class="col ps-0 pe-0">
+                            <div class="pink h2" id="SND-gust-11"></div>
+                            <div class="bg-danger" id="SND-gbar-11"></div>
+                            <div id="SND-wbar-11"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="SND-wind-11"></div>
+                            <div><div class="display-4" id="SND-wdir-11"></div></div>
+                            <div class="fs-4" id="SND-time-11"></div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Central Utah STATION READINGS -->
+        <div class="container-fluid display-3 mt-2">Central Utah</div>
 
         <!-- KRIF RICHFIELD AIRPORT -->
         <div class="container-fluid mt-4">
@@ -1730,9 +2143,10 @@
                     <div class="col-auto bg-black align-self-center display-4 text-warning clickable" id="KRIF-Forecast-toggle" onclick="toggleWindChart('KRIF-Forecast')">fcst</div>
                     <div class="col row bg-dark mx-0 rounded-4">
                         <div class="col-auto">
-                            <div class="row display-3">Richfield Airport</div>
+                            <div class="row display-3" id="KRIF-Name"></div>
                             <div class="col-auto row">
-                                <div class="col-auto fs-3 align-self-center text-info">5,318 ft&nbsp;&nbsp;&nbsp;</div>
+                                <div class="col-auto fs-3 align-self-center text-info" id="KRIF-Elevation"></div>
+                                <div class="col-auto fs-3 align-self-center text-info"></div>
                                 <div class="col-auto fs-1 align-self-center justify-content-end" id="KRIF-time"></div>
                             </div>
                         </div>
@@ -1754,11 +2168,11 @@
             <!-- HOURLY FORECAST EXPANSION -->
             <div class="collapse" id="KRIF-Forecast">
                 <div class="container-fluid p-0 mx-0 mt-2">
-                    <a href="https://forecast.weather.gov/MapClick.php?w0=t&w3=sfcwind&w3u=1&w4=sky&w5=pop&w7=rain&w9=snow&w13u=0&w16u=1&w17u=1&AheadHour=0&Submit=Submit&FcstType=graphical&textField1=38.7364&textField2=-112.1002&site=all&unit=0&dd=&bw=" target="_blank">
-                        <img class="border border-dark" src="https://forecast.weather.gov/meteograms/Plotter.php?lat=38.7364&lon=-112.1002&wfo=SLC&zcode=UTZ003&gset=30&gdiff=10&unit=0&tinfo=MY7&ahour=0&pcmd=10001110101000000000000000000000000000000000000000000000000&lg=en&indu=1!1!1!&dd=&bw=&hrspan=48&pqpfhr=6&psnwhr=6" width="100%">
+                    <a href="https://forecast.weather.gov/Map" id="KRIF-Forecast-URL" target="_blank">
+                        <img class="border border-dark" src="https://forecast.weather.gov" id="KRIF-Forecast-Image" width="100%">
                     </a>
                 </div>
-            </div>    
+            </div>
             <!-- KRIF READINGS EXPANSION -->
             <a href="https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=KRIF&table=1&banner=off" target="_blank">
                 <div class="collapse" id="KRIF">
@@ -1835,30 +2249,6 @@
                             <div><div class="display-4" id="KRIF-wdir-8"></div></div>
                             <div class="fs-4" id="KRIF-time-8"></div>
                         </div>
-                        <div class="col ps-0 pe-1">
-                            <div class="pink h2" id="KRIF-gust-9"></div>
-                            <div class="bg-danger" id="KRIF-gbar-9"></div>
-                            <div id="KRIF-wbar-9"></div>
-                            <div class="fs-1 fw-bold bg-secondary" id="KRIF-wind-9"></div>
-                            <div><div class="display-4" id="KRIF-wdir-9"></div></div>
-                            <div class="fs-4" id="KRIF-time-9"></div>
-                        </div>
-                        <div class="col ps-0 pe-1">
-                            <div class="pink h2" id="KRIF-gust-10"></div>
-                            <div class="bg-danger" id="KRIF-gbar-10"></div>
-                            <div id="KRIF-wbar-10"></div>
-                            <div class="fs-1 fw-bold bg-secondary" id="KRIF-wind-10"></div>
-                            <div><div class="display-4" id="KRIF-wdir-10"></div></div>
-                            <div class="fs-4" id="KRIF-time-10"></div>
-                        </div>
-                        <div class="col ps-0 pe-0">
-                            <div class="pink h2" id="KRIF-gust-11"></div>
-                            <div class="bg-danger" id="KRIF-gbar-11"></div>
-                            <div id="KRIF-wbar-11"></div>
-                            <div class="fs-1 fw-bold bg-secondary" id="KRIF-wind-11"></div>
-                            <div><div class="display-4" id="KRIF-wdir-11"></div></div>
-                            <div class="fs-4" id="KRIF-time-11"></div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -1925,9 +2315,10 @@
                     <div class="col-auto bg-black align-self-center display-4 text-warning clickable" id="SIGU1-Forecast-toggle" onclick="toggleWindChart('SIGU1-Forecast')">fcst</div>
                     <div class="bg-dark col mx-0 row rounded-4">
                         <div class="col-auto">
-                            <div class="row display-3">Signal Peak</div>
+                            <div class="row display-3" id="SIGU1-Name"></div>
                             <div class="col-auto row">
-                                <div class="col-auto fs-3 align-self-center text-info">8,767 ft&nbsp;&nbsp;&nbsp;</div>
+                                <div class="col-auto fs-3 align-self-center text-info" id="SIGU1-Elevation"></div>
+                                <div class="col-auto fs-3 align-self-center text-info"></div>
                                 <div class="col-auto fs-1 align-self-center justify-content-end" id="SIGU1-time"></div>
                             </div>
                         </div>
@@ -1943,8 +2334,8 @@
             <!-- HOURLY FORECAST EXPANSION -->
             <div class="collapse" id="SIGU1-Forecast">
                 <div class="container-fluid p-0 mx-0 mt-2">
-                    <a href="https://forecast.weather.gov/MapClick.php?w0=t&w3=sfcwind&w3u=1&w4=sky&w5=pop&w7=rain&w9=snow&w13u=0&w16u=1&w17u=1&AheadHour=0&Submit=Submit&FcstType=graphical&textField1=38.6335&textField2=-112.0592&site=all&unit=0&dd=&bw=" target="_blank">
-                        <img class="border border-dark" src="https://forecast.weather.gov/meteograms/Plotter.php?lat=38.6335&lon=-112.0592&wfo=SLC&zcode=UTZ003&gset=30&gdiff=10&unit=0&tinfo=MY7&ahour=0&pcmd=10001110101000000000000000000000000000000000000000000000000&lg=en&indu=1!1!1!&dd=&bw=&hrspan=48&pqpfhr=6&psnwhr=6" width="100%">
+                    <a href="https://forecast.weather.gov/Map" id="SIGU1-Forecast-URL" target="_blank">
+                        <img class="border border-dark" src="https://forecast.weather.gov" id="SIGU1-Forecast-Image" width="100%">
                     </a>
                 </div>
             </div>
@@ -1991,22 +2382,6 @@
                             <div class="fs-1 fw-bold bg-secondary" id="SIGU1-wind-4"></div>
                             <div><div class="display-4" id="SIGU1-wdir-4"></div></div>
                             <div class="fs-4" id="SIGU1-time-4"></div>
-                        </div>
-                        <div class="col ps-0 pe-1">
-                            <div class="pink h2" id="SIGU1-gust-5"></div>
-                            <div class="bg-danger" id="SIGU1-gbar-5"></div>
-                            <div id="SIGU1-wbar-5"></div>
-                            <div class="fs-1 fw-bold bg-secondary" id="SIGU1-wind-5"></div>
-                            <div><div class="display-4" id="SIGU1-wdir-5"></div></div>
-                            <div class="fs-4" id="SIGU1-time-5"></div>
-                        </div>
-                        <div class="col ps-0 pe-1">
-                            <div class="pink h2" id="SIGU1-gust-6"></div>
-                            <div class="bg-danger" id="SIGU1-gbar-6"></div>
-                            <div id="SIGU1-wbar-6"></div>
-                            <div class="fs-1 fw-bold bg-secondary" id="SIGU1-wind-6"></div>
-                            <div><div class="display-4" id="SIGU1-wdir-6"></div></div>
-                            <div class="fs-4" id="SIGU1-time-6"></div>
                         </div>
                     </div>
                 </div>

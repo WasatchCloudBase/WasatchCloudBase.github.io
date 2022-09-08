@@ -14,38 +14,81 @@ async function ReloadTimeSeries() {
     var TimeSeriesIntervalCall = await getTimeSeries()
 };
 
+// Function to populate station info and build URLs for forecast plotter image and click-through
+// Requires each station to have elements for station ID followed by:  -Name -Elevation -Forecast-URL -Forecast-Image
+function BuildStationInfo (StationID, StationName, StationElevation, StationLatitude, StationLongitude) {
+
+    document.getElementById(StationID + `-Name`).innerText = StationName
+    document.getElementById(StationID + `-Elevation`).innerText = StationElevation + ' ft'
+
+    document.getElementById(StationID + `-Forecast-URL`).href = 'https://forecast.weather.gov/MapClick.php?w0=t&w3=sfcwind&w4=sky&w5=pop&w7=rain&AheadHour=0&Submit=Submit&&FcstType=graphical&textField1=' + StationLatitude + '&textField2=' + StationLongitude + '&site=all&menu=1'
+
+    document.getElementById(StationID + `-Forecast-Image`).src = 'https://forecast.weather.gov/meteograms/Plotter.php?lat=' + StationLatitude + '&lon=' + StationLongitude + '&wfo=SLC&zcode=UTZ003&gset=30&gdiff=10&unit=0&tinfo=MY7&ahour=0&pcmd=10001110101000000000000000000000000000000000000000000000000&lg=en&indu=1!1!1!&dd=&bw=&hrspan=48&pqpfhr=6&psnwhr=6'
+}
+
 // Function to get TimeSeries data from Mesonet API
 // MESONET PRIVATE API FOR TIME SERIES: https://developers.synopticdata.com/mesonet
 async function getTimeSeries() {
-    //Perform multiple loops as the Mesowest API seems to be limited to 10 stations per query
-    var url = ""
-    for (let i=0; i<3; i++) {
-        switch(i) {
-            case 0:
-                url = `https://api.mesowest.net/v2/station/timeseries?&stid=KSLC&stid=UTOLY&stid=AMB&stid=KU42&stid=FPS&stid=HF012&stid=REY&stid=IFF&stid=CEN&stid=BBN&stid=SND&stid=KPVU&stid=SIGU1&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&obtimezone=local&timeformat=%-I:%M%20%p&token=0030ed6480a4440eb29ec23ff37fe159`
-                break
-            case 1: 
-                // Richfield API call only works correctly by itself
-                var url = `https://api.mesowest.net/v2/station/timeseries?&stid=KRIF&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&obtimezone=local&timeformat=%-I:%M%20%p&token=0030ed6480a4440eb29ec23ff37fe159`
-                break
-            case 2: 
-                // Add additional stations here (up to 10)
-                var url = `https://api.mesowest.net/v2/station/timeseries?&stid=KHIF&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&obtimezone=local&timeformat=%-I:%M%20%p&token=0030ed6480a4440eb29ec23ff37fe159`
-                break
-        } 
-        var response = await fetch(url)
-        var tsData = await response.json()
-        if (tsData) {
-            const AirportStations = ['KSLC', 'KRIF', 'KPVU', 'KHIF']
-            let stations = []
-            for (let i=0; i<tsData.STATION.length; i++) {
-                // Get pressure readings for each airport station
-                if (AirportStations.includes(tsData.STATION[i].STID)) AltiTempZone(tsData.STATION[i].STID, tsData.STATION[i].OBSERVATIONS)
-                // Get observations for all stations
-                stations[i] = tsData.STATION[i].OBSERVATIONS
-                stations[i].stid = tsData.STATION[i].STID
-                windChart(stations[i])
-            }
+
+    // Populate station info and build forecast URLs
+    // Central Wasatch
+    BuildStationInfo('KSLC', 'SLC Airport', '4,226', '40.7862', '-111.9801')
+    BuildStationInfo('UTOLY', 'Olympus Cove', '4,972', '40.6826', '-111.7973')
+    BuildStationInfo('KU42', 'Airport 2', '4,596', '40.61960', '-111.99016')
+    BuildStationInfo('HF012', 'POTM North', '6,194', '40.47191', '-111.88297')
+    BuildStationInfo('FPS', 'POTM South', '5,202', '40.45689', '-111.90483')
+    BuildStationInfo('REY', 'Reynolds Peak', '9,400', '40.662117', '-111.646764')
+    BuildStationInfo('IFF', 'Cardiff Peak', '10,059', '40.5950', '-111.6519')
+    BuildStationInfo('AMB', 'Alta Mt Baldy', '11,066', '40.5677', '-111.6374')
+    // Northern Wasatch
+    BuildStationInfo('KHIF', 'Hill AFB', '4,783', '41.11112', '-111.96229')
+    BuildStationInfo('CEN', 'Centerville', '4,231', '40.94968', '-111.891629')
+    BuildStationInfo('BBN', 'Bountiful Bench', '4,950', '40.89089', '-111.850578')
+    BuildStationInfo('OGP', 'Mount Ogden', '9,570', '41.200', '-111.881')
+    // Southern Wasatch
+    BuildStationInfo('KPVU', 'Provo Airport', '4,498', '40.21667', '-111.71667')
+    BuildStationInfo('UTORM', 'Orem', '4,650', '40.31925', '-111.7267')
+    BuildStationInfo('SND', 'Sundance', '8,250', '40.368386', '-111.593964')
+    // Central Utah
+    BuildStationInfo('KRIF', 'Richfield Airport', '5,318', '38.73411', '-112.10158')
+    BuildStationInfo('SIGU1', 'Signal Peak (Cove)', '8,767', '38.633428', '-112.060653')
+
+    // Get Mesowest readings
+    var url = `https://api.mesowest.net/v2/station/timeseries?` +
+        // Central Wasatch
+        `&stid=KSLC` + 
+        `&stid=UTOLY` + 
+        `&stid=KU42` + 
+        `&stid=HF012` + 
+        `&stid=FPS` + 
+        `&stid=REY` + 
+        `&stid=IFF` + 
+        `&stid=AMB` +
+        // Northern Wasatch
+        `&stid=KHIF` +
+        `&stid=CEN` +
+        `&stid=BBN` + 
+        `&stid=OGP` +
+        // Southern Wasatch
+        `&stid=KPVU` +
+        `&stid=UTORM` +
+        `&stid=SND` + 
+        // Central Utah
+        `&stid=KRIF` + 
+        `&stid=SIGU1` +
+        `&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&obtimezone=local&timeformat=%-I:%M%20%p&token=0030ed6480a4440eb29ec23ff37fe159`
+    var response = await fetch(url)
+    var tsData = await response.json()
+    if (tsData) {
+        const AirportStations = ['KSLC', 'KRIF', 'KPVU', 'KHIF']
+        let stations = []
+        for (let i=0; i<tsData.STATION.length; i++) {
+            // Get pressure readings for each airport station
+            if (AirportStations.includes(tsData.STATION[i].STID)) AltiTempZone(tsData.STATION[i].STID, tsData.STATION[i].OBSERVATIONS)
+            // Get observations for all stations
+            stations[i] = tsData.STATION[i].OBSERVATIONS
+            stations[i].stid = tsData.STATION[i].STID
+            windChart(stations[i])
         }
     }
 };
@@ -103,9 +146,32 @@ function zone(stationID, data, zDigit=[]) {
 }
 
 function windChart(data) {
-    const ylwLim = (data.stid==='AMB' || data.stid==='BBN' || data.stid==='SND' || data.stid==='REY' || data.stid==='IFF') ? 19 : data.stid==='FPS' ? 15 : 9
-    const redLim = (data.stid==='AMB' || data.stid==='BBN' || data.stid==='SND' || data.stid==='REY' || data.stid==='IFF') ? 29 : 19
-    const length = (data.stid==='AMB' || data.stid==='BBN' || data.stid==='SND' || data.stid==='REY' || data.stid==='IFF') ? 6 : 12
+    // Set wind limits based on site type
+    const MountainSites = ['AMB', 'SND', 'REY', 'IFF']
+    const SoaringSites = ['FPS', 'HF012']
+    if (MountainSites.includes(data.stid)) {
+        var ylwLim = 12
+        var redLim = 20
+    } else if (SoaringSites.includes(data.stid)) {
+        var ylwLim = 18
+        var redLim = 26
+    } else {
+        var ylwLim = 15
+        var redLim = 22
+    }
+    // Set number of history readings based on site reading frequency
+    // FastStations have 5-10 minute updates
+    // SlowStations have hourly updates
+    // All others have 10-30 minute updates
+    const FastStations = ['KSLC', 'UTOLY', 'FPS', 'REY', 'IFF', 'CEN', 'BBN', 'KPVU', 'UTORM', 'SND']
+    const SlowStations = ['AMB', 'SIGU1'] 
+    if (FastStations.includes(data.stid)) {
+        var length = 12 // Show 1-2 hour history
+    } else if (SlowStations.includes(data.stid)) {
+        var length = 5 // Show 5 hour history
+    } else {
+        var length = 9 // Show last 9 readings (~2-4 hour history)
+    }
     document.getElementById(`${data.stid}-main`).style.display = 'block'
     for (let key in data) data[key] = data[key].slice(-length)
     time(data.stid, data.date_time)
