@@ -52,6 +52,8 @@ async function getTimeSeries() {
     // Central Utah
     BuildStationInfo('KRIF', 'Richfield Airport', '5,318', '38.73411', '-112.10158')
     BuildStationInfo('SIGU1', 'Signal Peak (Cove)', '8,767', '38.633428', '-112.060653')
+    BuildStationInfo('UTBU1', 'Beaver Mt (Tushars)', '10,007', '38.28609', '-112.36122')
+
 
     // Get Mesowest readings
     var url = `https://api.mesowest.net/v2/station/timeseries?` +
@@ -76,6 +78,8 @@ async function getTimeSeries() {
         // Central Utah
         `&stid=KRIF` + 
         `&stid=SIGU1` +
+        `&stid=UTBU1` +
+//        `&stid=SIGU1` +
         `&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&obtimezone=local&timeformat=%-I:%M%20%p&token=0030ed6480a4440eb29ec23ff37fe159`
     var response = await fetch(url)
     var tsData = await response.json()
@@ -147,7 +151,7 @@ function zone(stationID, data, zDigit=[]) {
 
 function windChart(data) {
     // Set wind limits based on site type
-    const MountainSites = ['AMB', 'SND', 'REY', 'IFF']
+    const MountainSites = ['REY', 'IFF', 'AMB', 'OGP', 'SND', 'SIGU1', 'UTBU1']
     const SoaringSites = ['FPS', 'HF012']
     if (MountainSites.includes(data.stid)) {
         var ylwLim = 12
@@ -163,7 +167,7 @@ function windChart(data) {
     // FastStations have 5-10 minute updates
     // SlowStations have hourly updates
     // All others have 10-30 minute updates
-    const FastStations = ['KSLC', 'UTOLY', 'FPS', 'REY', 'IFF', 'CEN', 'BBN', 'KPVU', 'UTORM', 'SND']
+    const FastStations = ['KSLC', 'UTOLY', 'FPS', 'REY', 'IFF', 'CEN', 'BBN', 'KPVU', 'UTORM', 'SND', 'UTBU1']
     const SlowStations = ['AMB', 'SIGU1'] 
     if (FastStations.includes(data.stid)) {
         var length = 12 // Show 1-2 hour history
