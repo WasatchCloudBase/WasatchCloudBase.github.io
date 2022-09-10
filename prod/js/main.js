@@ -130,9 +130,9 @@ function toggleWindChart(div) {
     const DaylightData = await response.json()
     if (DaylightData) {
         // Get UTC / DST offset
-//        const timezone_url = `http://worldtimeapi.org/api/timezone/America/Denver`
-//        const timezone_response = await fetch(timezone_url)
-//        const TimeZoneData = await timezone_response.json()
+        const timezone_url = `http://worldtimeapi.org/api/timezone/America/Denver`
+        const timezone_response = await fetch(timezone_url)
+        const TimeZoneData = await timezone_response.json()
 //        let UTC_adjustment_digits = TimeZoneData.utc_offset.search(`:`)
 //        let UTC_Adjustment = +TimeZoneData.utc_offset.substring(0,UTC_adjustment_digits)
         let UTC_Adjustment = -6
