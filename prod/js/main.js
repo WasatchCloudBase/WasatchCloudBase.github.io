@@ -136,7 +136,7 @@ document.getElementById(`sunrise_time`).innerText = 'E'
     if (DaylightData) {
         // Get UTC / DST offset
 document.getElementById(`sunrise_time`).innerText = 'F'
-        const timezone_url = `http://worldtimeapi.org/api/timezone/America/Denver`
+        const timezone_url = `https://worldtimeapi.org/api/timezone/America/Denver`
 document.getElementById(`sunrise_time`).innerText = 'G'
         const timezone_response = await fetch(timezone_url)
 document.getElementById(`sunrise_time`).innerText = 'H'
