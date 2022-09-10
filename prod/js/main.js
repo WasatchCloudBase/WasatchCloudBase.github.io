@@ -125,14 +125,37 @@ function toggleWindChart(div) {
 (async () => {
     //  example url = 'https://api.sunrise-sunset.org/json?lat=40.7862&lng=-111.9801&date=2022-09-09'
     const ISO_format_today = now.toISOString().substring(0,10)
+
+
+    document.getElementById(`sunrise_time`).innerText = ISO_format_today
+
+
+
     const url = `https://api.sunrise-sunset.org/json?lat=40.7862&lng=-111.9801&date=` + ISO_format_today
+
+
+    document.getElementById(`sunrise_time`).innerText = url
+
+
     const response = await fetch(url)
     const DaylightData = await response.json()
     if (DaylightData) {
+
+
+        document.getElementById(`sunrise_time`).innerText = 'Fetched daylight data'
+
+
+
         // Get UTC / DST offset
         const timezone_url = `http://worldtimeapi.org/api/timezone/America/Denver`
         const timezone_response = await fetch(timezone_url)
         const TimeZoneData = await timezone_response.json()
+
+
+        document.getElementById(`sunrise_time`).innerText = 'Fetched timezone offset'
+
+
+
         let UTC_adjustment_digits = TimeZoneData.utc_offset.search(`:`)
         let UTC_Adjustment = +TimeZoneData.utc_offset.substring(0,UTC_adjustment_digits)
 
@@ -150,7 +173,7 @@ function toggleWindChart(div) {
 
         //Update page elements
         document.getElementById(`sunrise_time`).innerText = sunrise + ' am'
-//        document.getElementById(`sunset_time`).innerText = sunset + ' pm'
+        document.getElementById(`sunset_time`).innerText = sunset + ' pm'
     }
 })();
 
