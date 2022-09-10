@@ -149,8 +149,8 @@ function toggleWindChart(div) {
         let sunset = sunset_hour + DaylightData.results.sunset.substring(sunrise_hour_digits, sunset_hour_digits + 3)
 
         //Update page elements
-        document.getElementById(`sunrise_time`).innerHTML = sunrise + ' am'
-        document.getElementById(`sunset_time`).innerHTML = sunset + ' pm'
+//        document.getElementById(`sunrise_time`).innerHTML = sunrise + ' am'
+//        document.getElementById(`sunset_time`).innerHTML = sunset + ' pm'
     }
 })();
 
