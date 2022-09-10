@@ -124,23 +124,28 @@ function toggleWindChart(div) {
 // GET SUNRISE AND SUNSET FOR SLC AIRPORT
 (async () => {
     //  example url = 'https://api.sunrise-sunset.org/json?lat=40.7862&lng=-111.9801&date=2022-09-09'
+document.getElementById(`sunrise_time`).innerText = 'A'
     const ISO_format_today = now.toISOString().substring(0,10)
+document.getElementById(`sunrise_time`).innerText = 'B'
     const url = `https://api.sunrise-sunset.org/json?lat=40.7862&lng=-111.9801&date=` + ISO_format_today
+document.getElementById(`sunrise_time`).innerText = 'C'
     const response = await fetch(url)
+document.getElementById(`sunrise_time`).innerText = 'D'
     const DaylightData = await response.json()
+document.getElementById(`sunrise_time`).innerText = 'E'
     if (DaylightData) {
         // Get UTC / DST offset
-document.getElementById(`sunrise_time`).innerText = 'A'
-        const timezone_url = `http://worldtimeapi.org/api/timezone/America/Denver`
-document.getElementById(`sunrise_time`).innerText = 'B'
-        const timezone_response = await fetch(timezone_url)
-document.getElementById(`sunrise_time`).innerText = 'C'
-        const TimeZoneData = await timezone_response.json()
-document.getElementById(`sunrise_time`).innerText = 'D'
-        let UTC_adjustment_digits = TimeZoneData.utc_offset.search(`:`)
-document.getElementById(`sunrise_time`).innerText = 'E'
-        let UTC_Adjustment = +TimeZoneData.utc_offset.substring(0,UTC_adjustment_digits)
 document.getElementById(`sunrise_time`).innerText = 'F'
+        const timezone_url = `http://worldtimeapi.org/api/timezone/America/Denver`
+document.getElementById(`sunrise_time`).innerText = 'G'
+        const timezone_response = await fetch(timezone_url)
+document.getElementById(`sunrise_time`).innerText = 'H'
+        const TimeZoneData = await timezone_response.json()
+document.getElementById(`sunrise_time`).innerText = 'I'
+        let UTC_adjustment_digits = TimeZoneData.utc_offset.search(`:`)
+document.getElementById(`sunrise_time`).innerText = 'J'
+        let UTC_Adjustment = +TimeZoneData.utc_offset.substring(0,UTC_adjustment_digits)
+document.getElementById(`sunrise_time`).innerText = 'K'
 
         // Adjust sunrise for UTC / DST
         let sunrise_hour_digits = DaylightData.results.sunrise.search(`:`)
