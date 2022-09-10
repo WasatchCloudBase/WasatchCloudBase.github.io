@@ -17,12 +17,9 @@ async function ReloadTimeSeries() {
 // Function to populate station info and build URLs for forecast plotter image and click-through
 // Requires each station to have elements for station ID followed by:  -Name -Elevation -Forecast-URL -Forecast-Image
 function BuildStationInfo (StationID, StationName, StationElevation, StationLatitude, StationLongitude) {
-
     document.getElementById(StationID + `-Name`).innerText = StationName
     document.getElementById(StationID + `-Elevation`).innerText = StationElevation + ' ft'
-
     document.getElementById(StationID + `-Forecast-URL`).href = 'https://forecast.weather.gov/MapClick.php?w0=t&w3=sfcwind&w4=sky&w5=pop&w7=rain&AheadHour=0&Submit=Submit&&FcstType=graphical&textField1=' + StationLatitude + '&textField2=' + StationLongitude + '&site=all&menu=1'
-
     document.getElementById(StationID + `-Forecast-Image`).src = 'https://forecast.weather.gov/meteograms/Plotter.php?lat=' + StationLatitude + '&lon=' + StationLongitude + '&wfo=SLC&zcode=UTZ003&gset=30&gdiff=10&unit=0&tinfo=MY7&ahour=0&pcmd=10001110101000000000000000000000000000000000000000000000000&lg=en&indu=1!1!1!&dd=&bw=&hrspan=48&pqpfhr=6&psnwhr=6'
 }
 
@@ -54,7 +51,6 @@ async function getTimeSeries() {
     BuildStationInfo('SIGU1', 'Signal Peak (Cove)', '8,767', '38.633428', '-112.060653')
     BuildStationInfo('UTBU1', 'Beaver Mt (Tushars)', '10,007', '38.28609', '-112.36122')
 
-
     // Get Mesowest readings
     var url = `https://api.mesowest.net/v2/station/timeseries?` +
         // Central Wasatch
@@ -79,7 +75,6 @@ async function getTimeSeries() {
         `&stid=KRIF` + 
         `&stid=SIGU1` +
         `&stid=UTBU1` +
-//        `&stid=SIGU1` +
         `&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&obtimezone=local&timeformat=%-I:%M%20%p&token=0030ed6480a4440eb29ec23ff37fe159`
     var response = await fetch(url)
     var tsData = await response.json()
@@ -150,6 +145,7 @@ function zone(stationID, data, zDigit=[]) {
 }
 
 function windChart(data) {
+
     // Set wind limits based on site type
     const MountainSites = ['REY', 'IFF', 'AMB', 'OGP', 'SND', 'SIGU1', 'UTBU1']
     const SoaringSites = ['FPS', 'HF012']
@@ -163,6 +159,7 @@ function windChart(data) {
         var ylwLim = 15
         var redLim = 22
     }
+
     // Set number of history readings based on site reading frequency
     // FastStations have 5-10 minute updates
     // SlowStations have hourly updates
@@ -176,7 +173,11 @@ function windChart(data) {
     } else {
         var length = 9 // Show last 9 readings (~2-4 hour history)
     }
+
+    // Display history readings
     document.getElementById(`${data.stid}-main`).style.display = 'block'
+
+    // Populate history reading contents
     for (let key in data) data[key] = data[key].slice(-length)
     time(data.stid, data.date_time)
     wind(data.stid, data.wind_speed_set_1, ylwLim, redLim)

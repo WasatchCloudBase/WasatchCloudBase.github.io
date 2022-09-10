@@ -121,6 +121,39 @@ function toggleWindChart(div) {
     }
 }
 
+// GET SUNRISE AND SUNSET FOR SLC AIRPORT
+(async () => {
+    //  example url = 'https://api.sunrise-sunset.org/json?lat=40.7862&lng=-111.9801&date=2022-09-09'
+    const ISO_format_today = now.toISOString().substring(0,10)
+    const url = `https://api.sunrise-sunset.org/json?lat=40.7862&lng=-111.9801&date=` + ISO_format_today
+    const response = await fetch(url)
+    const DaylightData = await response.json()
+    if (DaylightData) {
+        // Get UTC / DST offset
+        const timezone_url = `http://worldtimeapi.org/api/timezone/America/Denver`
+        const timezone_response = await fetch(timezone_url)
+        const TimeZoneData = await timezone_response.json()
+        let UTC_adjustment_digits = TimeZoneData.utc_offset.search(`:`)
+        let UTC_Adjustment = +TimeZoneData.utc_offset.substring(0,UTC_adjustment_digits)
+
+        // Adjust sunrise for UTC / DST
+        let sunrise_hour_digits = DaylightData.results.sunrise.search(`:`)
+        let sunrise_hour = +DaylightData.results.sunrise.substring(0,sunrise_hour_digits) + UTC_Adjustment
+        if (sunrise_hour < 0) { sunrise_hour = (12 + sunrise_hour) } 
+        let sunrise = sunrise_hour + DaylightData.results.sunrise.substring(sunrise_hour_digits, sunrise_hour_digits + 3)
+
+        // Adjust sunset for UTC / DST
+        let sunset_hour_digits = DaylightData.results.sunset.search(`:`)
+        let sunset_hour = +DaylightData.results.sunset.substring(0,sunset_hour_digits) + UTC_Adjustment
+        if (sunset_hour < 0) { sunset_hour = (12 + sunset_hour) } 
+        let sunset = sunset_hour + DaylightData.results.sunset.substring(sunrise_hour_digits, sunset_hour_digits + 3)
+
+        //Update page elements
+        document.getElementById(`sunrise_time`).innerHTML = sunrise + ' am'
+        document.getElementById(`sunset_time`).innerHTML = sunset + ' pm'
+    }
+})();
+
 // IIFE ASYNC NOAA PUBLIC API FOR 3 DAY FORECAST
 (async () => {
 //     const url = 'https://wasatchcloudbase.github.io/example_files/example_noaa_forecast.json'

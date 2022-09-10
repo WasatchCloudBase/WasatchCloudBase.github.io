@@ -16,9 +16,14 @@
 
     <!-- Page title and menu -->
     <div class="container-fluid sticky-top bg-heading">
-        <div class="row">
-            <div class="col display-2">Wasatch Wind</div>
+        <div class="row align-items-center d-flex justify-content-around mb-2">
+            <div class="col-auto"><img src="prod/images/Sun_icon_gold_black_canvas.png" height="80" width="80"></div>
+            <div class="col-auto display-5 align-self-center text-warning" id="sunrise_time"></div>
+            <div class="col display-2">Wasatch+ Wind</div>
+            <div class="col-auto display-5 align-self-center text-warning" id="sunset_time"></div>
+            <div class="col-auto"><img src="prod/images/Moon_icon_gold.png" height="80" width="80"></div>
         </div>
+
         <div class="dropdown text-start border-top border-bottom mt-2">
             <div class="row">
                 <button class="col-auto btn-menu border-0 fw-bold display-2 bg-black rounded-3 text-warning my-2 py-3" id="btn-menu" onclick="menu()">&#9776;&#9662;</button>
@@ -89,8 +94,8 @@
             <!-- KSLC READINGS EXPANSION -->
             <a href="https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=KSLC&table=1&banner=off" target="_blank">
                 <div class="collapse" id="KSLC">
-                    <div class="row align-items-end bg-dark rounded-4 mx-0 mt-2">
-                        <div class="col ps-0 pe-1">
+                    <div class="row align-items-end bg-dark rounded-4 mx-0 mt-2" id="KSLC-Reading-Group">
+                        <div class="col ps-0 pe-1" id="KSLC-Reading-0">
                             <div class="pink h2" id="KSLC-gust-0"></div>
                             <div class="bg-danger" id="KSLC-gbar-0"></div>
                             <div id="KSLC-wbar-0"></div>
