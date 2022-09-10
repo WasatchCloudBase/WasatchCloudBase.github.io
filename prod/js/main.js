@@ -123,6 +123,12 @@ function toggleWindChart(div) {
 
 // GET SUNRISE AND SUNSET FOR SLC AIRPORT
 (async () => {
+
+
+    document.getElementById(`sunrise_time`).innerText = 'Started code'
+
+
+
     //  example url = 'https://api.sunrise-sunset.org/json?lat=40.7862&lng=-111.9801&date=2022-09-09'
     const ISO_format_today = now.toISOString().substring(0,10)
 
