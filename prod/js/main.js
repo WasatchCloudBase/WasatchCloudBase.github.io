@@ -130,12 +130,17 @@ function toggleWindChart(div) {
     const DaylightData = await response.json()
     if (DaylightData) {
         // Get UTC / DST offset
+document.getElementById(`sunrise_time`).innerText = sunrise + 'A'
         const timezone_url = `http://worldtimeapi.org/api/timezone/America/Denver`
-//        const timezone_response = await fetch(timezone_url)
-//        const TimeZoneData = await timezone_response.json()
-//        let UTC_adjustment_digits = TimeZoneData.utc_offset.search(`:`)
-//        let UTC_Adjustment = +TimeZoneData.utc_offset.substring(0,UTC_adjustment_digits)
-        let UTC_Adjustment = -6
+document.getElementById(`sunrise_time`).innerText = sunrise + 'B'
+        const timezone_response = await fetch(timezone_url)
+document.getElementById(`sunrise_time`).innerText = sunrise + 'C'
+        const TimeZoneData = await timezone_response.json()
+document.getElementById(`sunrise_time`).innerText = sunrise + 'D'
+        let UTC_adjustment_digits = TimeZoneData.utc_offset.search(`:`)
+document.getElementById(`sunrise_time`).innerText = sunrise + 'E'
+        let UTC_Adjustment = +TimeZoneData.utc_offset.substring(0,UTC_adjustment_digits)
+document.getElementById(`sunrise_time`).innerText = sunrise + 'F'
 
         // Adjust sunrise for UTC / DST
         let sunrise_hour_digits = DaylightData.results.sunrise.search(`:`)
