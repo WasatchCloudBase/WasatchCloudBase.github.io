@@ -51,6 +51,7 @@ async function getTimeSeries() {
     BuildStationInfo('KRIF', 'Richfield Airport', '5,318', '38.73411', '-112.10158')
     BuildStationInfo('SIGU1', 'Signal Peak (Cove)', '8,767', '38.633428', '-112.060653')
     BuildStationInfo('UTBU1', 'Beaver Mt (Tushars)', '10,007', '38.28609', '-112.36122')
+    BuildStationInfo('BYCU1', 'Bryce Canyon', '7,855', '37.641667', '-112.172222')
 
     // Get Mesowest readings
     var url = `https://api.mesowest.net/v2/station/timeseries?` +
@@ -77,6 +78,7 @@ async function getTimeSeries() {
         `&stid=KRIF` + 
         `&stid=SIGU1` +
         `&stid=UTBU1` +
+        `&stid=BYCU1` +
         `&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&obtimezone=local&timeformat=%-I:%M%20%p&token=0030ed6480a4440eb29ec23ff37fe159`
     var response = await fetch(url)
     var tsData = await response.json()
@@ -149,7 +151,7 @@ function zone(stationID, data, zDigit=[]) {
 function windChart(data) {
 
     // Set wind limits based on site type
-    const MountainSites = ['REY', 'IFF', 'AMB', 'OGP', 'SND', 'SIGU1', 'UTBU1']
+    const MountainSites = ['REY', 'IFF', 'AMB', 'OGP', 'SND', 'SIGU1', 'UTBU1', 'BYCU1']
     const SoaringSites = ['FPS', 'HF012', 'UCC45']
     if (MountainSites.includes(data.stid)) {
         var ylwLim = 12
@@ -167,7 +169,7 @@ function windChart(data) {
     // SlowStations have hourly updates
     // All others have 10-30 minute updates
     const FastStations = ['KSLC', 'UTOLY', 'FPS', 'REY', 'IFF', 'CEN', 'BBN', 'KPVU', 'UTORM', 'SND', 'UTBU1']
-    const SlowStations = ['AMB', 'SIGU1'] 
+    const SlowStations = ['AMB', 'SIGU1', 'BYCU1'] 
     if (FastStations.includes(data.stid)) {
         var length = 12 // Show 1-2 hour history
     } else if (SlowStations.includes(data.stid)) {
@@ -184,7 +186,7 @@ function windChart(data) {
     time(data.stid, data.date_time)
     wind(data.stid, data.wind_speed_set_1, ylwLim, redLim)
     if (data.wind_direction_set_1) wdir(data.stid, data.wind_direction_set_1)
-    if (data.wind_gust_set_1) gust(data.stid, data.wind_gust_set_1, data.wind_speed_set_1)
+    if (data.wind_gust_set_1) gust(data.stid, data.wind_gust_set_1, data.wind_speed_set_1, ylwLim, redLim)
     else { for (let i=0; i<length; i++) { document.getElementById(`${data.stid}-gust-${i}`).innerHTML = '&nbsp;' } }
 }
 
@@ -201,9 +203,8 @@ function wind(stid, data, ylwLim, redLim) {
     document.getElementById(`${stid}-wind`).innerHTML = typeof data[data.length-1]==='string' ? '<span class="display-5">Calm</span>' : data[data.length-1]
     for (let i=0; i<data.length; i++) {
         document.getElementById(`${stid}-wind-${i}`).innerHTML = data[i]
-        let element = document.getElementById(`${stid}-wbar-${i}`)
-        element.style.height = barHeight[i]
-        element.style.backgroundColor = barColor[i]
+        document.getElementById(`${stid}-wbar-${i}`).style.height = barHeight[i]
+        document.getElementById(`${stid}-wbar-${i}`).style.backgroundColor = barColor[i]
     }
 }
 
@@ -213,13 +214,13 @@ function wdir(stid, data) {
     document.getElementById(`${stid}-wdir`).innerHTML = wimg[wimg.length-1]
     document.getElementById(`${stid}-wdir`).style.transform = wdir[wdir.length-1]
     for (let i=0; i<data.length; i++) {
-        const element = document.getElementById(`${stid}-wdir-${i}`)
-        element.innerHTML = wimg[i]
-        element.style.transform = wdir[i]
+        document.getElementById(`${stid}-wdir-${i}`).innerHTML = wimg[i]
+        document.getElementById(`${stid}-wdir-${i}`).style.transform = wdir[i]
     }
 }
 
-function gust(stid, data, wind, barHeight=[]) {
+function gust(stid, data, wind, ylwLim, redLim, barHeight=[]) {
+    const barColor = data.map(d => (d>ylwLim && d<redLim) ? wwYlw : d>=redLim ? wwOrg : wwGrn)
     for (let i=0; i<data.length; i++) barHeight.push(data[i]>=1 ? `${(data[i]-wind[i])*4}px` : '0px')
     data = data.map(d => d>=1 ? `g${Math.round(d)}` : '&nbsp;')
     if (data[data.length-1]!=='&nbsp;') {
@@ -229,5 +230,7 @@ function gust(stid, data, wind, barHeight=[]) {
     for (let i=0; i<data.length; i++) {
         document.getElementById(`${stid}-gust-${i}`).innerHTML = data[i]
         document.getElementById(`${stid}-gbar-${i}`).style.height = barHeight[i]
+        document.getElementById(`${stid}-gbar-${i}`).style.backgroundColor = barColor[i]
+        if (stid === 'FPS') {document.getElementById(`${stid}-break-${i}`).style.height = '5px' }
     }
 }
