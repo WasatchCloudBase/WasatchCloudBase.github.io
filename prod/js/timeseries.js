@@ -42,6 +42,7 @@ async function getTimeSeries() {
     BuildStationInfo('CEN', 'Centerville', '4,231', '40.94968', '-111.891629')
     BuildStationInfo('BBN', 'Bountiful Bench', '4,950', '40.89089', '-111.850578')
     BuildStationInfo('OGP', 'Mount Ogden', '9,570', '41.200', '-111.881')
+    BuildStationInfo('UCC45', 'Randolph', '6,282', '41.67074', '-111.17445')
     // Southern Wasatch
     BuildStationInfo('KPVU', 'Provo Airport', '4,498', '40.21667', '-111.71667')
     BuildStationInfo('UTORM', 'Orem', '4,650', '40.31925', '-111.7267')
@@ -67,6 +68,7 @@ async function getTimeSeries() {
         `&stid=CEN` +
         `&stid=BBN` + 
         `&stid=OGP` +
+        `&stid=UCC45` +
         // Southern Wasatch
         `&stid=KPVU` +
         `&stid=UTORM` +
@@ -148,7 +150,7 @@ function windChart(data) {
 
     // Set wind limits based on site type
     const MountainSites = ['REY', 'IFF', 'AMB', 'OGP', 'SND', 'SIGU1', 'UTBU1']
-    const SoaringSites = ['FPS', 'HF012']
+    const SoaringSites = ['FPS', 'HF012', 'UCC45']
     if (MountainSites.includes(data.stid)) {
         var ylwLim = 12
         var redLim = 20

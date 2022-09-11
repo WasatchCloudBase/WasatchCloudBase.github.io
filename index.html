@@ -1667,6 +1667,118 @@
             </a>
         </div>        
 
+        <!-- WIND OGDEN PEAK (UCC45)-->
+        <div class="container-fluid mt-4">
+            <div id="UCC45-main">
+                <div class="row rounded mt-1">
+                    <div class="col-auto bg-black align-self-center display-4 text-warning clickable" id="UCC45-Forecast-toggle" onclick="toggleWindChart('UCC45-Forecast')">fcst</div>
+                    <div class="bg-dark col mx-0 row rounded-4">
+                        <div class="col-auto">
+                            <div class="row display-3" id="UCC45-Name"></div>
+                            <div class="col-auto row">
+                                <div class="col-auto fs-3 align-self-center text-info" id="UCC45-Elevation"></div>
+                                <div class="col-auto fs-3 align-self-center text-info"></div>
+                                <div class="col-auto fs-1 align-self-center justify-content-end" id="UCC45-time"></div>
+                            </div>
+                        </div>
+                        <div class="col align-self-end row justify-content-end">
+                            <div class="col-auto display-1" id="UCC45-wdir"></div>
+                            <div class="col-auto display-1 align-self-center" id="UCC45-wind">&nbsp;</div>
+                            <div class="collapse col-auto display-4 align-self-center pink" id="UCC45-gust"></div>
+                        </div>
+                    </div>
+                    <div class="col-auto bg-black align-self-center display-2 text-warning clickable" id="UCC45-toggle" onclick="toggleWindChart('UCC45')">+</div>
+                </div>
+            </div>
+            <!-- HOURLY FORECAST EXPANSION -->
+            <div class="collapse" id="UCC45-Forecast">
+                <div class="container-fluid p-0 mx-0 mt-2">
+                    <a href="https://forecast.weather.gov/Map" id="UCC45-Forecast-URL" target="_blank">
+                        <img class="border border-dark" src="https://forecast.weather.gov" id="UCC45-Forecast-Image" width="100%">
+                    </a>
+                </div>
+            </div>
+            <!-- WIND HISTORY EXPANSION -->
+            <a href="https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=UCC45&table=1&banner=off" target="_blank">
+                <div class="collapse" id="UCC45">
+                    <div class="row align-items-end bg-dark rounded-4 mx-0 mt-2">
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="UCC45-gust-0"></div>
+                            <div class="bg-danger" id="UCC45-gbar-0"></div>
+                            <div id="UCC45-wbar-0"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="UCC45-wind-0"></div>
+                            <div><div class="display-4" id="UCC45-wdir-0"></div></div>
+                            <div class="fs-4" id="UCC45-time-0"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="UCC45-gust-1"></div>
+                            <div class="bg-danger" id="UCC45-gbar-1"></div>
+                            <div id="UCC45-wbar-1"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="UCC45-wind-1"></div>
+                            <div><div class="display-4" id="UCC45-wdir-1"></div></div>
+                            <div class="fs-4" id="UCC45-time-1"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="UCC45-gust-2"></div>
+                            <div class="bg-danger" id="UCC45-gbar-2"></div>
+                            <div id="UCC45-wbar-2"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="UCC45-wind-2"></div>
+                            <div><div class="display-4" id="UCC45-wdir-2"></div></div>
+                            <div class="fs-4" id="UCC45-time-2"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="UCC45-gust-3"></div>
+                            <div class="bg-danger" id="UCC45-gbar-3"></div>
+                            <div id="UCC45-wbar-3"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="UCC45-wind-3"></div>
+                            <div><div class="display-4" id="UCC45-wdir-3"></div></div>
+                            <div class="fs-4" id="UCC45-time-3"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="UCC45-gust-4"></div>
+                            <div class="bg-danger" id="UCC45-gbar-4"></div>
+                            <div id="UCC45-wbar-4"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="UCC45-wind-4"></div>
+                            <div><div class="display-4" id="UCC45-wdir-4"></div></div>
+                            <div class="fs-4" id="UCC45-time-4"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="UCC45-gust-5"></div>
+                            <div class="bg-danger" id="UCC45-gbar-5"></div>
+                            <div id="UCC45-wbar-5"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="UCC45-wind-5"></div>
+                            <div><div class="display-4" id="UCC45-wdir-5"></div></div>
+                            <div class="fs-4" id="UCC45-time-5"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="UCC45-gust-6"></div>
+                            <div class="bg-danger" id="UCC45-gbar-6"></div>
+                            <div id="UCC45-wbar-6"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="UCC45-wind-6"></div>
+                            <div><div class="display-4" id="UCC45-wdir-6"></div></div>
+                            <div class="fs-4" id="UCC45-time-6"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="UCC45-gust-7"></div>
+                            <div class="bg-danger" id="UCC45-gbar-7"></div>
+                            <div id="UCC45-wbar-7"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="UCC45-wind-7"></div>
+                            <div><div class="display-4" id="UCC45-wdir-7"></div></div>
+                            <div class="fs-4" id="UCC45-time-7"></div>
+                        </div>
+                        <div class="col ps-0 pe-1">
+                            <div class="pink h2" id="UCC45-gust-8"></div>
+                            <div class="bg-danger" id="UCC45-gbar-8"></div>
+                            <div id="UCC45-wbar-8"></div>
+                            <div class="fs-1 fw-bold bg-secondary" id="UCC45-wind-8"></div>
+                            <div><div class="display-4" id="UCC45-wdir-8"></div></div>
+                            <div class="fs-4" id="UCC45-time-8"></div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>        
+
         <!-- SOUTHERN WASATCH STATION READINGS -->
         <div class="container-fluid display-3 mt-2">Southern Wasatch</div>
 
