@@ -195,6 +195,8 @@ function windChart(data) {
     // TEMP DO ONLY FOR FPS FOR NOW **********************************
     // ***************************************************************
     if (data.stid === 'FPS') {
+
+
     for (let i=1; i<length; i++) {
         let cloned_reading = document.getElementById(`${data.stid}-reading-0`).cloneNode(true)
         //Rename parent and children IDs
@@ -207,8 +209,9 @@ function windChart(data) {
         cloned_reading.children[5].id = `${data.stid}-wdir-` + i
         cloned_reading.children[6].id = `${data.stid}-time-` + i
         //Add clone to page
-        document.getElementById(`${data.stid}-reading-main`).appendChild(cloned_reading)
+//        document.getElementById(`${data.stid}-reading-main`).appendChild(cloned_reading)
     }
+
 
     // ****************************************************************
     // **** END OF TEMP *************************************************
