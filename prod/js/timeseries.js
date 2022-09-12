@@ -1,7 +1,7 @@
 'use strict';
 // Set number of history readings based on site reading frequency
 const FastStations = ['KSLC', 'UTOLY', 'FPS', 'REY', 'IFF', 'CEN', 'BBN', 'KPVU', 'UTORM', 'SND', 'UTBU1']
-const SlowStations = ['AMB', 'SIGU1', 'BYCU1'] 
+const SlowStations = ['AMB', 'SIGU1', 'BYCU1', 'KHIF'] 
 const FastStationCount = 12 // 5-10 minute updates; show 1-2 hour history
 const SlowStationCount = 5  // Hourly updates; show 5 hour history
 const MediumStationCount = 9 // 10-30 minute updates; show last 9 readings (~2-4 hour history)
