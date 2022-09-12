@@ -178,6 +178,43 @@ function windChart(data) {
         var length = 9 // Show last 9 readings (~2-4 hour history)
     }
 
+    // Clone history reading div
+    /* Div to clone:  
+        <div class="col ps-0 pe-1" id='FPS-reading-0>
+            <div class="pink h2" id="FPS-gust-0"></div>
+            <div id="FPS-gbar-0"></div>
+            <div class="bg-dark" id="FPS-break-0"></div>
+            <div id="FPS-wbar-0"></div>
+            <div class="fs-1" id="FPS-wind-0"></div>
+            <div class="display-4" id="FPS-wdir-0"></div>
+            <div class="fs-4 text-info" id="FPS-time-0"></div>
+        </div>   */
+    // loop for station history length...start at 1
+
+    // ***************************************************************
+    // TEMP DO ONLY FOR FPS FOR NOW **********************************
+    // ***************************************************************
+    if (data.stid === 'FPS') {
+    for (let i=1; i<length; i++) {
+        let cloned_reading = document.getElementById(`${data.stid}-reading-0`).cloneNode(true)
+        //Rename parent and children IDs
+        cloned_reading.id = `${data.stid}-reading-` + i +10 //**************DEBUGGING ***************/
+        cloned_reading.children[0].id = `${data.stid}-gust-` + i //**************DEBUGGING ***************/
+        cloned_reading.children[1].id = `${data.stid}-gbar-` + i //**************DEBUGGING ***************/
+        cloned_reading.children[2].id = `${data.stid}-break-` + i //**************DEBUGGING ***************/
+        cloned_reading.children[3].id = `${data.stid}-wbar-` + i//**************DEBUGGING ***************/
+        cloned_reading.children[4].id = `${data.stid}-wind-` + i //**************DEBUGGING ***************/
+        cloned_reading.children[5].id = `${data.stid}-wdir-` + i //**************DEBUGGING ***************/
+        cloned_reading.children[6].id = `${data.stid}-time-` + i //**************DEBUGGING ***************/
+        //Add clone to page
+        document.getElementById(`${data.stid}-reading-main`).appendChild(cloned_reading)
+    }
+
+    // ****************************************************************
+    // **** END OF TEMP *************************************************
+    // ******************************************************************
+    }
+ 
     // Display history readings
     document.getElementById(`${data.stid}-main`).style.display = 'block'
 
