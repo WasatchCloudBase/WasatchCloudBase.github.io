@@ -211,7 +211,7 @@ function windChart(data) {
             //Add clone to page
             document.getElementById(`${data.stid}-reading-main`).appendChild(cloned_reading)
         } 
-        catch (error) {document.getElementById('${data.stid}-Name') = error }
+        catch (error) {document.getElementById(`${data.stid}-Name`) = error }
     }
 
 
