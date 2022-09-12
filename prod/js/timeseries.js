@@ -197,20 +197,21 @@ function windChart(data) {
     if (data.stid === 'FPS') {
     
     for (let i=1; i<length; i++) {
-        let cloned_reading = document.getElementById(`${data.stid}-reading-0`).cloneNode(true)
-        //Rename parent and children IDs
-        cloned_reading.id = `${data.stid}-reading-` + i
-        cloned_reading.children[0].id = `${data.stid}-gust-` + i
-        cloned_reading.children[1].id = `${data.stid}-gbar-` + i
-        cloned_reading.children[2].id = `${data.stid}-break-` + i
-        cloned_reading.children[3].id = `${data.stid}-wbar-` + i
-        cloned_reading.children[4].id = `${data.stid}-wind-` + i
-        cloned_reading.children[5].id = `${data.stid}-wdir-` + i
-        cloned_reading.children[6].id = `${data.stid}-time-` + i
-        //Add clone to page
         try {
-        document.getElementById(`${data.stid}-reading-main`).appendChild(cloned_reading)
-        } catch (error) {document.getElementById('${data.stid}-Name') = error }
+            let cloned_reading = document.getElementById(`${data.stid}-reading-0`).cloneNode(true)
+            //Rename parent and children IDs
+            cloned_reading.id = `${data.stid}-reading-` + i
+            cloned_reading.children[0].id = `${data.stid}-gust-` + i
+            cloned_reading.children[1].id = `${data.stid}-gbar-` + i
+            cloned_reading.children[2].id = `${data.stid}-break-` + i
+            cloned_reading.children[3].id = `${data.stid}-wbar-` + i
+            cloned_reading.children[4].id = `${data.stid}-wind-` + i
+            cloned_reading.children[5].id = `${data.stid}-wdir-` + i
+            cloned_reading.children[6].id = `${data.stid}-time-` + i
+            //Add clone to page
+            document.getElementById(`${data.stid}-reading-main`).appendChild(cloned_reading)
+        } 
+        catch (error) {document.getElementById('${data.stid}-Name') = error }
     }
 
 
