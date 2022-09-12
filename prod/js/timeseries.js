@@ -1,4 +1,51 @@
 'use strict';
+// Set number of history readings based on site reading frequency
+const FastStations = ['KSLC', 'UTOLY', 'FPS', 'REY', 'IFF', 'CEN', 'BBN', 'KPVU', 'UTORM', 'SND', 'UTBU1']
+const SlowStations = ['AMB', 'SIGU1', 'BYCU1'] 
+const FastStationCount = 12 // 5-10 minute updates; show 1-2 hour history
+const SlowStationCount = 5  // Hourly updates; show 5 hour history
+const MediumStationCount = 9 // 10-30 minute updates; show last 9 readings (~2-4 hour history)
+// Determine mountain and soaring sites for wind speed color thresholds
+const MountainSites = ['REY', 'IFF', 'AMB', 'OGP', 'SND', 'SIGU1', 'UTBU1', 'BYCU1']
+const SoaringSites = ['FPS', 'HF012', 'UCC45']
+// Airport stations with pressure zone readings
+const AirportStations = ['KSLC', 'KRIF', 'KPVU', 'KHIF']
+
+// Build time series station info, forecast URLs, and cloned divs
+// Central Wasatch
+BuildStationInfo('KSLC', 'SLC Airport', '4,226', '40.7862', '-111.9801')
+BuildStationInfo('UTOLY', 'Olympus Cove', '4,972', '40.6826', '-111.7973')
+BuildStationInfo('KU42', 'Airport 2', '4,596', '40.61960', '-111.99016')
+BuildStationInfo('HF012', 'POTM North', '6,194', '40.47191', '-111.88297')
+BuildStationInfo('FPS', 'POTM South', '5,202', '40.45689', '-111.90483')
+BuildStationInfo('REY', 'Reynolds Peak', '9,400', '40.662117', '-111.646764')
+BuildStationInfo('IFF', 'Cardiff Peak', '10,059', '40.5950', '-111.6519')
+BuildStationInfo('AMB', 'Alta Mt Baldy', '11,066', '40.5677', '-111.6374')
+// Northern Wasatch
+BuildStationInfo('KHIF', 'Hill AFB', '4,783', '41.11112', '-111.96229')
+BuildStationInfo('CEN', 'Centerville', '4,231', '40.94968', '-111.891629')
+BuildStationInfo('BBN', 'Bountiful Bench', '4,950', '40.89089', '-111.850578')
+BuildStationInfo('OGP', 'Mount Ogden', '9,570', '41.200', '-111.881')
+BuildStationInfo('UCC45', 'Randolph', '6,282', '41.67074', '-111.17445')
+// Southern Wasatch
+BuildStationInfo('KPVU', 'Provo Airport', '4,498', '40.21667', '-111.71667')
+BuildStationInfo('UTORM', 'Orem', '4,650', '40.31925', '-111.7267')
+BuildStationInfo('SND', 'Sundance', '8,250', '40.368386', '-111.593964')
+// Central Utah
+BuildStationInfo('KRIF', 'Richfield Airport', '5,318', '38.73411', '-112.10158')
+BuildStationInfo('SIGU1', 'Signal Peak (Cove)', '8,767', '38.633428', '-112.060653')
+BuildStationInfo('UTBU1', 'Beaver Mt (Tushars)', '10,007', '38.28609', '-112.36122')
+BuildStationInfo('BYCU1', 'Bryce Canyon', '7,855', '37.641667', '-112.172222')    
+
+// Determine number of history readings based on station reading speed
+function getHistoryReadingCount(stid) {
+    var readingCount = 0
+    if (FastStations.includes(stid)) {readingCount = FastStationCount} 
+    else if (SlowStations.includes(stid)) {readingCount = SlowStationCount} 
+    else {readingCount = MediumStationCount}
+    return readingCount
+}
+
 // IIFE ASYNC CALL FUNCTION TO GET TIME SERIES DATA
 (async () => {
     // Initial call on page load
@@ -14,45 +61,36 @@ async function ReloadTimeSeries() {
     var TimeSeriesIntervalCall = await getTimeSeries()
 };
 
-// Function to populate station info and build URLs for forecast plotter image and click-through
-// Requires each station to have elements for station ID followed by:  -Name -Elevation -Forecast-URL -Forecast-Image
+// Function to populate station info, build URLs for forecast plotter image and click-through, and clone reading history DIVs
 function BuildStationInfo (StationID, StationName, StationElevation, StationLatitude, StationLongitude) {
     document.getElementById(StationID + `-Name`).innerText = StationName
     document.getElementById(StationID + `-Elevation`).innerText = StationElevation + ' ft'
     document.getElementById(StationID + `-Forecast-URL`).href = 'https://forecast.weather.gov/MapClick.php?w0=t&w3=sfcwind&w4=sky&w5=pop&w7=rain&AheadHour=0&Submit=Submit&&FcstType=graphical&textField1=' + StationLatitude + '&textField2=' + StationLongitude + '&site=all&menu=1'
     document.getElementById(StationID + `-Forecast-Image`).src = 'https://forecast.weather.gov/meteograms/Plotter.php?lat=' + StationLatitude + '&lon=' + StationLongitude + '&wfo=SLC&zcode=UTZ003&gset=30&gdiff=10&unit=0&tinfo=MY7&ahour=0&pcmd=10001110101000000000000000000000000000000000000000000000000&lg=en&indu=1!1!1!&dd=&bw=&hrspan=48&pqpfhr=6&psnwhr=6'
+    // Set number of history readings based on station reading speed
+    var readingCount = getHistoryReadingCount(StationID)
+    // Clone history reading div
+    try {
+        for (let i=1; i<readingCount; i++) {
+            let cloned_reading = document.getElementById(`${StationID}-reading-0`).cloneNode(true)
+            //Rename parent and children IDs
+            cloned_reading.id = `${StationID}-reading-` + i
+            cloned_reading.children[0].id = `${StationID}-gust-` + i
+            cloned_reading.children[1].id = `${StationID}-gbar-` + i
+            cloned_reading.children[2].id = `${StationID}-break-` + i
+            cloned_reading.children[3].id = `${StationID}-wbar-` + i
+            cloned_reading.children[4].id = `${StationID}-wind-` + i
+            cloned_reading.children[5].id = `${StationID}-wdir-` + i
+            cloned_reading.children[6].id = `${StationID}-time-` + i
+            //Add clone to page
+            document.getElementById(`${StationID}-reading-main`).appendChild(cloned_reading)
+        } 
+    }   catch (error) {document.getElementById(`${StationID}-Name`).innerText = error }
 }
 
 // Function to get TimeSeries data from Mesonet API
 // MESONET PRIVATE API FOR TIME SERIES: https://developers.synopticdata.com/mesonet
 async function getTimeSeries() {
-
-    // Populate station info and build forecast URLs
-    // Central Wasatch
-    BuildStationInfo('KSLC', 'SLC Airport', '4,226', '40.7862', '-111.9801')
-    BuildStationInfo('UTOLY', 'Olympus Cove', '4,972', '40.6826', '-111.7973')
-    BuildStationInfo('KU42', 'Airport 2', '4,596', '40.61960', '-111.99016')
-    BuildStationInfo('HF012', 'POTM North', '6,194', '40.47191', '-111.88297')
-    BuildStationInfo('FPS', 'POTM South', '5,202', '40.45689', '-111.90483')
-    BuildStationInfo('REY', 'Reynolds Peak', '9,400', '40.662117', '-111.646764')
-    BuildStationInfo('IFF', 'Cardiff Peak', '10,059', '40.5950', '-111.6519')
-    BuildStationInfo('AMB', 'Alta Mt Baldy', '11,066', '40.5677', '-111.6374')
-    // Northern Wasatch
-    BuildStationInfo('KHIF', 'Hill AFB', '4,783', '41.11112', '-111.96229')
-    BuildStationInfo('CEN', 'Centerville', '4,231', '40.94968', '-111.891629')
-    BuildStationInfo('BBN', 'Bountiful Bench', '4,950', '40.89089', '-111.850578')
-    BuildStationInfo('OGP', 'Mount Ogden', '9,570', '41.200', '-111.881')
-    BuildStationInfo('UCC45', 'Randolph', '6,282', '41.67074', '-111.17445')
-    // Southern Wasatch
-    BuildStationInfo('KPVU', 'Provo Airport', '4,498', '40.21667', '-111.71667')
-    BuildStationInfo('UTORM', 'Orem', '4,650', '40.31925', '-111.7267')
-    BuildStationInfo('SND', 'Sundance', '8,250', '40.368386', '-111.593964')
-    // Central Utah
-    BuildStationInfo('KRIF', 'Richfield Airport', '5,318', '38.73411', '-112.10158')
-    BuildStationInfo('SIGU1', 'Signal Peak (Cove)', '8,767', '38.633428', '-112.060653')
-    BuildStationInfo('UTBU1', 'Beaver Mt (Tushars)', '10,007', '38.28609', '-112.36122')
-    BuildStationInfo('BYCU1', 'Bryce Canyon', '7,855', '37.641667', '-112.172222')
-
     // Get Mesowest readings
     var url = `https://api.mesowest.net/v2/station/timeseries?` +
         // Central Wasatch
@@ -83,7 +121,6 @@ async function getTimeSeries() {
     var response = await fetch(url)
     var tsData = await response.json()
     if (tsData) {
-        const AirportStations = ['KSLC', 'KRIF', 'KPVU', 'KHIF']
         let stations = []
         for (let i=0; i<tsData.STATION.length; i++) {
             // Get pressure readings for each airport station
@@ -149,10 +186,7 @@ function zone(stationID, data, zDigit=[]) {
 }
 
 function windChart(data) {
-
     // Set wind limits based on site type
-    const MountainSites = ['REY', 'IFF', 'AMB', 'OGP', 'SND', 'SIGU1', 'UTBU1', 'BYCU1']
-    const SoaringSites = ['FPS', 'HF012', 'UCC45']
     if (MountainSites.includes(data.stid)) {
         var ylwLim = 12
         var redLim = 20
@@ -164,64 +198,11 @@ function windChart(data) {
         var redLim = 22
     }
 
-    // Set number of history readings based on site reading frequency
-    // FastStations have 5-10 minute updates
-    // SlowStations have hourly updates
-    // All others have 10-30 minute updates
-    const FastStations = ['KSLC', 'UTOLY', 'FPS', 'REY', 'IFF', 'CEN', 'BBN', 'KPVU', 'UTORM', 'SND', 'UTBU1']
-    const SlowStations = ['AMB', 'SIGU1', 'BYCU1'] 
-    if (FastStations.includes(data.stid)) {
-        var length = 12 // Show 1-2 hour history
-    } else if (SlowStations.includes(data.stid)) {
-        var length = 5 // Show 5 hour history
-    } else {
-        var length = 9 // Show last 9 readings (~2-4 hour history)
-    }
-
-    // Clone history reading div
-    /* Div to clone:  
-        <div class="col ps-0 pe-1" id='FPS-reading-0>
-            <div class="pink h2" id="FPS-gust-0"></div>
-            <div id="FPS-gbar-0"></div>
-            <div class="bg-dark" id="FPS-break-0"></div>
-            <div id="FPS-wbar-0"></div>
-            <div class="fs-1" id="FPS-wind-0"></div>
-            <div class="display-4" id="FPS-wdir-0"></div>
-            <div class="fs-4 text-info" id="FPS-time-0"></div>
-        </div>   */
-    // loop for station history length...start at 1
-
-    // ***************************************************************
-    // TEMP DO ONLY FOR FPS FOR NOW **********************************
-    // ***************************************************************
-    if (data.stid === 'FPS') {
-    try {
-        for (let i=1; i<length; i++) {
-            let cloned_reading = document.getElementById(`${data.stid}-reading-0`).cloneNode(true)
-            //Rename parent and children IDs
-            cloned_reading.id = `${data.stid}-reading-` + i
-            cloned_reading.children[0].id = `${data.stid}-gust-` + i
-            cloned_reading.children[1].id = `${data.stid}-gbar-` + i
-            cloned_reading.children[2].id = `${data.stid}-break-` + i
-            cloned_reading.children[3].id = `${data.stid}-wbar-` + i
-            cloned_reading.children[4].id = `${data.stid}-wind-` + i
-            cloned_reading.children[5].id = `${data.stid}-wdir-` + i
-            cloned_reading.children[6].id = `${data.stid}-time-` + i
-            //Add clone to page
-            document.getElementById(`${data.stid}-reading-main`).appendChild(cloned_reading)
-        } 
-    }   catch (error) {document.getElementById(`${data.stid}-Name`).innerText = error }
-
-    // ****************************************************************
-    // **** END OF TEMP *************************************************
-    // ******************************************************************
-    }
- 
-    // Display history readings
-    document.getElementById(`${data.stid}-main`).style.display = 'block'
-
-    // Populate history reading contents
+    // Reduce the observations (readings) to the last (most recent) based on the station history length
+    let length = getHistoryReadingCount(data.stid)
     for (let key in data) data[key] = data[key].slice(-length)
+
+    // Update page with reading data
     time(data.stid, data.date_time)
     wind(data.stid, data.wind_speed_set_1, ylwLim, redLim)
     if (data.wind_direction_set_1) wdir(data.stid, data.wind_direction_set_1)
@@ -232,7 +213,9 @@ function windChart(data) {
 function time(stid, data) {
     document.getElementById(`${stid}-time`).innerHTML = data[data.length-1].toLowerCase()
     data = data.map(d => data.length<11 ? d.toLowerCase().replace(':00', '') : d.toLowerCase().slice(0,-3))
-    for (let i=0; i<data.length; i++) document.getElementById(`${stid}-time-${i}`).innerHTML = data[i]
+    for (let i=0; i<data.length; i++) {
+        document.getElementById(`${stid}-time-${i}`).innerHTML = data[i]
+    }
 }
 
 function wind(stid, data, ylwLim, redLim) {
@@ -270,6 +253,6 @@ function gust(stid, data, wind, ylwLim, redLim, barHeight=[]) {
         document.getElementById(`${stid}-gust-${i}`).innerHTML = data[i]
         document.getElementById(`${stid}-gbar-${i}`).style.height = barHeight[i]
         document.getElementById(`${stid}-gbar-${i}`).style.backgroundColor = barColor[i]
-        if (stid === 'FPS') {document.getElementById(`${stid}-break-${i}`).style.height = '5px' }
+        document.getElementById(`${stid}-break-${i}`).style.height = '5px'
     }
 }
