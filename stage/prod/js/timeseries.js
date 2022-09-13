@@ -117,7 +117,8 @@ async function getTimeSeries() {
         `&stid=SIGU1` +
         `&stid=UTBU1` +
         `&stid=BYCU1` +
-        `&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&obtimezone=local&timeformat=%-I:%M%20%p&token=0030ed6480a4440eb29ec23ff37fe159`
+        `&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&obtimezone=local&timeformat=%-I:%M%20%p&` + 
+        `token=0030ed6480a4440eb29ec23ff37fe159`
     var response = await fetch(url)
     var tsData = await response.json()
     if (tsData) {
@@ -200,6 +201,7 @@ function windChart(data) {
 
     // Reduce the observations (readings) to the last (most recent) based on the station history length
     let length = getHistoryReadingCount(data.stid)
+
     for (let key in data) data[key] = data[key].slice(-length)
 
     // Update page with reading data
@@ -223,6 +225,9 @@ function wind(stid, data, ylwLim, redLim) {
     const barHeight = data.map(d => d!=='' ? `${d*4}px` : '0px')
     const barColor = data.map(d => (d>ylwLim && d<redLim) ? wwYlw : d>=redLim ? wwOrg : wwGrn)
     document.getElementById(`${stid}-wind`).innerHTML = typeof data[data.length-1]==='string' ? '<span class="display-5">Calm</span>' : data[data.length-1]
+    //specify wind color based on speed
+    document.getElementById(`${stid}-wind`).style.color = barColor[data.length-1]
+
     for (let i=0; i<data.length; i++) {
         document.getElementById(`${stid}-wind-${i}`).innerHTML = data[i]
         document.getElementById(`${stid}-wbar-${i}`).style.height = barHeight[i]
@@ -247,6 +252,7 @@ function gust(stid, data, wind, ylwLim, redLim, barHeight=[]) {
     data = data.map(d => d>=1 ? `g${Math.round(d)}` : '&nbsp;')
     if (data[data.length-1]!=='&nbsp;') {
         document.getElementById(`${stid}-gust`).innerHTML = data[data.length-1]
+        document.getElementById(`${stid}-gust`).style.color = barColor[data.length-1]
         document.getElementById(`${stid}-gust`).style.display = 'block'
     }
     for (let i=0; i<data.length; i++) {
