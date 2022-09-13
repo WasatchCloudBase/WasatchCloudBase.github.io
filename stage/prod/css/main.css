@@ -1,0 +1,96 @@
+@media only screen and (min-width: 1081px) {
+  body {
+    margin-left: 30%;
+    margin-right: 30%;
+    zoom: 0.4;
+  }
+}
+@media only screen and (max-width: 1080px) {
+  body { width: 98%; }
+  .container-fluid {
+    margin-left: 1%;
+    margin-right: 1%;
+  }
+}
+body {
+  background-color: #000000;
+  color: white;
+  text-align: center;
+}
+.clickable { cursor: pointer}
+a:link {
+  color: white;
+  background-color: transparent;
+  text-decoration: none;
+}
+a:visited {
+  color: white;
+  background-color: transparent;
+  text-decoration: none;
+}
+a:active {
+  color: white;
+  background-color: transparent;
+  text-decoration: none;
+}
+.pink { color: pink; }
+.bg-heading { background-color: #000000; }
+.bg-aloft {
+  background-image: url('../images/aloft.png');
+  background-size: 100% 100%;
+}
+hr.dash { border: 3px dashed white !important; }
+.mb-div-end { margin-bottom: 8rem !important; }
+.wwborder { border-radius: 1rem !important; }
+
+/* D3 */
+.dalrgrid {
+  opacity: 0.25;
+  stroke: white;
+}
+.gridticks {
+  color: lightgray;
+  opacity: 0.5;
+}
+.svgbg { fill: #000000; }
+.textlabel {
+  fill: white;
+  font-size: 150%;
+}
+.xAxis { font-size: 150%; }
+.xLabel {
+  fill: white;
+  font-size: 150%;
+  font-weight: bold;
+}
+.yAxis { font-size: 150%; }
+.yLabel {
+  fill: white;
+  text-anchor: middle;
+  font-size: 150%;
+  font-weight: bold;
+}
+.templabel {
+  fill: #0dcaf0;
+  font-size: 200%;
+  font-weight: bold;
+}
+.raoblabel {
+  fill: #dc3545;
+  font-size: 200%;
+  font-weight: bold;
+}
+.dewpointlabel {
+  fill: #20c997;
+  font-size: 200%;
+  font-weight: bold;
+}
+.dalrlabel {
+  fill: white;
+  font-size: 150%;
+}
+.alternatemax {
+  fill: #ffc107ad;
+  font-size: 200%;
+  font-weight: bold;
+}
