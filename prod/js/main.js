@@ -30,6 +30,7 @@ const svg = d3.select('#skew-t-d3')
 const x = d3.scaleLinear().range([-10, width]).domain([-10, 110])
 const y = d3.scaleLinear().range([height, 0]).domain([surfaceAlt, 18])
 let raobData = {}
+// Set default initial page
 let currentDiv = 'Weather Stations'
 document.getElementById('current-div').innerHTML = currentDiv
 let currentDay = 'Today'
