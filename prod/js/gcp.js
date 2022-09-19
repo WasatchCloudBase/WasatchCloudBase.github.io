@@ -15,15 +15,13 @@
 
 // GCP WIND ALOFT FORECAST
 (async () => {
-//     const url = 'https://wasatchcloudbase.github.io/example_files/example_wind_aloft.json'
+    //const windAloftURL = 'https://wasatchcloudbase.github.io/example_files/example_wind_aloft.json'
     const windAloftURL = 'https://us-west3-wasatchwind.cloudfunctions.net/wind-aloft-ftp'
     const windAloftResponse = await fetch(windAloftURL)
     const aloftData = await windAloftResponse.json()
     const range = (now.getHours() > 3 && now.getHours() < 13) ? '12' : (now.getHours() > 18 || now.getHours() < 4) ? '24' : '06'
     const link = `https://www.aviationweather.gov/windtemp/data?level=low&fcst=${range}&region=slc&layout=on&date=`
     document.getElementById('wind-aloft-link').setAttribute('href', link)
-    const ylwSpds = [9, 12, 15, 21]
-    const redSpds = [14, 18, 24, 30]
     const alts = ['6k', '9k', '12k', '18k']
     document.getElementById('aloft-start').innerHTML = aloftData['Start time']
     document.getElementById('aloft-end').innerHTML = aloftData['End time']
@@ -36,23 +34,20 @@
         else {
             document.getElementById(`aloft-${i}`).style.width = `${aloftData.Spds[alts[i]]*0.6}%`
             document.getElementById(`spd-${i}`).innerHTML = aloftData.Spds[alts[i]]
-            document.getElementById(`aloft-${i}`).style.backgroundColor = (aloftData.Spds[alts[i]] > ylwSpds[i] && aloftData.Spds[alts[i]] < redSpds[i]) ? wwYlw : (aloftData.Spds[alts[i]] >= redSpds[i] ? wwRed : wwGrn)
+            document.getElementById(`aloft-${i}`).style.backgroundColor = getWindColor('Aloft', aloftData.Spds[alts[i]])
             document.getElementById(`mph-${i}`).innerHTML = 'mph'
         }
     }
 })();
 
-// FETCH OF GOOGLE API FILE IS FAILING (CORS issues), SO HAVE RE-CREATED SOARING FORECAST FROM NWS SOURCE (SEE MAIN.JS)
-/* Have commented out the following section due to CORS issues)
 // GCP SOARING FORECAST
 (async () => {
-     const url = 'https://wasatchcloudbase.github.io/example_soaring_forecast.json'
+    //const url = 'https://wasatchcloudbase.github.io/example_soaring_forecast.json'
     const SoaringForecastURL = 'https://storage.googleapis.com/wasatch-wind-static/soaring.json'
-    const response = await fetch(SoaringForecastURL)
-    const soarData = await response.json()
-    const odt = (soarData['Overdevelopment time']==='0000') ? 'None' : soarData['Overdevelopment time']
-    const neg3 = (soarData['Height of -3 index']==='None') ? 0 : soarData['Height of -3 index']
-    const tol = (soarData['Top of lift'].substr(0,5)==='Error') ? 0 : parseInt(soarData['Top of lift'])
+/*    doCORSRequest({method: 'GET', url: SoaringForecastURL, data: ""}, function processResponse(soarData) {
+        const odt = (soarData['Overdevelopment time']==='0000') ? 'None' : soarData['Overdevelopment time']
+        const neg3 = (soarData['Height of -3 index']==='None') ? 0 : soarData['Height of -3 index']
+        const tol = (soarData['Top of lift'].substr(0,5)==='Error') ? 0 : parseInt(soarData['Top of lift'])
         if (soarData['Report date']===date) {
             const maxTemp = soarData['Max temp']
             raob(maxTemp)
@@ -77,10 +72,8 @@
             const maxTemp = (altMaxTempData.properties.maxTemperature.values[0].value*9/5)+32
             raob(maxTemp)
         }    
-////////////
-} catch (e) {
-        document.getElementById('soarcast-tol').innerHTML = e.message
-    }
+    })
+*/
 })();
 
 // GCP ROAB
@@ -93,4 +86,3 @@ function raob(maxTemp) {
             drawD3LapseChart(raobData, maxTemp)
         })
 }
-*/

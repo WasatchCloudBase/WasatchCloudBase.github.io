@@ -122,6 +122,60 @@ function toggleWindChart(div) {
     }
 }
 
+// Set wind speed font and bar colors
+function getWindColor(stid, windSpeed) {
+    // Set color threasholds based on site type
+    if (stid === 'Aloft') {  // Using mountain site speeds for winds aloft readings
+        var ylwLim = 12
+        var orgLim = 20
+        var redLim = 26
+    } else if (MountainSites.includes(stid)) {
+        var ylwLim = 12
+        var orgLim = 20
+        var redLim = 26
+    } else if (SoaringSites.includes(stid)) {
+        var ylwLim = 18
+        var orgLim = 25
+        var redLim = 30
+    } else {
+        var ylwLim = 15
+        var orgLim = 22
+        var redLim = 28
+    }
+
+    // Return color based on wind speed
+    if (windSpeed < ylwLim) {return wwGrn}
+    else if (windSpeed < orgLim) {return wwYlw}
+    else if (windSpeed < redLim) {return wwOrg}
+    else {return wwRed}
+}
+
+// Make CORS requests to external sites via proxy server
+function doCORSRequest(options, result) {
+    var cors_api_url = 'https://wasatchcloudbase.herokuapp.com/'
+    var ServerRequest = new XMLHttpRequest()
+    ServerRequest.open(options.method, cors_api_url + options.url)
+    ServerRequest.onload = ServerRequest.onerror = function() {
+        result(
+            options.method + ' ' + options.url + '\n' +
+            ServerRequest.status + ' ' + ServerRequest.statusText + '\n\n' +
+            (ServerRequest.responseText || '')
+        )
+    }
+    ServerRequest.send(options.data);
+}
+
+// Test URL fetch (uncomment to show debugging block and test URL call)
+/*
+(async () => {
+    document.getElementById('URLCheck').style.display = 'block'
+    const url = 'https://tfr.faa.gov/tfr2/list.html'
+    doCORSRequest({method: 'GET', url: url, data: ""}, function processResponse(result) {
+        document.getElementById('URLMessage').innerText = result
+    })
+})();
+*/
+
 // GET SUNRISE AND SUNSET FOR SLC AIRPORT
 (async () => {
     //  example url = 'https://api.sunrise-sunset.org/json?lat=40.7862&lng=-111.9801&date=2022-09-09'
@@ -130,12 +184,8 @@ function toggleWindChart(div) {
     const response = await fetch(url)
     const DaylightData = await response.json()
     if (DaylightData) {
-        // Get UTC / DST offset
-        const timezone_url = `https://worldtimeapi.org/api/timezone/America/Denver`
-        const timezone_response = await fetch(timezone_url)
-        const TimeZoneData = await timezone_response.json()
-        let UTC_adjustment_digits = TimeZoneData.utc_offset.search(`:`)
-        let UTC_Adjustment = +TimeZoneData.utc_offset.substring(0,UTC_adjustment_digits)
+        // Get timezone offset
+        const UTC_Adjustment = now.getTimezoneOffset() / 60
 
         // Adjust sunrise for UTC / DST
         let sunrise_hour_digits = DaylightData.results.sunrise.search(`:`)
@@ -157,9 +207,8 @@ function toggleWindChart(div) {
 
 // IIFE ASYNC NOAA PUBLIC API FOR 3 DAY FORECAST
 (async () => {
-//     const url = 'https://wasatchcloudbase.github.io/example_files/example_noaa_forecast.json'
+    //const url = 'https://wasatchcloudbase.github.io/example_files/example_noaa_forecast.json'
     const url = 'https://api.weather.gov/gridpoints/SLC/97,175/forecast'
-//     const response = await fetch(url, {mode: 'cors'})
     const response = await fetch(url)
     const noaaData = await response.json()
     if (noaaData) {
@@ -174,207 +223,160 @@ function toggleWindChart(div) {
 })();
 
 // IIFE ASYNC Utah Weather Alerts (hidden if none)
-(async () => 
-    {
-    //    const url = 'https://wasatchcloudbase.github.io/example_files/noaa_alerts_utah.json'
-        const url = 'https://api.weather.gov/alerts/active?area=UT'
-        const response = await fetch(url)
-        const AlertData = await response.json()
-        let EachAlert = []
-        for (let i=0; i<AlertData.features.length; i++) {
-            EachAlert = AlertData.features[i].properties
-            if (i==0) {
-                // Populate first alert
-                document.getElementById('UtahWeatherAlerts').style.display = 'block'
-                document.getElementById('AlertEvent').innerText = EachAlert.event
-                document.getElementById('AlertHeadline').innerText = EachAlert.headline
-                document.getElementById('AlertAreaDesc').innerText = EachAlert.areaDesc
-            } 
-            else {
-                // Clone division for additional alerts (as needed)
-                let cloned_alert = document.getElementById('AlertDiv').cloneNode(true)
-                //Rename parent and children IDs
-                cloned_alert.id = 'AlertDiv' + i
-                cloned_alert.children[0].id = 'AlertEvent' + i
-                cloned_alert.children[1].id = 'AlertHeadline' + i
-                cloned_alert.children[2].id = 'AlertAreaDesc' + i
-                //Add clone to page
-               document.getElementById('AlertGroupDiv').appendChild(cloned_alert)
-                //Populate additional alert
-                document.getElementById(`AlertDiv${i}`).style.display = 'block'
-                document.getElementById(`AlertEvent${i}`).innerText = EachAlert.event
-                document.getElementById(`AlertHeadline${i}`).innerText = EachAlert.headline
-                document.getElementById(`AlertAreaDesc${i}`).innerText = EachAlert.areaDesc
-            }
+(async () => {
+    // const url = 'https://wasatchcloudbase.github.io/example_files/noaa_alerts_utah.json'
+    const url = 'https://api.weather.gov/alerts/active?area=UT'
+    const response = await fetch(url)
+    const AlertData = await response.json()
+    let EachAlert = []
+    for (let i=0; i<AlertData.features.length; i++) {
+        EachAlert = AlertData.features[i].properties
+        if (i==0) {
+            // Populate first alert
+            document.getElementById('UtahWeatherAlerts').style.display = 'block'
+            document.getElementById('AlertEvent').innerText = EachAlert.event
+            document.getElementById('AlertHeadline').innerText = EachAlert.headline
+            document.getElementById('AlertAreaDesc').innerText = EachAlert.areaDesc
+        } 
+        else {
+            // Clone division for additional alerts (as needed)
+            let cloned_alert = document.getElementById('AlertDiv').cloneNode(true)
+            //Rename parent and children IDs
+            cloned_alert.id = 'AlertDiv' + i
+            cloned_alert.children[0].id = 'AlertEvent' + i
+            cloned_alert.children[1].id = 'AlertHeadline' + i
+            cloned_alert.children[2].id = 'AlertAreaDesc' + i
+            //Add clone to page
+            document.getElementById('AlertGroupDiv').appendChild(cloned_alert)
+            //Populate additional alert
+            document.getElementById(`AlertDiv${i}`).style.display = 'block'
+            document.getElementById(`AlertEvent${i}`).innerText = EachAlert.event
+            document.getElementById(`AlertHeadline${i}`).innerText = EachAlert.headline
+            document.getElementById(`AlertAreaDesc${i}`).innerText = EachAlert.areaDesc
         }
     }
-)();
+})();
 
 // IIFE ASYNC Get SLC Forecast Discussion text
-(async () => 
-    {
-        const url = 'https://forecast.weather.gov/product.php?site=NWS&issuedby=SLC&product=AFD&format=txt&version=1&glossary=0'
-        const response = await fetch(url)
-        const ForecastDiscussionText = await response.text()
-        if (ForecastDiscussionText) {
-            let CleanText = ForecastDiscussionText.replace(/[\n\r]/g, " ")
-            let date_position_start = CleanText.search("National Weather Service Salt Lake City UT")+43
-            let date_position_end = CleanText.indexOf(".", date_position_start)-1
-            let synopsis_position_start = CleanText.search(".SYNOPSIS.")+12
-            // Look for start of DISCUSSION section if SHORT TERM section is missing 
-            let synopsis_position_end = CleanText.indexOf(".SHORT TERM", synopsis_position_start)-4 
-            if (synopsis_position_end < 0) {
-                synopsis_position_end = CleanText.indexOf(".DISCUSSION", synopsis_position_start)-4 
-            }
-            let aviation_position_start = CleanText.search(".AVIATION")+19
-            let aviation_position_end = CleanText.search("REST OF UTAH AND SOUTHWEST WYOMING.")-1
-            document.getElementById("forecast-discussion-date").innerText = CleanText.substring(date_position_start, date_position_end)
-            document.getElementById("forecast-discussion-synopsis").innerText = CleanText.substring(synopsis_position_start, synopsis_position_end)
-            document.getElementById("forecast-discussion-aviation").innerText = CleanText.substring(aviation_position_start, aviation_position_end)
+(async () => {
+    const url = 'https://forecast.weather.gov/product.php?site=NWS&issuedby=SLC&product=AFD&format=txt&version=1&glossary=0'
+    const response = await fetch(url)
+    const ForecastDiscussionText = await response.text()
+    if (ForecastDiscussionText) {
+        let CleanText = ForecastDiscussionText.replace(/[\n\r]/g, " ")
+        let date_position_start = CleanText.search("National Weather Service Salt Lake City UT")+43
+        let date_position_end = CleanText.indexOf(".", date_position_start)-1
+        let synopsis_position_start = CleanText.search(".SYNOPSIS.")+12
+        // Look for start of DISCUSSION section if SHORT TERM section is missing 
+        let synopsis_position_end = CleanText.indexOf(".SHORT TERM", synopsis_position_start)-4 
+        if (synopsis_position_end < 0) {
+            synopsis_position_end = CleanText.indexOf(".DISCUSSION", synopsis_position_start)-4 
         }
+        let aviation_position_start = CleanText.search(".AVIATION")+19
+        let aviation_position_end = CleanText.search("REST OF UTAH AND SOUTHWEST WYOMING.")-1
+        document.getElementById("forecast-discussion-date").innerText = CleanText.substring(date_position_start, date_position_end)
+        document.getElementById("forecast-discussion-synopsis").innerText = CleanText.substring(synopsis_position_start, synopsis_position_end)
+        document.getElementById("forecast-discussion-aviation").innerText = CleanText.substring(aviation_position_start, aviation_position_end)
     }
-)();
+})();
 
 // IIFE ASYNC Get morning SkewT
-(async () =>
-    {
-        const date = now.toLocaleString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'}).split('/')
-        const url = `https://climate.cod.edu/data/raob/KSLC/skewt/KSLC.skewt.${date[2]}${date[0]}${date[1]}.12.gif`
-        document.getElementById('skew-t-img').src = url
-        document.getElementById('skew-t-href').href = url
-    }
-)();
+(async () => {
+    const date = now.toLocaleString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'}).split('/')
+    const url = `https://climate.cod.edu/data/raob/KSLC/skewt/KSLC.skewt.${date[2]}${date[0]}${date[1]}.12.gif`
+    document.getElementById('skew-t-img').src = url
+    document.getElementById('skew-t-href').href = url  
+})();
 
 // IIFE ASYNC Get graphical forecast images
-(async () =>
-    {
-        const url = 'https://graphical.weather.gov/images/slc/'
-        const timeStr = (now.getHours()>18 || now.getHours()<7) ? 5 : 1
-        const nextDay = now.getHours()>18 ? `( ${new Date(now.setHours(now.getHours()+24)).toLocaleString('en-us', {weekday: 'short'})} )` : null
-        document.getElementById('sky-next-day').innerHTML = nextDay
-        for (let i=0; i<4; i++) {
-            document.getElementById(`graphical-sky-${i}`).src = `${url}Sky${timeStr+i}_slc.png`
-            document.getElementById(`graphical-wx-${i}`).src = `${url}Wx${timeStr+i}_slc.png`
-        }
+(async () => {
+    const url = 'https://graphical.weather.gov/images/slc/'
+    const timeStr = (now.getHours()>18 || now.getHours()<7) ? 5 : 1
+    const nextDay = now.getHours()>18 ? `( ${new Date(now.setHours(now.getHours()+24)).toLocaleString('en-us', {weekday: 'short'})} )` : null
+    document.getElementById('sky-next-day').innerHTML = nextDay
+    for (let i=0; i<4; i++) {
+        document.getElementById(`graphical-sky-${i}`).src = `${url}Sky${timeStr+i}_slc.png`
+        document.getElementById(`graphical-wx-${i}`).src = `${url}Wx${timeStr+i}_slc.png`
     }
-)();
+})();
 
 // IIFE ASYNC Get surface forecast graphics
-(async () =>
-    {
-        if (now.getHours()>=6 && now.getHours()<=14) {
-            const offset = now.getTimezoneOffset()/60===6 ? '3 pm' : '2 pm'
-            document.getElementById('graphical-wind-time').innerHTML = offset
-            document.getElementById('graphical-wind-img').src = 'https://graphical.weather.gov/images/slc/WindSpd3_slc.png'
-            document.getElementById('graphical-gust-img').src = 'https://graphical.weather.gov/images/slc/WindGust3_slc.png'
-            document.getElementById('graphical-wind-div').style.display = 'block'        
-        }
+(async () => {
+    if (now.getHours()>=6 && now.getHours()<=14) {
+        const offset = now.getTimezoneOffset()/60===6 ? '3 pm' : '2 pm'
+        document.getElementById('graphical-wind-time').innerHTML = offset
+        document.getElementById('graphical-wind-img').src = 'https://graphical.weather.gov/images/slc/WindSpd3_slc.png'
+        document.getElementById('graphical-gust-img').src = 'https://graphical.weather.gov/images/slc/WindGust3_slc.png'
+        document.getElementById('graphical-wind-div').style.display = 'block'        
     }
-)();
+})();
 
 // IIFE ASYNC Get Soaring Forecast text
+(async () => {
+    const url = 'https://forecast.weather.gov/product.php?site=SLC&issuedby=SLC&product=SRG&format=TXT&version=1&glossary=0'
+    const response = await fetch(url)
+    const SoaringForecastText = await response.text()
+    if (SoaringForecastText) {
+        let ContentStart = SoaringForecastText.search("SRGSLC") + 7
+        let ContentEnd = SoaringForecastText.indexOf("THIS", ContentStart) - 1
+        let ContentText = SoaringForecastText.substring(ContentStart, ContentEnd) 
+        document.getElementById("soaring-forecast").innerText = ContentText
+    }
+})();
+
+// IIFE ASYNC Get TFRs for Utah
+/*
 (async () => 
     {
-        const url = 'https://forecast.weather.gov/product.php?site=SLC&issuedby=SLC&product=SRG&format=TXT&version=1&glossary=0'
-        const response = await fetch(url)
-        const SoaringForecastText = await response.text()
-        if (SoaringForecastText) {
-            let ContentStart = SoaringForecastText.search("SRGSLC") + 7
-            let ContentEnd = SoaringForecastText.indexOf("THIS", ContentStart) - 1
-            let ContentText = SoaringForecastText.substring(ContentStart, ContentEnd) 
-            document.getElementById("soaring-forecast").innerText = ContentText
-        }
+        const url = 'https://tfr.faa.gov/tfr2/list.html'
+        doCORSRequest({method: 'GET', url: url, data: ""}, 
+        function getResult(result) {ProcessTFRs(result) })
     }
 )();
 
-// Test URL fetch
-// Uncomment to show debugging block
-/*
-(async () => {
-
-    document.getElementById('URLCheck').style.display = 'block'
-    document.getElementById('URLMessage').innerText = 'Starting debugging block';
-
-    const url = "https://wasatchcloudbase.github.io/example_files/tfr_faa_gov_tfr2_list_jsp.html";
-    var headers = {}
-    document.getElementById('URLMessage').innerText = 'Established URL and headers';
-
-    fetch(url, {
-        method : "GET",
-        mode: 'cors',
-        headers: headers
-    })
-    .then((response) => {
-        if (!response.ok) {
-            document.getElementById('URLMessage').innerHTML = response.status + ": " + response.type + ": " + response.statustext;
-            throw new Error(response.error)
-        }
-        document.getElementById('URLMessage').innerHTML = 'Response received - data below';
-        document.getElementById('URLResponse').innerHTML = response.json();
-    })
-    .then(data => {
-        document.getElementById('URLMessage').innerHTML = 'Received data';
-        document.getElementById('URLResponse').innerHTML = data;
-    })
-    .catch(function(error) {
-        document.getElementById('URLResponse').innerHTML = error + ": " + error.stack;
-    });
-})();
+function ProcessTFRs(TFRtext) {
+    if (TFRtext) {
+        document.getElementById('URLCheck').style.display = 'block'
+        document.getElementById('URLMessage').innerText = TFRtext
+    }
+}
 */
 
-// IIFE ASYNC Utah TFRs (hidden if none)
-/* Currenty commented out due to CORS issues accessing data
-(async () => 
-    {
-        try { 
-        //    const url = 'https://wasatchcloudbase.github.io/example_files/tfr_faa_gov_tfr2_list_jsp.html'
-            const url = 'https://tfr.faa.gov/tfr2/list.jsp'
-            const response = await fetch(url, {
-                mode: 'cors',
-                method: 'GET',
-                cache: 'no-cache',
-                credentials: 'same-origin',
-                headers: {'Content-Type': 'text/html; charset=windows-1252',}
-            } )
-            const TFRText = await response.text() // May need to use response.json() instead
-        } catch (err) {
-            document.getElementById('TFRType').innerText = 'FETCH/PARSING FAILED: ' + err
-        }
-        if (TFRText) {
-            let EachTFR = []
-            for (let i=0; i<TFRData.features.length; i++) {
-                EachTFR = TFRData.features[i].properties
-                if (i==0) {
-                // Populate first TFR
-                    document.getElementById('UtahTFRs').style.display = 'block'
-                    document.getElementById('TFRBeginDate').innerText = EachTFR.BeginDate
-                    document.getElementById('TFREndDate').innerText = EachTFR.EndDate
-                    document.getElementById('TFRType').innerText = EachTFR.Type
-                    document.getElementById('TFRLocation').innerText = EachTFR.Location
-                    document.getElementById('TFRReason').innerText = EachTFR.Reason
-                } else if (i==1) {
-                    // REMEMBER TO REMOVE i==1 and add logic to filter for Utah only
-                    // Clone division for additional TFRs (as needed)
-                    let cloned_TFR = document.getElementById('TFRDiv').cloneNode(true)
-                    //Rename parent and children IDs
-                    cloned_TFR.id = 'TFRDiv' + i
-                    cloned_TFR.children[0].id = 'TFRBeginDate' + i
-                    cloned_TFR.children[1].id = 'TFREndDate' + i
-                    cloned_TFR.children[2].id = 'TFRType' + i
-                    cloned_TFR.children[3].id = 'TFRLocation' + i
-                    cloned_TFR.children[4].id = 'TFRReason' + i
-                    //Add clone to page
-                    document.getElementById('TFRGroupDiv').appendChild(cloned_TFR)
-                    //Populate additional TFR
-                    document.getElementById(`TFRDiv${i}`).style.display = 'block'
-                    document.getElementById(`TFRBeginDate${i}`).innerText = EachTFR.BeginDate
-                    document.getElementById(`TFREndDate${i}`).innerText = EachTFR.EndDate
-                    document.getElementById(`TFRType${i}`).innerText = EachTFR.Type
-                    document.getElementById(`TFRLocation${i}`).innerText = EachTFR.Location
-                    document.getElementById(`TFRReason${i}`).innerText = EachTFR.Reason
-                }
-            }
+/*
+    let EachTFR = []
+    for (let i=0; i<TFRData.features.length; i++) {
+        EachTFR = TFRData.features[i].properties
+        if (i==0) {
+        // Populate first TFR
+            document.getElementById('UtahTFRs').style.display = 'block'
+            document.getElementById('TFRBeginDate').innerText = EachTFR.BeginDate
+            document.getElementById('TFREndDate').innerText = EachTFR.EndDate
+            document.getElementById('TFRType').innerText = EachTFR.Type
+            document.getElementById('TFRLocation').innerText = EachTFR.Location
+            document.getElementById('TFRReason').innerText = EachTFR.Reason
+        } else if (i==1) {
+            // REMEMBER TO REMOVE i==1 and add logic to filter for Utah only
+            // Clone division for additional TFRs (as needed)
+            let cloned_TFR = document.getElementById('TFRDiv').cloneNode(true)
+            //Rename parent and children IDs
+            cloned_TFR.id = 'TFRDiv' + i
+            cloned_TFR.children[0].id = 'TFRBeginDate' + i
+            cloned_TFR.children[1].id = 'TFREndDate' + i
+            cloned_TFR.children[2].id = 'TFRType' + i
+            cloned_TFR.children[3].id = 'TFRLocation' + i
+            cloned_TFR.children[4].id = 'TFRReason' + i
+            //Add clone to page
+            document.getElementById('TFRGroupDiv').appendChild(cloned_TFR)
+            //Populate additional TFR
+            document.getElementById(`TFRDiv${i}`).style.display = 'block'
+            document.getElementById(`TFRBeginDate${i}`).innerText = EachTFR.BeginDate
+            document.getElementById(`TFREndDate${i}`).innerText = EachTFR.EndDate
+            document.getElementById(`TFRType${i}`).innerText = EachTFR.Type
+            document.getElementById(`TFRLocation${i}`).innerText = EachTFR.Location
+            document.getElementById(`TFRReason${i}`).innerText = EachTFR.Reason
         }
     }
+}
+}
 )();
 */

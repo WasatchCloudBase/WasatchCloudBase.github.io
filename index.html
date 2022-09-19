@@ -1534,31 +1534,31 @@
                    <span class="next-day"></span>
                </div>
                <div class="border wwborder border-2 border-warning bg-dark mx-5">
-                   <div class="row mx-5">
-                       <div class="col-4 row display-3 align-self-end justify-content-end ps-2 mx-5">18,000 ft</div>
+                   <div class="row mx-5 pt-2 pb-1">
+                       <div class="col-4 row display-3 align-self-center justify-content-end ps-2 mx-5">18,000 ft</div>
                        <div class="col-1 display-2 align-self-center ms-1 me-4" id="dir-3"></div>
-                       <div class="border col-md-auto align-self-center display-4" id="aloft-3">&nbsp;</div>
+                       <div class="col-md-auto align-self-center display-4" id="aloft-3">&nbsp;</div>
                        <div class="col-auto display-3 align-self-center fw-bold text-info ms-2 pe-0" id="spd-3"></div>
                        <div class="col-auto fs-3 text-info align-self-end mb-3 ps-3" id="mph-3"></div>
                    </div><hr class="m-0 dash">
-                   <div class="row mx-5">
-                       <div class="col-4 row display-3 align-self-end justify-content-end ps-2 mx-5">12,000 ft</div>
+                   <div class="row mx-5 pt-1 pb-1">
+                       <div class="col-4 row display-3 align-self-center justify-content-end ps-2 mx-5">12,000 ft</div>
                        <div class="col-1 display-2 align-self-center ms-1 me-4" id="dir-2"></div>
-                       <div class="border col-md-auto align-self-center display-4" id="aloft-2">&nbsp;</div>
+                       <div class="col-md-auto align-self-center display-4" id="aloft-2">&nbsp;</div>
                        <div class="col-auto display-3 align-self-center fw-bold text-info ms-2 pe-0" id="spd-2"></div>
                        <div class="col-auto fs-3 text-info align-self-end mb-3 ps-3" id="mph-2"></div>
                    </div><hr class="m-0 dash">
-                   <div class="row mx-5">
-                       <div class="col-4 row display-3 align-self-end justify-content-end ps-2 mx-5">9,000 ft</div>
+                   <div class="row mx-5 pt-1 pb-1">
+                       <div class="col-4 row display-3 align-self-center justify-content-end ps-2 mx-5">9,000 ft</div>
                        <div class="col-1 display-2 align-self-center ms-1 me-4" id="dir-1"></div>
-                       <div class="border col-md-auto align-self-center display-4" id="aloft-1">&nbsp;</div>
+                       <div class="col-md-auto align-self-center display-4" id="aloft-1">&nbsp;</div>
                        <div class="col-auto display-3 align-self-center fw-bold text-info ms-2 pe-0" id="spd-1"></div>
                        <div class="col-auto fs-3 text-info align-self-end mb-3 ps-3" id="mph-1"></div>
                    </div><hr class="m-0 dash">
-                   <div class="row mx-5">
-                       <div class="col-4 row display-3 align-self-end justify-content-end ps-2 mx-5">6,000 ft</div>
+                   <div class="row mx-5 pt-1 pb-2">
+                       <div class="col-4 row display-3 align-self-center justify-content-end ps-2 mx-5">6,000 ft</div>
                        <div class="col-1 display-2 align-self-center ms-1 me-4" id="dir-0"></div>
-                       <div class="border col-md-auto align-self-center display-4" id="aloft-0">&nbsp;</div>
+                       <div class="col-md-auto align-self-center display-4" id="aloft-0">&nbsp;</div>
                        <div class="col-auto display-3 align-self-center fw-bold text-info ms-2 pe-0" id="spd-0"></div>
                        <div class="col-auto fs-3 text-info align-self-end mb-3 ps-3" id="mph-0"></div>
                    </div>
@@ -1580,7 +1580,7 @@
         <!-- SD THE MORNING SNAPSHOT, <ORIGINAL> SOARCAST, AND ALT TEMP CALCS ARE NOT CURRENTLY ACTIVE.  THIS MAY BE A RESULT OF FORKING THE REPOSITORY.    -->
         <!-- MORNING SOUNDING SNAPSHOT -->
         <!-- NWS SOARING FORECAST -->
-        <!--
+<!--
         <div class="container-fluid p-0">
             <div class="display-3 pt-5 pb-3">Lift Forecast</div>
             <div class="collapse fs-1 pb-4" id="od-div">
@@ -1637,14 +1637,16 @@
                 </div>
             </div>
         </div> 
-        -->
-        <!-- 
+        
+        
             <div class="container-fluid p-0">
             <div class="display-3 pt-5 pb-3">Morning Sounding Snapshot</div>
             <div class="border wwborder border-2 border-warning bg-dark" id="skew-t-d3"></div>
-        </div> -->
+        </div> 
+-->
         <!-- USER INPUT TEMP FOR TOL and SOUNDING SNAPSHOT -->
-        <!-- <div class="container-fluid pt-5 pb-2">
+<!--
+        <div class="container-fluid pt-5 pb-2">
             <div class="display-3 py-4">Alternate Max Temp for Lift Forecast and Sounding</div>
             <div class="container-fluid">
                <div class="row display-4">
@@ -1660,7 +1662,7 @@
                </div>
            </div>
         </div>
-        -->
+-->        
 
         <!-- MORNING SOUNDING SKEW-T -->
         <div class="container-fluid p-0">
@@ -1944,12 +1946,12 @@
     </div>
 
     <!-- Debugging block for URL fetch checks -->
-    <div class="collapse container-fluid p-0" id="URLCheck">
+        <div class="collapse container-fluid p-0" id="URLCheck">
         <div class="container-fluid p-0 mt-5 pb-3 text-info display-3">URL Check</div>
         <div class="container-fluid border wwborder border-4 border-info display-5 rounded-4 bg-dark lh-base">
             <div class="col-auto text-start text-info" id="URLMessage"></div>
             <div><hr class="dash mt-3"></div>
-            <div class="col-auto text-start text-info display-5"id="URLResponse"></div>
+            <div class="col-auto text-start text-info display-5" id="URLResponse"></div>
         </div>
     </div>
 

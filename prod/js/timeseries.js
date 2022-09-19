@@ -187,18 +187,6 @@ function zone(stationID, data, zDigit=[]) {
 }
 
 function windChart(data) {
-    // Set wind limits based on site type
-    if (MountainSites.includes(data.stid)) {
-        var ylwLim = 12
-        var redLim = 20
-    } else if (SoaringSites.includes(data.stid)) {
-        var ylwLim = 18
-        var redLim = 26
-    } else {
-        var ylwLim = 15
-        var redLim = 22
-    }
-
     // Reduce the observations (readings) to the last (most recent) based on the station history length
     let length = getHistoryReadingCount(data.stid)
 
@@ -206,9 +194,9 @@ function windChart(data) {
 
     // Update page with reading data
     time(data.stid, data.date_time)
-    wind(data.stid, data.wind_speed_set_1, ylwLim, redLim)
+    wind(data.stid, data.wind_speed_set_1)
     if (data.wind_direction_set_1) wdir(data.stid, data.wind_direction_set_1)
-    if (data.wind_gust_set_1) gust(data.stid, data.wind_gust_set_1, data.wind_speed_set_1, ylwLim, redLim)
+    if (data.wind_gust_set_1) gust(data.stid, data.wind_gust_set_1, data.wind_speed_set_1)
     else { for (let i=0; i<length; i++) { document.getElementById(`${data.stid}-gust-${i}`).innerHTML = '&nbsp;' } }
 }
 
@@ -220,12 +208,12 @@ function time(stid, data) {
     }
 }
 
-function wind(stid, data, ylwLim, redLim) {
+function wind(stid, data) {
     data = data.map(d => Math.round(d)>=1 ? Math.round(d) : d===null ? '&nbsp;' : '<span class="fs-3 fw-normal">Calm</span>')
     const barHeight = data.map(d => d!=='' ? `${d*4}px` : '0px')
-    const barColor = data.map(d => (d>ylwLim && d<redLim) ? wwYlw : d>=redLim ? wwOrg : wwGrn)
+    const barColor = data.map(d => getWindColor(stid, d))
+
     document.getElementById(`${stid}-wind`).innerHTML = typeof data[data.length-1]==='string' ? '<span class="display-5">Calm</span>' : data[data.length-1]
-    //specify wind color based on speed
     document.getElementById(`${stid}-wind`).style.color = barColor[data.length-1]
 
     for (let i=0; i<data.length; i++) {
@@ -246,8 +234,8 @@ function wdir(stid, data) {
     }
 }
 
-function gust(stid, data, wind, ylwLim, redLim, barHeight=[]) {
-    const barColor = data.map(d => (d>ylwLim && d<redLim) ? wwYlw : d>=redLim ? wwOrg : wwGrn)
+function gust(stid, data, wind, barHeight=[]) {
+    const barColor = data.map(d => getWindColor(stid, d))
     for (let i=0; i<data.length; i++) barHeight.push(data[i]>=1 ? `${(data[i]-wind[i])*4}px` : '0px')
     data = data.map(d => d>=1 ? `g${Math.round(d)}` : '&nbsp;')
     if (data[data.length-1]!=='&nbsp;') {
