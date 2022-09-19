@@ -295,8 +295,8 @@ function doCORSRequest(options, result) {
     const response = await fetch(url)
     const SoaringForecastText = await response.text()
     if (SoaringForecastText) {
-        let ContentStart = SoaringForecastText.search("SRGSLC") + 7
-        let ContentEnd = SoaringForecastText.indexOf("THIS", ContentStart) - 1
+        let ContentStart = SoaringForecastText.search("THERMAL INDEX.")
+        let ContentEnd = SoaringForecastText.indexOf("THIS", ContentStart) - 2
         let ContentText = SoaringForecastText.substring(ContentStart, ContentEnd) 
         document.getElementById("soaring-forecast").innerText = ContentText
     }
