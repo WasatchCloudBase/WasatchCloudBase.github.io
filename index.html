@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<meta charset="UTF-8">
 <html>
 
 <head>
@@ -1409,7 +1410,7 @@
             <div class="container-fluid border wwborder border-4 border-warning display-5 rounded-4 bg-dark lh-base">
                 <div class="row pt-3 pb-3">
                     <div class="col-auto text-warning">Forecast date:</div>
-                    <div class="fs-1 col-auto text-start" id="forecast-discussion-date"></div>
+                    <div class="col-auto text-start align-self-end" id="forecast-discussion-date"></div>
                 </div>
                 <div class="col-auto text-start text-warning">Synopsis</div>
                 <div class="fs-1 col-auto text-start pb-3" id="forecast-discussion-synopsis"></div>
@@ -1567,7 +1568,7 @@
        </div>
 
         <!-- NWS SOARING FORECAST (LIFT) -->
-        <div class="container-fluid p-0 mt-5 pb-3 display-3">Lift Forecast</div>
+        <div class="container-fluid p-0 mt-5 pb-3 display-3">NWS Lift Forecast for SLC</div>
         <a href="https://forecast.weather.gov/product.php?site=SLC&issuedby=SLC&product=SRG&format=TXT&version=1&glossary=0" target="_blank">
             <div class="container-fluid border wwborder border-4 border-warning display-5 rounded-4 bg-dark lh-base">
                 <div class="row pt-3 pb-3">
@@ -1576,93 +1577,32 @@
             </div>
         </a>
 
-        <!-- THE SOUNDING FETCH APPEARS TO BE FAILING DUE TO CREDENTIALS, ETC. FOR THE GOOGLE API WASATCH WIND FILE SOURCE,                 -->
-        <!-- SD THE MORNING SNAPSHOT, <ORIGINAL> SOARCAST, AND ALT TEMP CALCS ARE NOT CURRENTLY ACTIVE.  THIS MAY BE A RESULT OF FORKING THE REPOSITORY.    -->
-        <!-- MORNING SOUNDING SNAPSHOT -->
-        <!-- NWS SOARING FORECAST -->
-        <div class="container-fluid p-0">
-            <div class="display-3 pt-5 pb-3">Lift Forecast</div>
-            <div class="collapse fs-1 pb-4" id="od-div">
-                <span>NWS Overdevelopment Time:&nbsp;</span>
-                <span class="text-danger display-4 fw-bold" id="od-time"></span>
-            </div>
-            <div class="border wwborder border-2 border-warning bg-dark pb-3">
-                <div class="row mx-2 display-4">
-                    <div class="col text-center">
-                        <a href="https://forecast.weather.gov/product.php?site=slc&issuedby=SLC&product=SRG&fbclid=IwAR0SKLHSuTQHvSgTn5BOTK-7qowSVfkE22I0SVZd7IPfDiq6CzfklioIKH0" target="_blank">
-                            <span class="text-warning text-decoration-underline">NWS Soaring Forecast</span>
-                        </a>
-                    </div>
-                    <div class="col text-center">Alternate Max</div>
-                </div><hr class="dash">
-                <div class="row">
-                    <div class="row col-3 ms-2">
-                        <div class="display-3 fw-bold text-start text-info" id="soarcast-tol"></div>
-                        <div class="fs-3 text-end" id="soarcast-tol-m">Soaring Forecast Error</div>
-                    </div>
-                    <div class="col-6 fs-1 fw-bold text-info">Top of Lift
-                        <div class="fs-3 fw-normal text-info">(ft MSL)</div>
-                    </div>
-                    <div class="row col-3 me-2">
-                        <div class="display-3 fw-bold text-start text-info" id="user-input-tol">&nbsp;</div>
-                        <div class="fs-3 text-end" id="user-input-tol-m">&nbsp;</div>
-                    </div>
-                </div><hr class="dash">
-                <div class="row">
-                    <div class="row col-3 ms-2">
-                        <div class="display-3 fw-bold text-start text-info" id="soarcast-neg3"></div>
-                        <div class="fs-3 text-end" id="soarcast-neg3-m">Soaring Forecast Error</div>
-                    </div>
-                    <div class="col-6 fs-1 fw-bold text-info">Height of -3 Index
-                        <div class="fs-3 fw-normal text-info">(ft MSL)</div>
-                    </div>
-                    <div class="row col-3 me-2">
-                        <div class="display-3 fw-bold text-start text-info" id="user-input-neg3">&nbsp;</div>
-                        <div class="fs-3 text-end" id="user-input-neg3-m">&nbsp;</div>
-                    </div>
-                </div><hr class="dash">
-                <div class="row">
-                    <div class="row col-3 ms-2">
-                        <div class="display-3 fw-bold text-start text-info" id="soarcast-rol"></div>
-                        <div class="fs-3 text-end" id="soarcast-rol-m">Soaring Forecast Error</div>
-                    </div>
-                    <div class="col-6 fs-1 fw-bold text-info">Max Rate of Lift
-                        <div class="fs-3 fw-normal text-info">(ft/min)</div>
-                    </div>
-                    <div class="row col-3 me-2">
-                        <div class="display-3 fw-bold text-start text-info" id="user-input-rol">&nbsp;</div>
-                        <div class="fs-3 text-end" id="user-input-rol-m">&nbsp;</div>
-                    </div>
+        <!-- D3 CHART -->
+        <div class="container-fluid p-0 mt-5 pb-3 display-3">Decoded Skew-T</div>
+        <div class="container-fluid border rounded-4 wwborder border-4 border-warning display-5 fs-5 bg-dark lh-base overflow-hidden tile-border">
+            <div id="skew-t-d3"></div>
+            <div class="display-3 d-flex justify-content-around my-3">
+                <div class="col">
+                    <div class="fs-1 fw-bold text-info">Top of Lift (ft)</div>
+                    <div class="fw-bold" id="user-tol"></div>
+                </div>
+                <div class="col">
+                    <div class="fs-1 fw-bold text-info">Height of -3 Index (ft)</div>
+                    <div class="fw-bold" id="user-neg3"></div>
                 </div>
             </div>
-        </div> 
-                
-        <div class="container-fluid p-0">
-            <div class="display-3 pt-5 pb-3">Morning Sounding Snapshot</div>
-            <div class="border wwborder border-2 border-warning bg-dark" id="skew-t-d3"></div>
-        </div> 
-
-        <!-- USER INPUT TEMP FOR TOL and SOUNDING SNAPSHOT -->
-        <div class="container-fluid pt-5 pb-2">
-            <div class="display-3 py-4">Alternate Max Temp for Lift Forecast and Sounding</div>
-            <div class="container-fluid">
-               <div class="row display-4">
-                   <div class="col text-end">
-                       <input class="text-primary border rounded-4 border-warning bg-black text-warning pb-3 px-4 text-center" type="text" placeholder="__&deg;" id="user-temp" size="1">
-                   </div>
-                   <div class="col-auto">
-                       <button class="text-primary border rounded-4 border-warning bg-black text-warning pb-3 px-4" onclick="d3Update()">Enter</button>
-                   </div>
-                   <div class="col text-start">
-                       <button class="text-primary border rounded-4 border-warning bg-black text-warning pb-3 px-4" onclick="d3Clear()">Clear</button>
-                   </div>
-               </div>
-           </div>
+            <div class="border-bottom border-warning"></div>
+            <div class="display-4">Use alternate max temp:</div>
+            <div class="display-4 d-flex fw-semibold justify-content-around py-3 text-warning">
+                <div class="border-bottom border-warning" onclick="d3Update()">Enter</div>
+                <input class="bg-dark border border-2 border border rounded-4 border-warning text-center text-warning" type="number" min="0" max="120" id="user-temp">
+                <div class="border-bottom border-warning" onclick="d3Clear()">Clear</div>
+            </div>
         </div>
-      
 
         <!-- MORNING SOUNDING SKEW-T -->
-        <div class="container-fluid p-0">
+        <!-- Collapsing this DIV, as the decoded skew-T is better -->
+        <div class="collapse container-fluid p-0">
             <a href="https://climate.cod.edu/data/raob/KPVU/skewt" id="skew-t-href" target="_blank">
                 <div class="display-3 pt-5 pb-3">Morning Sounding Skew-T</div>
                     <img class="border wwborder border-4 border-warning" id="skew-t-img" width="100%">

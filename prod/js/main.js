@@ -6,35 +6,15 @@ const wwGrn = '#20c997' // Bootstrap teal
 const wwYlw = '#ffc107' // Bootstrap yellow (warning)
 const wwOrg = '#fd7e14' // Bootstrap orange
 const wwRed = '#dc3545' // Bootstrap red (danger)
-const surfaceAlt = 4229/1000 // KSLC elevation adjusted to d3 y-axis scale
-const dalr = 5.4 // Dry Adiabatic Lapse Rate in °F/1000' (equivalent to 3°C)
-const dalrSlope = -1/dalr
-const clientWidth = document.documentElement.clientWidth
-const visibleScreenWidth = clientWidth>1080 ? clientWidth*0.6 : clientWidth*0.89
-const visibleScreenHeight = visibleScreenWidth*0.679
-const margin = {
-    top: visibleScreenHeight*0.05,
-    right: visibleScreenWidth*0.05,
-    bottom: visibleScreenHeight*0.05,
-    left: visibleScreenWidth*0.05
-}
-const width = visibleScreenWidth-margin.left-margin.right
-const height = visibleScreenHeight-margin.top-margin.bottom
-const svg = d3.select('#skew-t-d3')
-    .append('svg')
-    .attr('class', 'svgbg')
-    .attr('width', width+margin.left+margin.right)
-    .attr('height', height+margin.top+margin.bottom)
-    .append('g')
-    .attr('transform', `translate(${margin.left},${margin.top})`)
-const x = d3.scaleLinear().range([-10, width]).domain([-10, 110])
-const y = d3.scaleLinear().range([height, 0]).domain([surfaceAlt, 18])
-let raobData = {}
+
 // Set default initial page
 let currentDiv = 'Weather Stations'
 document.getElementById('current-div').innerHTML = currentDiv
 let currentDay = 'Today'
 document.getElementById('current-day').innerHTML = currentDay
+
+// Set defaults for decoded skew-T
+let liftParams = {}, maxTempF, soundingData = {}
 
 window.onclick = function(event) {
     if (!event.target.matches('.btn-menu')) {
@@ -125,8 +105,8 @@ function toggleWindChart(div) {
 // Set wind speed font and bar colors
 function getWindColor(stid, windSpeed) {
     // Set color threasholds based on site type
-    if (stid === 'Aloft') {  // Using mountain site speeds for winds aloft readings
-        var ylwLim = 12
+    if (stid === 'Aloft') {
+        var ylwLim = 12  // Using mountain site speeds for winds aloft readings
         var orgLim = 20
         var redLim = 26
     } else if (MountainSites.includes(stid)) {
@@ -134,13 +114,13 @@ function getWindColor(stid, windSpeed) {
         var orgLim = 20
         var redLim = 26
     } else if (SoaringSites.includes(stid)) {
-        var ylwLim = 18
-        var orgLim = 25
-        var redLim = 30
+        var ylwLim = 19
+        var orgLim = 26
+        var redLim = 32
     } else {
         var ylwLim = 15
-        var orgLim = 22
-        var redLim = 28
+        var orgLim = 23
+        var redLim = 30
     }
 
     // Return color based on wind speed
@@ -157,13 +137,8 @@ function doCORSRequest(options, result) {
     var ServerRequest = new XMLHttpRequest()
     ServerRequest.open(options.method, cors_api_url + options.url)
     ServerRequest.onload = ServerRequest.onerror = function() {
-        result(
-//            options.method + ' ' + options.url + '\n' +
-//            ServerRequest.status + ' ' + ServerRequest.statusText + '\n\n' +
-//            (
-                ServerRequest.responseText
-//                 || '')
-        )
+        result(ServerRequest.responseText)
+        // Can add to result for debugging:  options.method + ' ' + options.url + '\n' + ServerRequest.status + ' ' + ServerRequest.statusText + '\n\n' +
     }
     ServerRequest.send(options.data);
 }
