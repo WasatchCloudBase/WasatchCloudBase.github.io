@@ -44,7 +44,8 @@
 (async () => {
     //const url = 'https://wasatchcloudbase.github.io/example_soaring_forecast.json'
     const SoaringForecastURL = 'https://storage.googleapis.com/wasatch-wind-static/soaring.json'
-/*    doCORSRequest({method: 'GET', url: SoaringForecastURL, data: ""}, function processResponse(soarData) {
+    doCORSRequest({method: 'GET', url: SoaringForecastURL, data: ""}, function processResponse(result) {
+        var soarData = JSON.parse(result)
         const odt = (soarData['Overdevelopment time']==='0000') ? 'None' : soarData['Overdevelopment time']
         const neg3 = (soarData['Height of -3 index']==='None') ? 0 : soarData['Height of -3 index']
         const tol = (soarData['Top of lift'].substr(0,5)==='Error') ? 0 : parseInt(soarData['Top of lift'])
@@ -67,13 +68,13 @@
         }
         else {
             const altMaxTempurl = 'https://api.weather.gov/gridpoints/SLC/97,175'
-            const altMaxTempresponse = await fetch(altMaxTempurl, {mode: 'cors'})
-            const altMaxTempData = await altMaxTempresponse.json()
-            const maxTemp = (altMaxTempData.properties.maxTemperature.values[0].value*9/5)+32
-            raob(maxTemp)
-        }    
+            doCORSRequest({method: 'GET', url: altMaxTempurl, data: ""}, function processResponse(result) {
+                const altMaxTempData = JSON.parse(result)
+                const maxTemp = (altMaxTempData.properties.maxTemperature.values[0].value*9/5)+32
+                raob(maxTemp)
+            })
+        }
     })
-*/
 })();
 
 // GCP ROAB

@@ -107,9 +107,9 @@ function toggleWindChart(div) {
     if (element.style.display==='' || element.style.display==='none') {
         element.style.display = 'block'
         if (div.includes('Forecast')) {
-            document.getElementById(`${div}-toggle`).innerHTML = '&#8212;' //Extended emdash
+            document.getElementById(`${div}-toggle`).innerHTML = '&#8212;' //Extended dash
         } else {
-            document.getElementById(`${div}-toggle`).innerHTML = '-'
+            document.getElementById(`${div}-toggle`).innerHTML = '&#8211;' //Medium dash
         }
     }
     else {
@@ -147,7 +147,8 @@ function getWindColor(stid, windSpeed) {
     if (windSpeed < ylwLim) {return wwGrn}
     else if (windSpeed < orgLim) {return wwYlw}
     else if (windSpeed < redLim) {return wwOrg}
-    else {return wwRed}
+    else if (windSpeed >= redLim) {return wwRed}
+    else /* Handle calm winds */ {return wwGrn}
 }
 
 // Make CORS requests to external sites via proxy server
@@ -157,9 +158,11 @@ function doCORSRequest(options, result) {
     ServerRequest.open(options.method, cors_api_url + options.url)
     ServerRequest.onload = ServerRequest.onerror = function() {
         result(
-            options.method + ' ' + options.url + '\n' +
-            ServerRequest.status + ' ' + ServerRequest.statusText + '\n\n' +
-            (ServerRequest.responseText || '')
+//            options.method + ' ' + options.url + '\n' +
+//            ServerRequest.status + ' ' + ServerRequest.statusText + '\n\n' +
+//            (
+                ServerRequest.responseText
+//                 || '')
         )
     }
     ServerRequest.send(options.data);
