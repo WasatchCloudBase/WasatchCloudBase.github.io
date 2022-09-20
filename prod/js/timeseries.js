@@ -61,7 +61,7 @@ async function ReloadTimeSeries() {
     var TimeSeriesIntervalCall = await getTimeSeries()
 };
 
-// Function to populate station info, build URLs for forecast plotter image and click-through, and clone reading history DIVs
+// Function to populate station info, build URLs for forecast plotter image and click-through, and clone reading reading/pressure DIVs
 function BuildStationInfo (StationID, StationName, StationElevation, StationLatitude, StationLongitude) {
     document.getElementById(StationID + `-Name`).innerText = StationName
     document.getElementById(StationID + `-Elevation`).innerText = StationElevation + ' ft'
@@ -70,22 +70,35 @@ function BuildStationInfo (StationID, StationName, StationElevation, StationLati
     // Set number of history readings based on station reading speed
     var readingCount = getHistoryReadingCount(StationID)
     // Clone history reading div
-    try {
-        for (let i=1; i<readingCount; i++) {
-            let cloned_reading = document.getElementById(`${StationID}-reading-0`).cloneNode(true)
+    for (let i=1; i<readingCount; i++) {
+        let cloned_reading = document.getElementById(`${StationID}-reading-0`).cloneNode(true)
+        //Rename parent and children IDs
+        cloned_reading.id = `${StationID}-reading-` + i
+        cloned_reading.children[0].id = `${StationID}-gust-` + i
+        cloned_reading.children[1].id = `${StationID}-gbar-` + i
+        cloned_reading.children[2].id = `${StationID}-break-` + i
+        cloned_reading.children[3].id = `${StationID}-wbar-` + i
+        cloned_reading.children[4].id = `${StationID}-wind-` + i
+        cloned_reading.children[5].id = `${StationID}-wdir-` + i
+        cloned_reading.children[6].id = `${StationID}-time-` + i
+        //Add clone to page
+        document.getElementById(`${StationID}-reading-main`).appendChild(cloned_reading)
+    } 
+    // Clone airport pressure reading div
+    if (AirportStations.includes(StationID)) {
+        for (let i=1; i<6; i++) {
+            let cloned_reading = document.getElementById(`${StationID}-pressure-0`).cloneNode(true)
             //Rename parent and children IDs
-            cloned_reading.id = `${StationID}-reading-` + i
-            cloned_reading.children[0].id = `${StationID}-gust-` + i
-            cloned_reading.children[1].id = `${StationID}-gbar-` + i
-            cloned_reading.children[2].id = `${StationID}-break-` + i
-            cloned_reading.children[3].id = `${StationID}-wbar-` + i
-            cloned_reading.children[4].id = `${StationID}-wind-` + i
-            cloned_reading.children[5].id = `${StationID}-wdir-` + i
-            cloned_reading.children[6].id = `${StationID}-time-` + i
+            cloned_reading.id = `${StationID}-pressure-` + i
+            cloned_reading.children[0].id = `${StationID}-alti-` + i
+            cloned_reading.children[1].id = `${StationID}-altibar-` + i
+            cloned_reading.children[2].id = `${StationID}-temp-` + i
+            cloned_reading.children[3].id = `${StationID}-zone-` + i
+            cloned_reading.children[4].id = `${StationID}-alti-time-` + i
             //Add clone to page
-            document.getElementById(`${StationID}-reading-main`).appendChild(cloned_reading)
+            document.getElementById(`${StationID}-pressure-main`).appendChild(cloned_reading)
         } 
-    }   catch (error) {document.getElementById(`${StationID}-Name`).innerText = error }
+    }
 }
 
 // Function to get TimeSeries data from Mesonet API
