@@ -12,6 +12,9 @@ let currentDiv = 'Weather Stations'
 document.getElementById('current-div').innerHTML = currentDiv
 let currentDay = 'Today'
 document.getElementById('current-day').innerHTML = currentDay
+let currentLoc = 'Salt Lake City'
+document.getElementById('current-loc').innerHTML = currentLoc
+let day3ForecastURL = 'https://api.weather.gov/gridpoints/SLC/97,175/forecast'
 
 // Set defaults for decoded skew-T
 let liftParams = {}, maxTempF, soundingData = {}
@@ -25,11 +28,17 @@ window.onclick = function(event) {
         const DayMenu = document.getElementById('DayMenu')
         if (DayMenu.classList.contains('show')) DayMenu.classList.remove('show')
     }
+    if (!event.target.matches('.btn-LocMenu')) {
+        const LocMenu = document.getElementById('LocMenu')
+        if (LocMenu.classList.contains('show')) LocMenu.classList.remove('show')
+    }
 }
 
 function menu() { document.getElementById('menu').classList.toggle('show') }
 
 function DayMenu() { document.getElementById('DayMenu').classList.toggle('show') }
+
+function LocMenu() { document.getElementById('LocMenu').classList.toggle('show') }
 
 function reload() {
     history.scrollRestoration = 'manual'
@@ -183,12 +192,12 @@ function doCORSRequest(options, result) {
     }
 })();
 
-// IIFE ASYNC NOAA PUBLIC API FOR 3 DAY FORECAST
-(async () => {
-    //const url = 'https://wasatchcloudbase.github.io/example_files/example_noaa_forecast.json'
-    const url = 'https://api.weather.gov/gridpoints/SLC/97,175/forecast'
-    const response = await fetch(url)
-    const noaaData = await response.json()
+// 3 DAY FORECAST
+// Get 3 day forecast based on selection location
+//const url = 'https://wasatchcloudbase.github.io/example_files/example_noaa_forecast.json'
+async function get3DayForecast() {
+    var response = await fetch(day3ForecastURL)
+    var noaaData = await response.json()
     if (noaaData) {
         let position = noaaData.properties.periods[0].isDaytime ? 0 : 1
         for (let i=1; i<4; i++) {
@@ -198,7 +207,28 @@ function doCORSRequest(options, result) {
             position += 2
         }
     }
+}
+// Make call for initial 3 day forecast on load
+(async () => {
+    get3DayForecast()
 })();
+// Toggle changes to 3 day forecast location
+function toggleLoc(newLoc) {
+    var currentLoc = newLoc
+    document.getElementById('current-loc').innerHTML = currentLoc
+    // Determine forecast based on location selected
+    // Can get different location grid points from:  https://api.weather.gov/points/{lat},{lon}
+    if (currentLoc === 'Salt Lake City') {
+        day3ForecastURL = 'https://api.weather.gov/gridpoints/SLC/97,175/forecast'
+    } else if (currentLoc === 'The V') {
+        day3ForecastURL = 'https://api.weather.gov/gridpoints/SLC/102,181/forecast'
+    } else if (currentLoc === 'Inspo') {
+        day3ForecastURL = 'https://api.weather.gov/gridpoints/SLC/106,153/forecast'
+    } else if (currentLoc === 'Monroe Peak') {
+        day3ForecastURL = 'https://api.weather.gov/gridpoints/SLC/80,75/forecast'
+    }
+    get3DayForecast()
+}
 
 // IIFE ASYNC Utah Weather Alerts (hidden if none)
 (async () => {
@@ -303,22 +333,23 @@ function doCORSRequest(options, result) {
 })();
 
 // IIFE ASYNC Get TFRs for Utah
-/*
-(async () => 
-    {
-        const url = 'https://tfr.faa.gov/tfr2/list.html'
-        doCORSRequest({method: 'GET', url: url, data: ""}, 
-        function getResult(result) {ProcessTFRs(result) })
-    }
-)();
-
-function ProcessTFRs(TFRtext) {
-    if (TFRtext) {
-        document.getElementById('URLCheck').style.display = 'block'
-        document.getElementById('URLMessage').innerText = TFRtext
-    }
-}
+/*(async () => {
+    const url = 'https://tfr.faa.gov/tfr2/list.html'
+    doCORSRequest({method: 'GET', url: url, data: ""}, function processResponse(result) {
+    document.getElementById('UtahTFRs').style.display = 'block'
+    document.getElementById('TFRType').innerText = 'CORS request called'
+    document.getElementById('TFRType').innerHTML = JSON.stringify(result)
+    
+//        const TFRtext = JSON.parse(result)
+//document.getElementById('TFRType').innerText = 'Response parsed'
+//        if (TFRtext) {
+//            document.getElementById('UtahTFRs').style.display = 'block'
+//            document.getElementById('TFRType').innerText = TFRtext
+//        }    
+    })
+})();
 */
+
 
 /*
     let EachTFR = []

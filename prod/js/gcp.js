@@ -41,54 +41,6 @@
 })();
 
 // GCP SOARING FORECAST
-/*
-(async () => {
-    //const url = 'https://wasatchcloudbase.github.io/example_soaring_forecast.json'
-    const SoaringForecastURL = 'https://storage.googleapis.com/wasatch-wind-static/soaring.json'
-    doCORSRequest({method: 'GET', url: SoaringForecastURL, data: ""}, function processResponse(result) {
-        var soarData = JSON.parse(result)
-        const odt = (soarData['Overdevelopment time']==='0000') ? 'None' : soarData['Overdevelopment time']
-        const neg3 = (soarData['Height of -3 index']==='None') ? 0 : soarData['Height of -3 index']
-        const tol = (soarData['Top of lift'].substr(0,5)==='Error') ? 0 : parseInt(soarData['Top of lift'])
-        if (soarData['Report date']===date) {
-            const maxTemp = soarData['Max temp']
-            raob(maxTemp)
-            document.getElementById('soarcast-tol').innerHTML = tol.toLocaleString()
-            document.getElementById('soarcast-tol-m').innerHTML = `${Math.round(tol/3.281).toLocaleString()} m`
-            document.getElementById('soarcast-neg3').innerHTML = parseInt(neg3).toLocaleString()
-            document.getElementById('soarcast-neg3-m').innerHTML = `${Math.round(parseInt(neg3)/3.281).toLocaleString()} m`
-            document.getElementById('soarcast-rol').innerHTML = parseInt(soarData['Max rate of lift']).toLocaleString()
-            document.getElementById('soarcast-rol-m').innerHTML = `${Math.round((parseInt(soarData['Max rate of lift'])/197)*10)/10} m/s`
-            if (odt !== 'None' && odt !== 'NONE' && odt !== 'Error: Failed to extract overdevelopment time') {
-                let odhour = parseInt(odt.substr(0,2))
-                let odmins = odt.substr(2,4)
-                let odtime = (odhour>12) ? `${odhour -= 12}:${odmins} pm` : (odhour===12 && odmins==='00') ? 'Noon' : (odhour===12 && odmins>0) ? `${odhour}:${odmins} pm`: `${odhour}:${odmins} am`
-                document.getElementById('od-div').style.display = 'block'
-                document.getElementById('od-time').innerHTML = odtime
-            }
-        }
-        else {
-            const altMaxTempurl = 'https://api.weather.gov/gridpoints/SLC/97,175'
-            doCORSRequest({method: 'GET', url: altMaxTempurl, data: ""}, function processResponse(result) {
-                const altMaxTempData = JSON.parse(result)
-                const maxTemp = (altMaxTempData.properties.maxTemperature.values[0].value*9/5)+32
-                raob(maxTemp)
-            })
-        }
-    })
-})();
-
-// GCP ROAB
-function raob(maxTemp) {
-    const url = 'https://storage.googleapis.com/wasatch-wind-static/raob.json'
-    doCORSRequest({method: 'GET', url: url, data: ""}, function processResponse(result) {
-        raobData = result
-        drawD3LapseChart(raobData, maxTemp)
-    })
-}
-*/
-
-// GCP SOARING FORECAST
 (async () => {
     try {
         const maxTempURL = 'https://storage.googleapis.com/wasatch-wind-static/maxtemp.json'
@@ -106,7 +58,6 @@ function raob(maxTemp) {
     } catch (error) { 
         console.log(error) }
 })();
-
 
 function getLiftParams(temp, data, position = 0, raobSlope, raobYInt, params = {}) {
     const tempC = (temp - 32) * 5 / 9
