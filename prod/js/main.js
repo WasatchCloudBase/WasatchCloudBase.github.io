@@ -152,17 +152,6 @@ function doCORSRequest(options, result) {
     ServerRequest.send(options.data);
 }
 
-// Test URL fetch (uncomment to show debugging block and test URL call)
-/*
-(async () => {
-    document.getElementById('URLCheck').style.display = 'block'
-    const url = 'https://tfr.faa.gov/tfr2/list.html'
-    doCORSRequest({method: 'GET', url: url, data: ""}, function processResponse(result) {
-        document.getElementById('URLMessage').innerText = result
-    })
-})();
-*/
-
 // GET SUNRISE AND SUNSET FOR SLC AIRPORT
 (async () => {
     //  example url = 'https://api.sunrise-sunset.org/json?lat=40.7862&lng=-111.9801&date=2022-09-09'
@@ -395,4 +384,16 @@ function toggleLoc(newLoc) {
 }
 }
 )();
+*/
+/**************************************************************************************************************************/
+
+// Test URL fetch (uncomment to show debugging block and test URL call)
+/*
+(async () => {
+    document.getElementById('URLCheck').style.display = 'block'
+    const url = 'https://tfr.faa.gov/tfr2/list.html'
+    doCORSRequest({method: 'GET', url: url, data: ""}, function processResponse(result) {
+        document.getElementById('URLMessage').innerText = result
+    })
+})();
 */

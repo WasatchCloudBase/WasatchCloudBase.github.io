@@ -9,8 +9,6 @@
     gcpImageTime = gcpImageTime.toLocaleString('en-US', {hour: 'numeric', minute: '2-digit'}).toLowerCase();
     document.getElementById('wind-map-timestamp').innerHTML = gcpImageTime;
     document.getElementById('surface-wind-map').src = gcpImageURL;
-//     document.getElementById('wind-map-timestamp').innerHTML = '2:45 pm'
-//     document.getElementById('surface-wind-map').src = '/Staging/images/wind-map-save.png'
 })();
 
 // GCP WIND ALOFT FORECAST
