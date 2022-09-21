@@ -196,6 +196,8 @@ function doCORSRequest(options, result) {
 // Get 3 day forecast based on selection location
 //const url = 'https://wasatchcloudbase.github.io/example_files/example_noaa_forecast.json'
 async function get3DayForecast() {
+    // Clear prior results while loading
+    // (a lag sometimes occurs the first time forecasts are queried)
     for (let i=1; i<4; i++) {
         document.getElementById(`forecast-day${i}-day`).innerHTML = 'Loading forecast...'
         document.getElementById(`forecast-day${i}-txt`).innerHTML = ''
