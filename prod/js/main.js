@@ -388,7 +388,7 @@ function toggleLoc(newLoc) {
 /**************************************************************************************************************************/
 
 // Test URL fetch (uncomment to show debugging block and test URL call)
-/*
+
 (async () => {
     document.getElementById('URLCheck').style.display = 'block'
     const url = 'https://tfr.faa.gov/tfr2/list.html'
@@ -396,4 +396,3 @@ function toggleLoc(newLoc) {
         document.getElementById('URLMessage').innerText = result
     })
 })();
-*/
