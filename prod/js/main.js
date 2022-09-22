@@ -394,6 +394,6 @@ function toggleLoc(newLoc) {
 //    const url = 'https://tfr.faa.gov/tfr2/list.html'
     const url = 'tfr'
     doCORSRequest({method: 'GET', url: url, data: ""}, function processResponse(result) {
-        document.getElementById('URLMessage').innerText = result
+        document.getElementById('URLMessage').innerText = JSON.stringify(result)
     })
 })();
