@@ -15,6 +15,7 @@ document.getElementById('current-day').innerHTML = currentDay
 let currentLoc = 'Salt Lake City'
 document.getElementById('current-loc').innerHTML = currentLoc
 let day3ForecastURL = 'https://api.weather.gov/gridpoints/SLC/97,175/forecast'
+let TFRDetails = ''
 
 // Set defaults for decoded skew-T
 let liftParams = {}, maxTempF, soundingData = {}
@@ -329,70 +330,66 @@ function toggleLoc(newLoc) {
 })();
 
 // IIFE ASYNC Get TFRs for Utah
-/*(async () => {
-    const url = 'https://tfr.faa.gov/tfr2/list.html'
+(async () => {
+    const url = 'cloudbase_tfr_api_call'
+    const xmlparser = new DOMParser()
     doCORSRequest({method: 'GET', url: url, data: ""}, function processResponse(result) {
-    document.getElementById('UtahTFRs').style.display = 'block'
-    document.getElementById('TFRType').innerText = 'CORS request called'
-    document.getElementById('TFRType').innerHTML = JSON.stringify(result)
-    
-//        const TFRtext = JSON.parse(result)
-//document.getElementById('TFRType').innerText = 'Response parsed'
-//        if (TFRtext) {
-//            document.getElementById('UtahTFRs').style.display = 'block'
-//            document.getElementById('TFRType').innerText = TFRtext
-//        }    
+        var TFRData = JSON.parse(result)
+        var TFRCount = 0
+        if (TFRData) {
+            let EachTFR = []
+            for (let i=0; i<TFRData.length; i++) {
+                EachTFR = TFRData[i]
+                if (EachTFR.state === 'UT') {
+                    if (TFRCount==0) {
+                        // Populate first TFR
+                        document.getElementById('UtahTFRs').style.display = 'block'
+                        document.getElementById('TFRNotam').innerText = EachTFR.notam
+                        document.getElementById('TFRNotam').href = EachTFR.links.details
+                        document.getElementById('TFRDate').innerText = EachTFR.date
+                        document.getElementById('TFRType').innerText = EachTFR.type
+                        // Get TFR detailed description
+                        doCORSRequest({method: 'GET', url: EachTFR.links.xml, data: ""}, function processResponse(result) {
+                            let xmlDoc = xmlparser.parseFromString(result, 'text/xml')
+                            // Add line return formatting
+                            document.getElementById('TFRDescription').innerText = xmlDoc.getElementsByTagName('txtDescrUSNS')[0].childNodes[0].nodeValue.replaceAll(`..`, `\r`)
+                        })
+                    } else {
+                        // Clone division for additional TFRs (as needed)
+                        let cloned_TFR = document.getElementById('TFRDiv').cloneNode(true)
+                        //Rename parent and children IDs
+                        cloned_TFR.id = 'TFRDiv' + TFRCount
+                        cloned_TFR.children[0].id = 'TFRNotam' + TFRCount
+                        cloned_TFR.children[1].id = 'TFRDate' + TFRCount
+                        cloned_TFR.children[2].id = 'TFRType' + TFRCount
+                        cloned_TFR.children[3].id = 'TFRAirDescription' + TFRCount
+                        //Add clone to page
+                        document.getElementById('TFRGroupDiv').appendChild(cloned_TFR)
+                        //Populate additional TFRs
+                        document.getElementById(`TFRDiv${TFRCount}`).style.display = 'block'
+                        document.getElementById(`TFRNotam${TFRCount}`).innerText = EachTFR.notam
+                        document.getElementById(`TFRDate${TFRCount}`).innerText = EachTFR.date
+                        document.getElementById(`TFRType${TFRCount}`).innerText = EachTFR.type
+                        // Get TFR detailed description
+                        doCORSRequest({method: 'GET', url: EachTFR.links.xml, data: ""}, function processResponse(result) {
+                            let xmlDoc = xmlparser.parseFromString(result, 'text/xml')
+                            document.getElementById(`TFRDescription${TFRCount}`).innerText = xmlDoc.getElementsByTagName('txtDescrUSNS')[0].childNodes[0].nodeValue
+                        })   
+                    }
+                    TFRCount = TFRCount + 1
+                }
+            }
+        
+        }    
     })
 })();
-*/
 
-
-/*
-    let EachTFR = []
-    for (let i=0; i<TFRData.features.length; i++) {
-        EachTFR = TFRData.features[i].properties
-        if (i==0) {
-        // Populate first TFR
-            document.getElementById('UtahTFRs').style.display = 'block'
-            document.getElementById('TFRBeginDate').innerText = EachTFR.BeginDate
-            document.getElementById('TFREndDate').innerText = EachTFR.EndDate
-            document.getElementById('TFRType').innerText = EachTFR.Type
-            document.getElementById('TFRLocation').innerText = EachTFR.Location
-            document.getElementById('TFRReason').innerText = EachTFR.Reason
-        } else if (i==1) {
-            // REMEMBER TO REMOVE i==1 and add logic to filter for Utah only
-            // Clone division for additional TFRs (as needed)
-            let cloned_TFR = document.getElementById('TFRDiv').cloneNode(true)
-            //Rename parent and children IDs
-            cloned_TFR.id = 'TFRDiv' + i
-            cloned_TFR.children[0].id = 'TFRBeginDate' + i
-            cloned_TFR.children[1].id = 'TFREndDate' + i
-            cloned_TFR.children[2].id = 'TFRType' + i
-            cloned_TFR.children[3].id = 'TFRLocation' + i
-            cloned_TFR.children[4].id = 'TFRReason' + i
-            //Add clone to page
-            document.getElementById('TFRGroupDiv').appendChild(cloned_TFR)
-            //Populate additional TFR
-            document.getElementById(`TFRDiv${i}`).style.display = 'block'
-            document.getElementById(`TFRBeginDate${i}`).innerText = EachTFR.BeginDate
-            document.getElementById(`TFREndDate${i}`).innerText = EachTFR.EndDate
-            document.getElementById(`TFRType${i}`).innerText = EachTFR.Type
-            document.getElementById(`TFRLocation${i}`).innerText = EachTFR.Location
-            document.getElementById(`TFRReason${i}`).innerText = EachTFR.Reason
-        }
-    }
-}
-}
-)();
-*/
 /**************************************************************************************************************************/
-
 // Test URL fetch (uncomment to show debugging block and test URL call)
 
 (async () => {
     document.getElementById('URLCheck').style.display = 'block'
-//    const url = 'https://tfr.faa.gov/tfr2/list.html'
-    const url = 'tfr'
+    const url = 'https://tfr.faa.gov/save_pages/detail_2_8303.xml'
     doCORSRequest({method: 'GET', url: url, data: ""}, function processResponse(result) {
         document.getElementById('URLMessage').innerText = JSON.stringify(result)
     })

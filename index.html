@@ -1382,16 +1382,14 @@
 
         <!-- TFRs FOR UTAH -->
         <div class="collapse container-fluid p-0" id="UtahTFRs">
-            <a href="https://tfr.faa.gov/tfr_map_ims/html/ew/scale3/tile_2_2.html" target="_blank">
                 <div class="container-fluid p-0 mt-5 pb-3 text-danger display-3">Utah TFRs</div>
                 <div class="container-fluid border wwborder border-4 border-danger display-5 rounded-4 bg-dark lh-base">
-                    <div id="TFRGroupDiv">
+                    <div id="TFRGroupDiv">            
                         <div class="row pt-3 pb-3" id="TFRDiv">
-                            <div class="col-auto text-start fw-bold text-warning" id="TFRBeginDate"></div>
-                            <div class="col-auto text-start fw-bold text-warning" id="TFREndDate"></div>
-                            <div class="col-auto text-start fw-bold text-warning" id="TFRType"></div>
-                            <div class="fs-1 col-auto text-start" id="TFRLocation"></div>
-                            <div class="fs-1 col-auto text-start text-info" id="TFRReason"></div>
+                            <a href="https://tfr.faa.gov/tfr_map_ims/html/ew/scale3/tile_2_2.html" target="_blank" class="col-auto text-start fw-bold text-warning" id="TFRNotam"></a>
+                            <div class="col-auto text-start text-warning" id="TFRDate"></div>
+                            <div class="col-auto text-start" id="TFRType"></div>
+                            <div class="fs-1 col-auto text-start text-info" id="TFRDescription"></div>
                             <div><hr class="dash mt-3"></div>
                         </div>
                     </div>
@@ -1757,20 +1755,22 @@
             <div class="text-warning">Donate to Matt Hansen for his efforts via Venmo: </div>
             <div class="text-info">@Matt-Hansonx</div>
         </div>
-    </div>
 
-    <!-- Debugging block for URL fetch checks -->
-    <!-- This is always hidden unless debugging -->
-    <div class="collapse container-fluid p-0" id="URLCheck">
-        <div class="container-fluid p-0 mt-5 pb-3 text-info display-3">URL Check</div>
-        <div class="container-fluid border wwborder border-4 border-info display-5 rounded-4 bg-dark lh-base">
-            <div class="col-auto text-start text-info" id="URLMessage"></div>
-            <div><hr class="dash mt-3"></div>
-            <div class="col-auto text-start text-info display-5" id="URLResponse"></div>
+        <!-- Debugging block for URL fetch checks -->
+        <!-- This is always hidden unless debugging -->
+        <div class="collapse container-fluid p-0" id="URLCheck">
+            <div class="container-fluid p-0 mt-5 pb-3 text-info display-3">URL Check</div>
+            <div class="container-fluid border wwborder border-4 border-info display-5 rounded-4 bg-dark lh-base">
+                <div class="col-auto text-start text-info" id="URLMessage"></div>
+                <div><hr class="dash mt-3"></div>
+                <div class="col-auto text-start text-info display-5" id="URLResponse"></div>
+            </div>
         </div>
+
     </div>
 
     <!-- LOCAL SCRIPTS -->
+    <script type="text/javascript" src="prod/js/xml2json.js"></script>
     <script type="text/javascript" src="prod/js/main.js"></script>
     <script type="text/javascript" src="prod/js/timeseries.js"></script>
     <script type="text/javascript" src="prod/js/d3.js"></script>
