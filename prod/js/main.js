@@ -391,7 +391,8 @@ function toggleLoc(newLoc) {
 
 (async () => {
     document.getElementById('URLCheck').style.display = 'block'
-    const url = 'https://tfr.faa.gov/tfr2/list.html'
+//    const url = 'https://tfr.faa.gov/tfr2/list.html'
+    const url = 'TFR'
     doCORSRequest({method: 'GET', url: url, data: ""}, function processResponse(result) {
         document.getElementById('URLMessage').innerText = result
     })
