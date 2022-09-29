@@ -97,3 +97,35 @@ hr.dash { border: 3px dashed white !important; }
   fill: white;
   font-size: 200%;
 }
+
+/* Flight log CSS */
+/* formatting options for HTML5 date picker, since the zoom used for the rest of the page makes the calendar popup unreadably small at 40% zoom */
+.zoomdatepicker {
+  zoom: 2.5;
+  transform: scale(.4)
+}
+.zoomdropdown {
+  zoom: 2.5;
+}
+
+/*  -webkit-align-items: center;
+  display: -webkit-inline-flex;
+  font-family: monospace;
+  overflow: hidden;
+  padding: 0;
+  -webkit-padding-start: 1px;
+}
+input::-webkit-datetime-edit {
+ -webkit-flex: 1;
+ -webkit-user-modify: read-only !important;
+ display: inline-block;
+ min-width: 0;
+ overflow: hidden;
+}
+input::-webkit-datetime-edit-fields-wrapper {
+ -webkit-user-modify: read-only !important;
+ display: inline-block;
+ padding: 1px 0;
+ white-space: pre;
+}
+*/

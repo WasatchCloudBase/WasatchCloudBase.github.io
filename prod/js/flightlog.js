@@ -1,7 +1,5 @@
 'use strict';
 // Globals
-const now = new Date()
-const date = new Intl.DateTimeFormat('en-US', {month: '2-digit', day: '2-digit', year: 'numeric'}).format(now)
 const wwGrn = '#20c997' // Bootstrap teal
 const wwYlw = '#ffc107' // Bootstrap yellow (warning)
 const wwOrg = '#fd7e14' // Bootstrap orange
@@ -10,6 +8,14 @@ const wwRed = '#dc3545' // Bootstrap red (danger)
 // Set default initial page
 let currentDiv = 'Enter New Flight'
 document.getElementById('current-div').innerHTML = currentDiv
+
+// Set flight log entry default date
+let today = new Date();
+let day = today.getDate(); // typeof = number
+let month = ('0' + (today.getMonth()+1)).slice(-2) // typeof = number
+let year = today.getFullYear(); // typeof = number
+let currentDate = `${year}-${month}-${day}`; // typeof = string;
+document.getElementById("flightDate").value = currentDate;
 
 window.onclick = function(event) {
     if (!event.target.matches('.btn-menu')) {
@@ -47,5 +53,5 @@ function doCORSRequest(options, result) {
 
 // Set defaults for flight log entry
 (async () => {
-    document.getElementById('flightDate').innerText = date()
+    
 })();
