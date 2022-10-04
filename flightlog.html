@@ -60,13 +60,41 @@
        </div>
     </div>
 
-
     <div class="dropdown">
-        <button class="btn btn-secondary zoomdropdown dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <button class="btn zoomdropdown dropdown-toggle border border-info display-3 text-info bg-dark my-2 mx-5" type="button" data-bs-toggle="dropdown" aria-expanded="false">
           Dropdown
         </button>
-        <ul class="dropdown-menu zoomdropdown">
-          <li><button class="dropdown-item" type="button">Action</button></li>
+    <ul class="dropdown-menu zoomdropdown dropdown-menu-dark d-block position-static border-0 pt-0 mx-0 rounded-3 shadow overflow-hidden w-280px">
+        <form class="p-2 mb-2 bg-dark border-bottom border-dark">
+          <input type="search" class="form-control form-control-dark" autocomplete="false" placeholder="Type to filter...">
+        </form>
+        <ul class="list-unstyled mb-0">
+          <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#">
+            <span class="d-inline-block bg-success rounded-circle p-1"></span>
+            Action
+          </a></li>
+          <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#">
+            <span class="d-inline-block bg-primary rounded-circle p-1"></span>
+            Another action
+          </a></li>
+          <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#">
+            <span class="d-inline-block bg-danger rounded-circle p-1"></span>
+            Something else here
+          </a></li>
+          <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#">
+            <span class="d-inline-block bg-info rounded-circle p-1"></span>
+            Separated link
+          </a></li>
+        </ul>
+    </ul>
+    </div>
+
+    <div class="dropdown">
+        <button class="btn zoomdropdown dropdown-toggle border border-info display-3 text-info bg-dark my-2 mx-5" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Dropdown
+        </button>
+        <ul class="dropdown-menu zoomdropdown bg-dark border px-5 text-info">
+          <li><button class="py-3 display-4 clickable dropdown-item" type="button">Action</button></li>
           <li><button class="dropdown-item" type="button">Another action</button></li>
           <li><button class="dropdown-item" type="button">Something else here</button></li>
         </ul>

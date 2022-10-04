@@ -57,6 +57,7 @@ function toggleDiv(newDiv) {
 function toggleDay(newDay) {
     var currentDay = newDay
     document.getElementById('current-day').innerHTML = currentDay
+    
     // Determine windgram directory based on day selected
     var windgram_url_dir = 'https://flymarshall.com/ut-4k/OUT'
     if (currentDay === 'Today + 1') {windgram_url_dir = windgram_url_dir + '+1'}
@@ -322,7 +323,7 @@ function toggleLoc(newLoc) {
     const response = await fetch(url)
     const SoaringForecastText = await response.text()
     if (SoaringForecastText) {
-        let ContentStart = SoaringForecastText.search("THERMAL INDEX.")
+        let ContentStart = SoaringForecastText.search("DATE..")
         let ContentEnd = SoaringForecastText.indexOf("THIS", ContentStart) - 2
         let ContentText = SoaringForecastText.substring(ContentStart, ContentEnd) 
         document.getElementById("soaring-forecast").innerText = ContentText
