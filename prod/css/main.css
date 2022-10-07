@@ -99,15 +99,18 @@ hr.dash { border: 3px dashed white !important; }
 }
 
 /* Flight log CSS */
-/* formatting options for HTML5 date picker, since the zoom used for the rest of the page makes the calendar popup unreadably small at 40% zoom */
+/* Adjusting zoom for input elements since the zoom used for the rest of the page makes these unreadably small */
 .zoomdatepicker {
   zoom: 2.5;
   transform: scale(.4)
 }
-/* formatting options for drop down, since the zoom used for the rest of the page makes the dropdown unreadably small */
 .zoomdropdown {
   zoom: 2.5;
 }
+.form-control {
+  zoom: 2.5;
+}
+
 /* Make the date picker calendar icon white (dark background theme) */
 input {
   color-scheme: dark;
