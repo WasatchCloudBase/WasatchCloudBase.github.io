@@ -21,11 +21,11 @@
 
         <div class="dropdown text-start border-top border-bottom mt-2">
             <div class="row">
-                <button class="col-auto btn-menu border-0 fw-bold display-2 bg-black rounded-3 text-warning my-2 py-3" id="btn-menu" onclick="menu()">&#9776;&#9662;</button>
+                <button class="col-auto btn-menu border-0 fw-bold display-2 bg-black rounded-4 text-warning my-2 py-3" id="btn-menu" onclick="menu()">&#9776;&#9662;</button>
                 <div class="col align-self-center display-1 text-center text-info pb-2" id="current-div"></div>
                 <img class="col-1 me-2 align-self-center clickable" src="prod/images/refresh.png" height="100%" width="100%" onclick="reload()">
             </div>
-            <div class="dropdown-menu bg-dark border px-5 text-warning" id="menu">
+            <div class="dropdown-menu bg-dark border px-5 text-warning rounded-4" id="menu">
                 <div class="py-3 display-3 clickable" onclick="toggleDiv('Enter New Flight')">Enter New Flight</div>
                 <div class="py-3 display-3 clickable" onclick="toggleDiv('Flight Log Statistics')">Flight Log Statistics</div>
                 <div class="py-3 display-3 clickable" onclick="toggleDiv('Flight Log History')">Flight Log History</div>
@@ -36,82 +36,58 @@
 </head>
 
 <body>
+
     <!-- Enter New Flight DIV ############################################################################################################################################ -->
     <div class="mb-div-end" id="Enter New Flight">
         <!-- Enter new flight -->
        <div class="container-fluid p-0">
-            <div class="pt-4">
-                <div class="display-3 pb-4">Enter New Flight</div>
-            </div>
-            <div class="border wwborder border-2 border-warning bg-dark">
-                <div class="row mx-5 pt-2 pb-1">
-                    <div class="col align-self-center display-4">Date:</div>
-                    <div class="col display-4 d-flex justify-content-around py-3">
-                        <input class="display-4 zoomdatepicker" type="date" id="flightDate">
+            <div class="py-4"></div>
+            <div class="border wwborder border-2 border-info bg-dark">
+
+                <!-- Flight date -->
+                <div class="row mx-5 py-3">
+                    <div class="col align-self-center display-4 text-info">Date</div>
+                    <div class="col">
+                        <input class="col display-4 zoomdatepicker bg-black border border-white rounded-4 px-3 py-3" type="date" id="flightDate">
                     </div>
                 </div>
-                <div class="row mx-5 pt-2 pb-1">
-                    <div class="col align-self-center display-4">Location:</div>
-                    <div class="col display-4 d-flex justify-content-around py-3">
-                        <input class="display-4" id="flightLocation">
+
+                <!-- Flight location -->
+                <div class="row mx-5 py-3">
+                    <div class="col align-self-center display-4 text-info">Location</div>
+                    <div class="col row">
+                        <button class="col-10 btn-menu dropdown-toggle border border-white display-4 bg-black rounded-4 text-white px-3 py-3" id="btn-location-menu" onclick="locationMenu()"></button>
+                        <div class="dropdown-menu bg-dark border px-5 text-white col-auto rounded-4" id="location-dropdown">
+                            <div class="py-3 display-4 clickable" onclick="selectLocation('POTM North Side')">POTM North Side</div>
+                            <div class="py-3 display-4 clickable" onclick="selectLocation('POTM South Side')">POTM South Side</div>
+                            <div class="py-3 display-4 clickable" onclick="selectLocation('Inspo')">Inspo</div>
+                            <div class="py-3 display-4 clickable" onclick="selectLocation('The V')">The V</div>
+                        </div>
                     </div>
                 </div>
+
+                <!-- Glider -->
+                <div class="row mx-5 py-3">
+                    <div class="col align-self-center display-4 text-info">Glider</div>
+                    <div class="col row">
+                        <button class="col-10 btn-menu dropdown-toggle border border-white display-4 bg-black rounded-4 text-white px-3 py-3" id="btn-glider-menu" onclick="gliderMenu()"></button>
+                        <div class="dropdown-menu bg-dark border px-5 text-white col-auto rounded-4" id="glider-dropdown">
+                            <div class="py-3 display-4 clickable" onclick="selectGlider('Advance Iota')">Advance Iota</div>
+                            <div class="py-3 display-4 clickable" onclick="selectGlider('Advance Pi')">Advance Pi</div>
+                            <div class="py-3 display-4 clickable" onclick="selectGlider('Gin Explorer')">Gin Explorer</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pb-4"></div>
             </div>
        </div>
     </div>
 
-    <div class="dropdown">
-        <button class="btn zoomdropdown dropdown-toggle border border-info display-3 text-info bg-dark my-2 mx-5" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-          Dropdown
-        </button>
-    <ul class="dropdown-menu zoomdropdown dropdown-menu-dark d-block position-static border-0 pt-0 mx-0 rounded-3 shadow overflow-hidden w-280px">
-        <form class="p-2 mb-2 bg-dark border-bottom border-dark">
-          <input type="search" class="form-control form-control-dark" autocomplete="false" placeholder="Type to filter...">
-        </form>
-        <ul class="list-unstyled mb-0">
-          <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#">
-            <span class="d-inline-block bg-success rounded-circle p-1"></span>
-            Action
-          </a></li>
-          <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#">
-            <span class="d-inline-block bg-primary rounded-circle p-1"></span>
-            Another action
-          </a></li>
-          <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#">
-            <span class="d-inline-block bg-danger rounded-circle p-1"></span>
-            Something else here
-          </a></li>
-          <li><a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#">
-            <span class="d-inline-block bg-info rounded-circle p-1"></span>
-            Separated link
-          </a></li>
-        </ul>
-    </ul>
-    </div>
-
-    <div class="dropdown">
-        <button class="btn zoomdropdown dropdown-toggle border border-info display-3 text-info bg-dark my-2 mx-5" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-          Dropdown
-        </button>
-        <ul class="dropdown-menu zoomdropdown bg-dark border px-5 text-info">
-          <li><button class="py-3 display-4 clickable dropdown-item" type="button">Action</button></li>
-          <li><button class="dropdown-item" type="button">Another action</button></li>
-          <li><button class="dropdown-item" type="button">Something else here</button></li>
-        </ul>
-      </div>
-
-        <!-- Drop down to select windgram day -->
-        <div class="dropdown text-start border border-info rounded-4 bg-dark mx-5 mt-5">
-            <div class="row">
-                <button class="col-auto btn-DayMenu border-0 fw-bold display-3 text-info bg-dark my-2 mx-5" id="btn-DayMenu" onclick="DayMenu()">&#9776;&#9662;</button>
-                <div class="col btn-DayMenu align-self-center display-3 text-center text-info pb-2 clickable" id="current-day" onclick="DayMenu()"></div>
-            </div>
-            <div class="dropdown-menu bg-dark border px-5 text-info" id="DayMenu">
-                <div class="py-3 display-4 clickable" onclick="toggleDay('Today')">Today</div>
-                <div class="py-3 display-4 clickable" onclick="toggleDay('Today + 1')">Today + 1</div>
-                <div class="py-3 display-4 clickable" onclick="toggleDay('Today + 2')">Today + 2</div>
-            </div>
-        </div>
+    <!-- LOCAL SCRIPTS -->
+    <script type="text/javascript" src="prod/js/flightlog.js"></script>
+</body>
+</html>
 
 
 
