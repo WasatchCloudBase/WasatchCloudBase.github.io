@@ -104,16 +104,10 @@ hr.dash { border: 3px dashed white !important; }
   zoom: 2.5;
   transform: scale(.4)
 }
-.zoomdropdown {
+.form-select {
   zoom: 2.5;
 }
 .form-control {
-  zoom: 2.5;
-}
-.select {
-  zoom: 2.5;
-}
-.form-select {
   zoom: 2.5;
 }
 
