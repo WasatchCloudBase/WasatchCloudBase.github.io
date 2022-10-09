@@ -175,7 +175,8 @@ function doCORSRequest(options, result) {
         let sunset_hour_digits = DaylightData.results.sunset.search(`:`)
         let sunset_hour = +DaylightData.results.sunset.substring(0,sunset_hour_digits) + UTC_Adjustment
         if (sunset_hour < 0) { sunset_hour = (12 + sunset_hour) } 
-        let sunset = sunset_hour + DaylightData.results.sunset.substring(sunrise_hour_digits, sunset_hour_digits + 3)
+        if (sunset_hour > 12) { sunset_hour = (sunset_hour - 12)}
+        let sunset = sunset_hour + DaylightData.results.sunset.substring(sunset_hour_digits, sunset_hour_digits + 3)
 
         //Update page elements
         document.getElementById(`sunrise_time`).innerText = sunrise + 'am'

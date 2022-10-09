@@ -24,6 +24,11 @@ function reload() {
     location.reload()
 }
 
+function runcode() {
+    document.getElementById('flightLocationLabel').innerText = 'CODE RAN';
+}
+
+
 function toggleDiv(newDiv) {
     document.getElementById('menu').classList.toggle('show')
     document.getElementById(currentDiv).style.display = 'none'
