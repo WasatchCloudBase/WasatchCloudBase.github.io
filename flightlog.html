@@ -29,6 +29,8 @@
                 <div class="py-3 display-3 clickable" onclick="toggleDiv('Enter New Flight')">Enter New Flight</div>
                 <div class="py-3 display-3 clickable" onclick="toggleDiv('Flight Log Statistics')">Flight Log Statistics</div>
                 <div class="py-3 display-3 clickable" onclick="toggleDiv('Flight Log History')">Flight Log History</div>
+                <div class="py-3 display-3 clickable" onclick="toggleDiv('Import Past Flights')">Import Past Flights</div>
+                <div class="py-3 display-3 clickable" onclick="toggleDiv('User Profile / Logout')">User Profile / Logout</div>
                 <div class="py-3 display-3 clickable" onclick="toggleDiv('About')">About</div>
             </div>
         </div>
@@ -82,7 +84,7 @@
 
                 <!-- Flight duration -->
                 <div class="row mx-5 py-3">
-                    <div class="col align-self-center display-4 text-info">Flight Duration (minutes)</div>
+                    <div class="col align-self-center display-4 text-info">Duration (minutes)</div>
                     <div class="col">
                         <input class="col display-4 bg-black border border-white rounded-4 px-3 py-3" type="number" id="flightDuration">
                     </div>
@@ -90,7 +92,7 @@
                 
                 <!-- Number of flights -->
                 <div class="row mx-5 py-3">
-                    <div class="col align-self-center display-4 text-info">Number of Flights</div>
+                    <div class="col align-self-center display-4 text-info"># of Flights</div>
                     <div class="col">
                         <input class="col display-4 bg-black border border-white rounded-4 px-3 py-3" type="number" id="flightNumber">
                     </div>
@@ -98,7 +100,7 @@
 
                 <!-- Flying buddies -->
                 <div class="row mx-5 py-3">
-                    <div class="col align-self-center display-4 text-info">Flying buddies</div>
+                    <div class="col align-self-center display-4 text-info">Air Buddies</div>
                     <div class="col row">
                         <select class="select rows-4 display-6 bg-black text-white border border-white rounded-4" multiple>
                             <option value="Jasper">Jasper</option>
@@ -145,28 +147,20 @@
        </div>
     </div>
 
-    <!-- LOCAL SCRIPTS -->
-    <script type="text/javascript" src="prod/js/flightlog.js"></script>
-</body>
-</html>
-
-
-
-
-
-
-
-
-
-
-
-
     <!-- Flight Log Statistics DIV  ###################################################################################################################################### -->
     <div class="collapse mb-div-end" id="Flight Log Statistics">
     </div>
 
     <!-- Flight Log History DIV  ######################################################################################################################################### -->
     <div class="collapse mb-div-end" id="Flight Log History">
+    </div>
+
+    <!-- Import Past Flights DIV  ######################################################################################################################################## -->
+    <div class="collapse mb-div-end" id="Import Past Flights">
+    </div>
+
+    <!-- User Profile / Logout DIV  ###################################################################################################################################### -->
+    <div class="collapse mb-div-end" id="User Profile / Logout">
     </div>
 
     <!-- ABOUT DIV ####################################################################################################################################################### -->

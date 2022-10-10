@@ -8,6 +8,8 @@ const wwRed = '#dc3545' // Bootstrap red (danger)
 // Set defaults
 let currentDiv = 'Enter New Flight'
 document.getElementById('current-div').innerHTML = currentDiv
+let user_name = 'Mike'
+document.getElementById('user_name').innerHTML = user_name
 
 // Set flight log entry default date
 let today = new Date();
