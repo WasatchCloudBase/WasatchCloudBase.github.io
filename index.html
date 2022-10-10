@@ -1344,6 +1344,22 @@
             </a>
         </div>        
 
+        <!-- WeatherStreet Forecast -->
+        <div class="container-fluid p-0">
+            <div class="display-3 pt-4">WeatherStreet 5 Day Forecast</div>
+            <div class="display-5 text-info pb-4">(6 hour intervals)</div>
+            <a href="https://weatherstreet.com/gfs_files/gfs_mslp_pcpn_frzn_clouds_us_1.png" target="_blank">
+                <img class="border wwborder border-4 border-warning img-fluid" id="WeatherStreetImg" 
+                    src="https://weatherstreet.com/gfs_files/gfs_mslp_pcpn_frzn_clouds_us_1.png" width="100%" alt="Forecast unavailable">
+            </a>
+            <div class="row align-items-center d-flex justify-content-around pt-3 mb-4">
+                <div class="col-2"></div>
+                <img class="col-1 me-2 align-self-center border border-1 border-info rounded-4 clickable" src="prod/images/rewind-white-icon.png" height="100%" width="100%" onclick="WeatherStreetBack()">
+                <img class="col-1 me-2 align-self-center border border-1 border-info rounded-4 clickable" src="prod/images/forward-white-icon.png" height="100%" width="100%" onclick="WeatherStreetNext()">
+                <div class="col-2"></div>
+            </div>
+        </div>      
+
         <!-- GRAPHICAL SKY COVER (CLOUD COVER AND PRECIPITATION) FORECAST -->
         <div class="display-3 pt-4" id="SKYCOVERTEST">Cloud Cover and Precipitation Forecast</div>
         <div class="fs-1 fw-bold text-info" id="sky-next-day"></div>

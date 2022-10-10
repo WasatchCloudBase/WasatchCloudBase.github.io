@@ -16,6 +16,7 @@ let currentLoc = 'Salt Lake City'
 document.getElementById('current-loc').innerHTML = currentLoc
 let day3ForecastURL = 'https://api.weather.gov/gridpoints/SLC/97,175/forecast'
 let TFRDetails = ''
+let WeatherStreetImage = 1
 
 // Set defaults for decoded skew-T
 let liftParams = {}, maxTempF, soundingData = {}
@@ -227,6 +228,18 @@ function toggleLoc(newLoc) {
         day3ForecastURL = 'https://api.weather.gov/gridpoints/SLC/80,75/forecast'
     }
     get3DayForecast()
+}
+
+// Update WeatherStreet forecast image based on forward/back buttons
+function WeatherStreetNext() {
+    if (WeatherStreetImage < 20) { WeatherStreetImage = WeatherStreetImage + 1 }
+    var WeatherStreetURL = 'https://weatherstreet.com/gfs_files/gfs_mslp_pcpn_frzn_clouds_us_' + WeatherStreetImage + '.png'
+    document.getElementById('WeatherStreetImg').src = WeatherStreetURL
+}
+function WeatherStreetBack() {
+    if (WeatherStreetImage > 1) { WeatherStreetImage = WeatherStreetImage - 1 }
+    var WeatherStreetURL = 'https://weatherstreet.com/gfs_files/gfs_mslp_pcpn_frzn_clouds_us_' + WeatherStreetImage + '.png'
+    document.getElementById('WeatherStreetImg').src = WeatherStreetURL
 }
 
 // IIFE ASYNC Utah Weather Alerts (hidden if none)
