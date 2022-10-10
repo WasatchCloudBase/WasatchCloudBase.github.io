@@ -97,6 +97,10 @@ hr.dash { border: 3px dashed white !important; }
   fill: white;
   font-size: 200%;
 }
+/* Don't zoom in when pressing buttons mulitple times quickly */
+.disable-dbl-tap-zoom {
+  touch-action: manipulation;
+}
 
 /* Flight log CSS */
 /* Adjusting zoom for input elements since the zoom used for the rest of the page makes these unreadably small */
