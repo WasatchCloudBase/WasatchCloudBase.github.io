@@ -43,109 +43,101 @@
     <div class="mb-div-end" id="Enter New Flight">
 
         <!-- Enter new flight -->
-       <div class="container-fluid p-0">
-            <div class="py-4"></div>
-            <div class="border wwborder border-2 border-info bg-dark">
+        <div class="py-4"></div>
+        <div class="row border wwborder border-2 border-info bg-dark display-4 text-info">
 
-                <!-- Flight date -->
-                <div class="d-flex flex-row justify-content-around">
-                    <div class="p-2 align-self-center text-right display-4 text-info">Date</div>
-                    <div class="p-2">
-                        <input class="display-6 zoomdatepicker bg-black border border-white rounded-4 px-3 py-3" type="date" id="flightDate">
-                    </div>
-                </div>        
-
-                <!-- Flight location -->
-                <div class="d-flex flex-row justify-content-around">
-                    <div class="p-2 align-self-center display-4 text-info" id="flightLocationLabel">Location</div>
-                    <div class="p-2">
-                        <select class="form-select border border-1 border-white display-4 bg-black rounded-3 text-white" id="flightLocation" onchange="runcode()">
-                            <option selected>Select a location</option>
-                            <option value="POTM - North Side">POTM - North Side</option>
-                            <option value="POTM - South Side">POTM - South Side</option>
-                            <option value="The V">The V</option>
-                            <option value="Inspo">Inspo</option>
-                            <option value="Grandeur Peak">Grandeur Peak</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Glider -->
-                <div class="d-flex flex-row justify-content-around">
-                    <div class="p-2 align-self-center display-4 text-info">Glider</div>
-                    <div class="p-2">
-                        <select class="form-select border border-1 border-white display-4 bg-black rounded-3 text-white" id="flightGlider">
-                            <option selected>Select a glider</option>
-                            <option value="Advance Iota">Advance Iota</option>
-                            <option value="Advance Pi">Advance Pi</option>
-                            <option value="Gin Explorer">Gin Explorer</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Flight duration -->
-                <div class="row mx-5 py-3">
-                    <div class="col align-self-center display-4 text-info">Duration (minutes)</div>
-                    <div class="col">
-                        <input class="col-2 display-4 bg-black border border-white rounded-4 px-3 py-3" type="number" id="flightDuration">
-                    </div>
-                </div>
-                
-                <!-- Number of flights -->
-                <div class="row mx-5 py-3">
-                    <div class="col align-self-center display-4 text-info"># of Flights</div>
-                    <div class="col">
-                        <input class="col-2 display-4 bg-black border border-white rounded-4 px-3 py-3" type="number" id="flightNumber">
-                    </div>
-                </div>
-
-                <!-- Flying buddies -->
-                <div class="row mx-5 py-3">
-                    <div class="col align-self-center display-4 text-info">Air Buddies</div>
-                    <div class="col row">
-                        <select class="select rows-4 display-6 bg-black text-white border border-white rounded-4" multiple>
-                            <option value="Jasper">Jasper</option>
-                            <option value="Codde">Codde</option>
-                            <option value="Chris">Chris</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <!-- Notes -->
-                <div class="row mx-5 py-3">
-                    <div class="col align-self-center display-4 text-info">Notes</div>
-                    <div class="col">
-                        <textarea class="form-control col display-4 bg-black text-white border border-1 border-white rounded-3 px-3 py-3" id="flightNotes" rows="4"></textarea>
-                    </div>
-                </div>
-                
-                <!-- Max altitude -->
-                <div class="row mx-5 py-3">
-                    <div class="col align-self-center display-4 text-info">Max altitude (ft)</div>
-                    <div class="col">
-                        <input class="col-2 display-4 bg-black border border-white rounded-4 px-3 py-3" type="number" id="flightMaxAlt">
-                    </div>
-                </div>
-
-                <!-- Max lift -->
-                <div class="row mx-5 py-3">
-                    <div class="col align-self-center display-4 text-info">Max lift (m/s)</div>
-                    <div class="col">
-                        <input class="col-2 display-4 bg-black border border-white rounded-4 px-3 py-3" type="number" id="flightMaxLift">
-                    </div>
-                </div>
-                
-                <!-- XC points -->
-                <div class="row mx-5 py-3">
-                    <div class="col align-self-center display-4 text-info">XC points</div>
-                    <div class="col">
-                        <input class="col-2 display-4 bg-black border border-white rounded-4 px-3 py-3" type="number" id="flightXCPoints">
-                    </div>
-                </div>
-
-                <div class="pb-4"></div>
+            <!-- Flight date -->
+            <div class="col align-self-center text-right display-4">Date</div>
+            <div class="col px-5">
+                <input class="display-6 zoomdatepicker bg-black border border-white rounded-4 px-3 py-3" type="date" id="flightDate">
             </div>
-       </div>
+            <div class="w-100"></div>
+
+            <!-- Flight location -->
+            <div class="col align-self-center display-4" id="flightLocationLabel">Location</div>
+            <div class="col px-5">
+                <select class="form-select border border-1 border-white bg-black rounded-3 text-white" id="flightLocation" onchange="runcode()">
+                    <option selected>Select a location</option>
+                    <option value="POTM - North Side">POTM - North Side</option>
+                    <option value="POTM - South Side">POTM - South Side</option>
+                    <option value="The V">The V</option>
+                    <option value="Inspo">Inspo</option>
+                    <option value="Grandeur Peak">Grandeur Peak</option>
+                </select>
+            </div>
+            <div class="w-100 py-3"></div>
+
+            <!-- Glider -->
+            <div class="col align-self-center display-4">Glider</div>
+            <div class="col px-5">
+                <select class="form-select border border-1 border-white bg-black rounded-3 text-white" id="flightGlider">
+                    <option selected>Select a glider</option>
+                    <option value="Advance Iota">Advance Iota</option>
+                    <option value="Advance Pi">Advance Pi</option>
+                    <option value="Gin Explorer">Gin Explorer</option>
+                </select>
+            </div>
+            <div class="w-100 py-3"></div>
+
+            <!-- Flight duration -->
+            <div class="col align-self-center display-4">Duration (minutes)</div>
+            <div class="col px-5">
+                <input class="bg-black border border-white rounded-4 px-3 py-3" type="number" id="flightDuration">
+            </div>
+            <div class="w-100 py-3"></div>
+            
+            <!-- Number of flights -->
+            <div class="col align-self-center"># of Flights</div>
+            <div class="col px-5">
+                <input class="bg-black border border-white rounded-4 px-3 py-3" type="number" id="flightNumber">
+            </div>
+            <div class="w-100 py-3"></div>
+
+            <!-- Flying buddies -->
+            <div class="col align-self-center">Air Buddies</div>
+            <div class="col px-5">
+                <select class="col-5 select rows-4 display-6 bg-black text-white border border-white rounded-4" multiple>
+                    <option value="Jasper">Jasper</option>
+                    <option value="Codde">Codde</option>
+                    <option value="Chris">Chris</option>
+                </select>
+            </div>
+            <div class="w-100 py-3"></div>
+            
+            <!-- Notes -->
+            <div class="col align-self-center">Notes</div>
+            <div class="col px-5">
+                <textarea class="form-control col bg-black text-white border border-1 border-white rounded-3 px-3 py-3" id="flightNotes" rows="4"></textarea>
+            </div>
+            <div class="w-100 py-3"></div>
+            
+            <!-- Max altitude -->
+            <div class="col align-self-center">Max altitude (ft)</div>
+            <div class="col px-5">
+                <input class="bg-black border border-white rounded-4 px-3 py-3" type="number" id="flightMaxAlt">
+            </div>
+            <div class="w-100 py-3"></div>
+
+            <!-- Max lift -->
+            <div class="col align-self-center">Max lift (m/s)</div>
+            <div class="col px-5">
+                <input class="bg-black border border-white rounded-4 px-3 py-3" type="number" id="flightMaxLift">
+            </div>
+            <div class="w-100 py-3"></div>
+            
+            <!-- XC points -->
+            <div class="col align-self-center">XC points</div>
+            <div class="col px-5">
+                <input class="bg-black border border-white rounded-4 px-3 py-3" type="number" id="flightXCPoints">
+            </div>
+            <div class="w-100 py-3"></div>
+
+            <div class="pb-4"></div>
+        </div>
+
+        <div class="py-5">
+           <button class="col-3 py-2 align-self-center display-4 border border-1 bg-dark text-warning border-warning rounded-4 clickable" onclick="SubmitFlight()">Submit Flight</button>
+        </div>
     </div>
 
     <!-- Flight Log Statistics DIV  ###################################################################################################################################### -->
