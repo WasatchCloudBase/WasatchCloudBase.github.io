@@ -9,21 +9,17 @@
     gcpImageTime = gcpImageTime.toLocaleString('en-US', {hour: 'numeric', minute: '2-digit'}).toLowerCase();
     document.getElementById('wind-map-timestamp').innerHTML = gcpImageTime;
     document.getElementById('surface-wind-map').src = gcpImageURL;
-//     document.getElementById('wind-map-timestamp').innerHTML = '2:45 pm'
-//     document.getElementById('surface-wind-map').src = '/Staging/images/wind-map-save.png'
 })();
 
 // GCP WIND ALOFT FORECAST
 (async () => {
-//     const url = 'https://wasatchcloudbase.github.io/example_files/example_wind_aloft.json'
+    //const windAloftURL = 'https://wasatchcloudbase.github.io/example_files/example_wind_aloft.json'
     const windAloftURL = 'https://us-west3-wasatchwind.cloudfunctions.net/wind-aloft-ftp'
     const windAloftResponse = await fetch(windAloftURL)
     const aloftData = await windAloftResponse.json()
     const range = (now.getHours() > 3 && now.getHours() < 13) ? '12' : (now.getHours() > 18 || now.getHours() < 4) ? '24' : '06'
     const link = `https://www.aviationweather.gov/windtemp/data?level=low&fcst=${range}&region=slc&layout=on&date=`
     document.getElementById('wind-aloft-link').setAttribute('href', link)
-    const ylwSpds = [9, 12, 15, 21]
-    const redSpds = [14, 18, 24, 30]
     const alts = ['6k', '9k', '12k', '18k']
     document.getElementById('aloft-start').innerHTML = aloftData['Start time']
     document.getElementById('aloft-end').innerHTML = aloftData['End time']
@@ -36,61 +32,64 @@
         else {
             document.getElementById(`aloft-${i}`).style.width = `${aloftData.Spds[alts[i]]*0.6}%`
             document.getElementById(`spd-${i}`).innerHTML = aloftData.Spds[alts[i]]
-            document.getElementById(`aloft-${i}`).style.backgroundColor = (aloftData.Spds[alts[i]] > ylwSpds[i] && aloftData.Spds[alts[i]] < redSpds[i]) ? wwYlw : (aloftData.Spds[alts[i]] >= redSpds[i] ? wwRed : wwGrn)
+            document.getElementById(`aloft-${i}`).style.backgroundColor = getWindColor('Aloft', aloftData.Spds[alts[i]])
             document.getElementById(`mph-${i}`).innerHTML = 'mph'
         }
     }
 })();
 
-// FETCH OF GOOGLE API FILE IS FAILING (CORS issues), SO HAVE RE-CREATED SOARING FORECAST FROM NWS SOURCE (SEE MAIN.JS)
-/* Have commented out the following section due to CORS issues)
 // GCP SOARING FORECAST
 (async () => {
-     const url = 'https://wasatchcloudbase.github.io/example_soaring_forecast.json'
-    const SoaringForecastURL = 'https://storage.googleapis.com/wasatch-wind-static/soaring.json'
-    const response = await fetch(SoaringForecastURL)
-    const soarData = await response.json()
-    const odt = (soarData['Overdevelopment time']==='0000') ? 'None' : soarData['Overdevelopment time']
-    const neg3 = (soarData['Height of -3 index']==='None') ? 0 : soarData['Height of -3 index']
-    const tol = (soarData['Top of lift'].substr(0,5)==='Error') ? 0 : parseInt(soarData['Top of lift'])
-        if (soarData['Report date']===date) {
-            const maxTemp = soarData['Max temp']
-            raob(maxTemp)
-            document.getElementById('soarcast-tol').innerHTML = tol.toLocaleString()
-            document.getElementById('soarcast-tol-m').innerHTML = `${Math.round(tol/3.281).toLocaleString()} m`
-            document.getElementById('soarcast-neg3').innerHTML = parseInt(neg3).toLocaleString()
-            document.getElementById('soarcast-neg3-m').innerHTML = `${Math.round(parseInt(neg3)/3.281).toLocaleString()} m`
-            document.getElementById('soarcast-rol').innerHTML = parseInt(soarData['Max rate of lift']).toLocaleString()
-            document.getElementById('soarcast-rol-m').innerHTML = `${Math.round((parseInt(soarData['Max rate of lift'])/197)*10)/10} m/s`
-            if (odt !== 'None' && odt !== 'NONE' && odt !== 'Error: Failed to extract overdevelopment time') {
-                let odhour = parseInt(odt.substr(0,2))
-                let odmins = odt.substr(2,4)
-                let odtime = (odhour>12) ? `${odhour -= 12}:${odmins} pm` : (odhour===12 && odmins==='00') ? 'Noon' : (odhour===12 && odmins>0) ? `${odhour}:${odmins} pm`: `${odhour}:${odmins} am`
-                document.getElementById('od-div').style.display = 'block'
-                document.getElementById('od-time').innerHTML = odtime
-            }
-        }
-        else {
-            const altMaxTempurl = 'https://api.weather.gov/gridpoints/SLC/97,175'
-            const altMaxTempresponse = await fetch(altMaxTempurl, {mode: 'cors'})
-            const altMaxTempData = await altMaxTempresponse.json()
-            const maxTemp = (altMaxTempData.properties.maxTemperature.values[0].value*9/5)+32
-            raob(maxTemp)
-        }    
-////////////
-} catch (e) {
-        document.getElementById('soarcast-tol').innerHTML = e.message
-    }
+    try {
+        const maxTempURL = 'https://storage.googleapis.com/wasatch-wind-static/maxtemp.json'
+        doCORSRequest({method: 'GET', url: maxTempURL, data: ""}, function processResponse(result) {
+            maxTempF = JSON.parse(result).maxtemp
+            const soundingURL = 'https://storage.googleapis.com/wasatch-wind-static/raob.json'
+            doCORSRequest({method: 'GET', url: soundingURL, data: ""}, function processResponse(result) {
+                soundingData = JSON.parse(result)
+                if (maxTempF && soundingData) {                
+                    liftParams = getLiftParams(maxTempF, soundingData)                
+                    decodedSkewTChart(maxTempF, soundingData, liftParams)
+                }
+            })                
+        })
+    } catch (error) { 
+        console.log(error) }
 })();
 
-// GCP ROAB
-function raob(maxTemp) {
-    const url = 'https://storage.googleapis.com/wasatch-wind-static/raob.json'
-    fetch(url)
-        .then(response => { return response.json() })
-        .then(data => {
-            raobData = data
-            drawD3LapseChart(raobData, maxTemp)
-        })
-}
-*/
+function getLiftParams(temp, data, position = 0, raobSlope, raobYInt, params = {}) {
+    const tempC = (temp - 32) * 5 / 9
+    const surfaceAlt_m = 1289
+    const dalrSlope = -101.6 // Metric equivalent to -5.4 F / 1,000' (1000/3.28084 & 3deg C) = 101.6
+    const dalrYInt = surfaceAlt_m - (dalrSlope * tempC)
+    // Find height of -3 index first (thermal index is -3)
+    while (data[position].Temp_c - ((data[position].Altitude_m - dalrYInt) / dalrSlope) < -3) position++
+    let interpolateX1 = data[position].Temp_c
+    let interpolateY1 = data[position].Altitude_m
+    let interpolateX2 = data[position - 1].Temp_c
+    let interpolateY2 = data[position - 1].Altitude_m
+    if (interpolateX1 !== interpolateX2) {
+        raobSlope = (interpolateY1 - interpolateY2) / (interpolateX1 - interpolateX2)
+        let raobYInt = interpolateY1 - (raobSlope * interpolateX1)
+        const interpolateX = (raobYInt - dalrYInt - (3 * dalrSlope)) / (dalrSlope - raobSlope)
+        params.neg3 = interpolateY1 + (interpolateX - interpolateX1) * (interpolateY2 - interpolateY1) / (interpolateX2 - interpolateX1)
+    }
+    else params.neg3 = (interpolateX1 + 3) * dalrSlope + dalrYInt
+    params.neg3Temp = (params.neg3 - dalrYInt) / dalrSlope
+    document.getElementById('user-neg3').innerHTML = Math.round(params.neg3 * 3.28084).toLocaleString()
+    // Now find top of lift (thermal index is 0)
+    while (data[position].Temp_c - ((data[position].Altitude_m - dalrYInt) / dalrSlope) < 0) position++
+    interpolateX1 = data[position].Temp_c
+    interpolateY1 = data[position].Altitude_m
+    interpolateX2 = data[position - 1].Temp_c
+    interpolateY2 = data[position - 1].Altitude_m
+    if (interpolateX1 !== interpolateX2) {
+        raobSlope = (interpolateY1 - interpolateY2) / (interpolateX1 - interpolateX2)
+        raobYInt = interpolateY1 - (raobSlope * interpolateX1)
+        params.tol = ((dalrSlope * raobYInt) - (raobSlope * dalrYInt)) / (dalrSlope - raobSlope)
+    }
+    else params.tol = (interpolateX1 * dalrSlope) + dalrYInt
+    params.tolTemp = (params.tol - dalrYInt) / dalrSlope
+    document.getElementById('user-tol').innerHTML = Math.round(params.tol * 3.28084).toLocaleString()
+    return params
+};

@@ -44,53 +44,78 @@ hr.dash { border: 3px dashed white !important; }
 .wwborder { border-radius: 1rem !important; }
 
 /* D3 */
-.dalrgrid {
-  opacity: 0.25;
-  stroke: white;
-}
 .gridticks {
   color: lightgray;
   opacity: 0.5;
 }
-.svgbg { fill: #000000; }
-.textlabel {
-  fill: white;
-  font-size: 150%;
-}
-.xAxis { font-size: 150%; }
-.xLabel {
-  fill: white;
-  font-size: 150%;
-  font-weight: bold;
-}
-.yAxis { font-size: 150%; }
-.yLabel {
-  fill: white;
-  text-anchor: middle;
-  font-size: 150%;
-  font-weight: bold;
-}
-.templabel {
+.svgbg { fill: #212529; }
+.xAxis { font-size: 175%; }
+.yAxis { font-size: 175%; }
+.maxtemp {
   fill: #0dcaf0;
-  font-size: 200%;
-  font-weight: bold;
+  font-size: calc(1.475rem + 2.7vw);
+  font-weight: 500;
+  line-height: 1.2;
 }
-.raoblabel {
-  fill: #dc3545;
-  font-size: 200%;
-  font-weight: bold;
+@media (min-width: 1200px) {
+  .maxtemp {
+    font-size: 3.5rem;
+  }
 }
-.dewpointlabel {
+.dewpoint {
   fill: #20c997;
-  font-size: 200%;
-  font-weight: bold;
+  font-size: calc(1.475rem + 2.7vw);
+  font-weight: 500;
+  line-height: 1.2;
+}
+@media (min-width: 1200px) {
+  .dewpoint {
+    font-size: 3.5rem;
+  }
+}
+.temp {
+  fill: #dc3545;
+  font-size: calc(1.475rem + 2.7vw);
+  font-weight: 500;
+  line-height: 1.2;
+}
+@media (min-width: 1200px) {
+  .temp {
+    font-size: 3.5rem;
+  }
 }
 .dalrlabel {
-  fill: white;
-  font-size: 150%;
+  fill: #6c757d;
+  font-size: calc(1.325rem + 0.9vw);
+  font-weight: 500;
 }
-.alternatemax {
-  fill: #ffc107ad;
+.neg3label {
+  fill: white;
   font-size: 200%;
-  font-weight: bold;
+}
+.tollabel {
+  fill: white;
+  font-size: 200%;
+}
+/* Don't zoom in when pressing buttons mulitple times quickly */
+.disable-dbl-tap-zoom {
+  touch-action: manipulation;
+}
+
+/* Flight log CSS */
+/* Adjusting zoom for input elements since the zoom used for the rest of the page makes these unreadably small */
+.zoomdatepicker {
+  zoom: 2.5;
+  transform: scale(.4)
+}
+.form-select {
+  zoom: 2.5;
+}
+.form-control {
+  zoom: 2.5;
+}
+
+/* Make the date picker calendar icon white (dark background theme) */
+input {
+  color-scheme: dark;
 }

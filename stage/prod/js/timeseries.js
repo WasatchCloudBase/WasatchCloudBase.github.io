@@ -1,14 +1,17 @@
 'use strict';
+
 // Set number of history readings based on site reading frequency
 const FastStations = ['KSLC', 'UTOLY', 'FPS', 'REY', 'IFF', 'CEN', 'BBN', 'KPVU', 'UTORM', 'SND', 'UTBU1']
 const SlowStations = ['AMB', 'SIGU1', 'BYCU1', 'KHIF'] 
 const FastStationCount = 12 // 5-10 minute updates; show 1-2 hour history
 const SlowStationCount = 5  // Hourly updates; show 5 hour history
 const MediumStationCount = 9 // 10-30 minute updates; show last 9 readings (~2-4 hour history)
+
 // Determine mountain and soaring sites for wind speed color thresholds
 const MountainSites = ['REY', 'IFF', 'AMB', 'OGP', 'SND', 'SIGU1', 'UTBU1', 'BYCU1']
 const SoaringSites = ['FPS', 'HF012', 'UCC45']
-// Airport stations with pressure zone readings
+
+// Identify airport stations to show pressure zone readings
 const AirportStations = ['KSLC', 'KRIF', 'KPVU', 'KHIF']
 
 // Build time series station info, forecast URLs, and cloned divs
@@ -61,7 +64,7 @@ async function ReloadTimeSeries() {
     var TimeSeriesIntervalCall = await getTimeSeries()
 };
 
-// Function to populate station info, build URLs for forecast plotter image and click-through, and clone reading history DIVs
+// Function to populate station info, build URLs for forecast plotter image and click-through, and clone reading reading/pressure DIVs
 function BuildStationInfo (StationID, StationName, StationElevation, StationLatitude, StationLongitude) {
     document.getElementById(StationID + `-Name`).innerText = StationName
     document.getElementById(StationID + `-Elevation`).innerText = StationElevation + ' ft'
@@ -70,22 +73,35 @@ function BuildStationInfo (StationID, StationName, StationElevation, StationLati
     // Set number of history readings based on station reading speed
     var readingCount = getHistoryReadingCount(StationID)
     // Clone history reading div
-    try {
-        for (let i=1; i<readingCount; i++) {
-            let cloned_reading = document.getElementById(`${StationID}-reading-0`).cloneNode(true)
+    for (let i=1; i<readingCount; i++) {
+        let cloned_reading = document.getElementById(`${StationID}-reading-0`).cloneNode(true)
+        //Rename parent and children IDs
+        cloned_reading.id = `${StationID}-reading-` + i
+        cloned_reading.children[0].id = `${StationID}-gust-` + i
+        cloned_reading.children[1].id = `${StationID}-gbar-` + i
+        cloned_reading.children[2].id = `${StationID}-break-` + i
+        cloned_reading.children[3].id = `${StationID}-wbar-` + i
+        cloned_reading.children[4].id = `${StationID}-wind-` + i
+        cloned_reading.children[5].id = `${StationID}-wdir-` + i
+        cloned_reading.children[6].id = `${StationID}-time-` + i
+        //Add clone to page
+        document.getElementById(`${StationID}-reading-main`).appendChild(cloned_reading)
+    } 
+    // Clone airport pressure reading div
+    if (AirportStations.includes(StationID)) {
+        for (let i=1; i<6; i++) {
+            let cloned_reading = document.getElementById(`${StationID}-pressure-0`).cloneNode(true)
             //Rename parent and children IDs
-            cloned_reading.id = `${StationID}-reading-` + i
-            cloned_reading.children[0].id = `${StationID}-gust-` + i
-            cloned_reading.children[1].id = `${StationID}-gbar-` + i
-            cloned_reading.children[2].id = `${StationID}-break-` + i
-            cloned_reading.children[3].id = `${StationID}-wbar-` + i
-            cloned_reading.children[4].id = `${StationID}-wind-` + i
-            cloned_reading.children[5].id = `${StationID}-wdir-` + i
-            cloned_reading.children[6].id = `${StationID}-time-` + i
+            cloned_reading.id = `${StationID}-pressure-` + i
+            cloned_reading.children[0].id = `${StationID}-alti-` + i
+            cloned_reading.children[1].id = `${StationID}-altibar-` + i
+            cloned_reading.children[2].id = `${StationID}-temp-` + i
+            cloned_reading.children[3].id = `${StationID}-zone-` + i
+            cloned_reading.children[4].id = `${StationID}-alti-time-` + i
             //Add clone to page
-            document.getElementById(`${StationID}-reading-main`).appendChild(cloned_reading)
+            document.getElementById(`${StationID}-pressure-main`).appendChild(cloned_reading)
         } 
-    }   catch (error) {document.getElementById(`${StationID}-Name`).innerText = error }
+    }
 }
 
 // Function to get TimeSeries data from Mesonet API
@@ -187,18 +203,6 @@ function zone(stationID, data, zDigit=[]) {
 }
 
 function windChart(data) {
-    // Set wind limits based on site type
-    if (MountainSites.includes(data.stid)) {
-        var ylwLim = 12
-        var redLim = 20
-    } else if (SoaringSites.includes(data.stid)) {
-        var ylwLim = 18
-        var redLim = 26
-    } else {
-        var ylwLim = 15
-        var redLim = 22
-    }
-
     // Reduce the observations (readings) to the last (most recent) based on the station history length
     let length = getHistoryReadingCount(data.stid)
 
@@ -206,9 +210,9 @@ function windChart(data) {
 
     // Update page with reading data
     time(data.stid, data.date_time)
-    wind(data.stid, data.wind_speed_set_1, ylwLim, redLim)
+    wind(data.stid, data.wind_speed_set_1)
     if (data.wind_direction_set_1) wdir(data.stid, data.wind_direction_set_1)
-    if (data.wind_gust_set_1) gust(data.stid, data.wind_gust_set_1, data.wind_speed_set_1, ylwLim, redLim)
+    if (data.wind_gust_set_1) gust(data.stid, data.wind_gust_set_1, data.wind_speed_set_1)
     else { for (let i=0; i<length; i++) { document.getElementById(`${data.stid}-gust-${i}`).innerHTML = '&nbsp;' } }
 }
 
@@ -220,12 +224,12 @@ function time(stid, data) {
     }
 }
 
-function wind(stid, data, ylwLim, redLim) {
+function wind(stid, data) {
     data = data.map(d => Math.round(d)>=1 ? Math.round(d) : d===null ? '&nbsp;' : '<span class="fs-3 fw-normal">Calm</span>')
     const barHeight = data.map(d => d!=='' ? `${d*4}px` : '0px')
-    const barColor = data.map(d => (d>ylwLim && d<redLim) ? wwYlw : d>=redLim ? wwOrg : wwGrn)
+    const barColor = data.map(d => getWindColor(stid, d))
+
     document.getElementById(`${stid}-wind`).innerHTML = typeof data[data.length-1]==='string' ? '<span class="display-5">Calm</span>' : data[data.length-1]
-    //specify wind color based on speed
     document.getElementById(`${stid}-wind`).style.color = barColor[data.length-1]
 
     for (let i=0; i<data.length; i++) {
@@ -246,8 +250,8 @@ function wdir(stid, data) {
     }
 }
 
-function gust(stid, data, wind, ylwLim, redLim, barHeight=[]) {
-    const barColor = data.map(d => (d>ylwLim && d<redLim) ? wwYlw : d>=redLim ? wwOrg : wwGrn)
+function gust(stid, data, wind, barHeight=[]) {
+    const barColor = data.map(d => getWindColor(stid, d))
     for (let i=0; i<data.length; i++) barHeight.push(data[i]>=1 ? `${(data[i]-wind[i])*4}px` : '0px')
     data = data.map(d => d>=1 ? `g${Math.round(d)}` : '&nbsp;')
     if (data[data.length-1]!=='&nbsp;') {
