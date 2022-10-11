@@ -105,8 +105,8 @@ hr.dash { border: 3px dashed white !important; }
 /* Flight log CSS */
 /* Adjusting zoom for input elements since the zoom used for the rest of the page makes these unreadably small */
 .zoomdatepicker {
-  zoom: 2.5;
-  transform: scale(.4)
+  zoom: 2;
+  transform: scale(.5)
 }
 .form-select {
   zoom: 2.5;
