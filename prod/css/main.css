@@ -114,8 +114,10 @@ hr.dash { border: 3px dashed white !important; }
 .form-control {
   zoom: 2.5;
 }
-
 /* Make the date picker calendar icon white (dark background theme) */
 input {
   color-scheme: dark;
+}
+.multiselect {
+  width: 100% !important;
 }
