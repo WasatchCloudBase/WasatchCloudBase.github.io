@@ -148,9 +148,9 @@ async function getTimeSeries() {
                 stations[i].stid = tsData.STATION[i].STID
                 windChart(stations[i])
             } catch (error) { 
-                console.log('Station reading error: ' + error)
-                console.log('For station ID: ' + tsData.STATION[i].STID) 
-                console.log(tsData.STATION[i].OBSERVATIONS) 
+//                console.log('Station reading error: ' + error)
+//                console.log('For station ID: ' + tsData.STATION[i].STID) 
+//                console.log(tsData.STATION[i].OBSERVATIONS) 
             }
         }
     }
@@ -243,9 +243,9 @@ function wind(stid, data) {
             document.getElementById(`${stid}-wbar-${i}`).style.backgroundColor = barColor[i]
         }
     } catch (error) { 
-        console.log('Station wind data error: ' + error)
-        console.log('For station ID: ' + stid) 
-        console.log(data) 
+//        console.log('Station wind data error: ' + error)
+//        console.log('For station ID: ' + stid) 
+//        console.log(data) 
     }
 }
 
@@ -277,8 +277,8 @@ function gust(stid, data, wind, barHeight=[]) {
             document.getElementById(`${stid}-break-${i}`).style.height = '5px'
         }
     } catch (error) { 
-        console.log('Station wind data error: ' + error)
-        console.log('For station ID: ' + stid) 
-        console.log(data) 
+//        console.log('Station wind data error: ' + error)
+//        console.log('For station ID: ' + stid) 
+//        console.log(data) 
     }
 }
