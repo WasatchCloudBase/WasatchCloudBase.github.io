@@ -398,15 +398,3 @@ function WeatherStreetBack() {
         }    
     })
 })();
-
-/**************************************************************************************************************************/
-// Test URL fetch (uncomment to show debugging block and test URL call)
-/*
-(async () => {
-    document.getElementById('URLCheck').style.display = 'block'
-    const url = 'https://tfr.faa.gov/save_pages/detail_2_8303.xml'
-    doCORSRequest({method: 'GET', url: url, data: ""}, function processResponse(result) {
-        document.getElementById('URLMessage').innerText = JSON.stringify(result)
-    })
-})();
-*/

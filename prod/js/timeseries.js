@@ -140,12 +140,18 @@ async function getTimeSeries() {
     if (tsData) {
         let stations = []
         for (let i=0; i<tsData.STATION.length; i++) {
-            // Get pressure readings for each airport station
-            if (AirportStations.includes(tsData.STATION[i].STID)) AltiTempZone(tsData.STATION[i].STID, tsData.STATION[i].OBSERVATIONS)
-            // Get observations for all stations
-            stations[i] = tsData.STATION[i].OBSERVATIONS
-            stations[i].stid = tsData.STATION[i].STID
-            windChart(stations[i])
+            try {
+                // Get pressure readings for each airport station
+                if (AirportStations.includes(tsData.STATION[i].STID)) AltiTempZone(tsData.STATION[i].STID, tsData.STATION[i].OBSERVATIONS)
+                // Get observations for all stations
+                stations[i] = tsData.STATION[i].OBSERVATIONS
+                stations[i].stid = tsData.STATION[i].STID
+                windChart(stations[i])
+            } catch (error) { 
+                console.log('Station reading error: ' + error)
+                console.log('For station ID: ' + tsData.STATION[i].STID) 
+                console.log(tsData.STATION[i].OBSERVATIONS) 
+            }
         }
     }
 };
@@ -205,9 +211,7 @@ function zone(stationID, data, zDigit=[]) {
 function windChart(data) {
     // Reduce the observations (readings) to the last (most recent) based on the station history length
     let length = getHistoryReadingCount(data.stid)
-
     for (let key in data) data[key] = data[key].slice(-length)
-
     // Update page with reading data
     time(data.stid, data.date_time)
     wind(data.stid, data.wind_speed_set_1)
@@ -225,17 +229,23 @@ function time(stid, data) {
 }
 
 function wind(stid, data) {
-    data = data.map(d => Math.round(d)>=1 ? Math.round(d) : d===null ? '&nbsp;' : '<span class="fs-3 fw-normal">Calm</span>')
-    const barHeight = data.map(d => d!=='' ? `${d*4}px` : '0px')
-    const barColor = data.map(d => getWindColor(stid, d))
+    try {
+        data = data.map(d => Math.round(d)>=1 ? Math.round(d) : d===null ? '&nbsp;' : '<span class="fs-3 fw-normal">Calm</span>')
+        const barHeight = data.map(d => d!=='' ? `${d*4}px` : '0px')
+        const barColor = data.map(d => getWindColor(stid, d))
 
-    document.getElementById(`${stid}-wind`).innerHTML = typeof data[data.length-1]==='string' ? '<span class="display-5">Calm</span>' : data[data.length-1]
-    document.getElementById(`${stid}-wind`).style.color = barColor[data.length-1]
+        document.getElementById(`${stid}-wind`).innerHTML = typeof data[data.length-1]==='string' ? '<span class="display-5">Calm</span>' : data[data.length-1]
+        document.getElementById(`${stid}-wind`).style.color = barColor[data.length-1]
 
-    for (let i=0; i<data.length; i++) {
-        document.getElementById(`${stid}-wind-${i}`).innerHTML = data[i]
-        document.getElementById(`${stid}-wbar-${i}`).style.height = barHeight[i]
-        document.getElementById(`${stid}-wbar-${i}`).style.backgroundColor = barColor[i]
+        for (let i=0; i<data.length; i++) {
+            document.getElementById(`${stid}-wind-${i}`).innerHTML = data[i]
+            document.getElementById(`${stid}-wbar-${i}`).style.height = barHeight[i]
+            document.getElementById(`${stid}-wbar-${i}`).style.backgroundColor = barColor[i]
+        }
+    } catch (error) { 
+        console.log('Station wind data error: ' + error)
+        console.log('For station ID: ' + stid) 
+        console.log(data) 
     }
 }
 
@@ -251,18 +261,24 @@ function wdir(stid, data) {
 }
 
 function gust(stid, data, wind, barHeight=[]) {
-    const barColor = data.map(d => getWindColor(stid, d))
-    for (let i=0; i<data.length; i++) barHeight.push(data[i]>=1 ? `${(data[i]-wind[i])*4}px` : '0px')
-    data = data.map(d => d>=1 ? `g${Math.round(d)}` : '&nbsp;')
-    if (data[data.length-1]!=='&nbsp;') {
-        document.getElementById(`${stid}-gust`).innerHTML = data[data.length-1]
-        document.getElementById(`${stid}-gust`).style.color = barColor[data.length-1]
-        document.getElementById(`${stid}-gust`).style.display = 'block'
-    }
-    for (let i=0; i<data.length; i++) {
-        document.getElementById(`${stid}-gust-${i}`).innerHTML = data[i]
-        document.getElementById(`${stid}-gbar-${i}`).style.height = barHeight[i]
-        document.getElementById(`${stid}-gbar-${i}`).style.backgroundColor = barColor[i]
-        document.getElementById(`${stid}-break-${i}`).style.height = '5px'
+    try {
+        const barColor = data.map(d => getWindColor(stid, d))
+        for (let i=0; i<data.length; i++) barHeight.push(data[i]>=1 ? `${(data[i]-wind[i])*4}px` : '0px')
+        data = data.map(d => d>=1 ? `g${Math.round(d)}` : '&nbsp;')
+        if (data[data.length-1]!=='&nbsp;') {
+            document.getElementById(`${stid}-gust`).innerHTML = data[data.length-1]
+            document.getElementById(`${stid}-gust`).style.color = barColor[data.length-1]
+            document.getElementById(`${stid}-gust`).style.display = 'block'
+        }
+        for (let i=0; i<data.length; i++) {
+            document.getElementById(`${stid}-gust-${i}`).innerHTML = data[i]
+            document.getElementById(`${stid}-gbar-${i}`).style.height = barHeight[i]
+            document.getElementById(`${stid}-gbar-${i}`).style.backgroundColor = barColor[i]
+            document.getElementById(`${stid}-break-${i}`).style.height = '5px'
+        }
+    } catch (error) { 
+        console.log('Station wind data error: ' + error)
+        console.log('For station ID: ' + stid) 
+        console.log(data) 
     }
 }
