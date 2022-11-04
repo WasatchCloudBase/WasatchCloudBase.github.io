@@ -1,7 +1,7 @@
 'use strict';
 
 // Set number of history readings based on site reading frequency
-const FastStations = ['KSLC', 'UTOLY', 'FPS', 'REY', 'IFF', 'CEN', 'BBN', 'KPVU', 'UTORM', 'SND', 'UTBU1']
+const FastStations = ['KSLC', 'UTOLY', 'FPS', 'REY', 'IFF', 'CEN', 'BBN', 'KPVU', 'UTORM', 'SND', 'PC198', 'UTBU1']
 const SlowStations = ['AMB', 'SIGU1', 'BYCU1', 'KHIF'] 
 const FastStationCount = 12 // 5-10 minute updates; show 1-2 hour history
 const SlowStationCount = 5  // Hourly updates; show 5 hour history
@@ -9,7 +9,7 @@ const MediumStationCount = 9 // 10-30 minute updates; show last 9 readings (~2-4
 
 // Determine mountain and soaring sites for wind speed color thresholds
 const MountainSites = ['REY', 'IFF', 'AMB', 'OGP', 'SND', 'SIGU1', 'UTBU1', 'BYCU1']
-const SoaringSites = ['FPS', 'HF012', 'UCC45']
+const SoaringSites = ['FPS', 'HF012', 'UCC45', 'PC198']
 
 // Identify airport stations to show pressure zone readings
 const AirportStations = ['KSLC', 'KRIF', 'KPVU', 'KHIF']
@@ -37,6 +37,7 @@ BuildStationInfo('SND', 'Sundance', '8,250', '40.368386', '-111.593964')
 // Central Utah
 BuildStationInfo('KRIF', 'Richfield Airport', '5,318', '38.73411', '-112.10158')
 BuildStationInfo('SIGU1', 'Signal Peak (Cove)', '8,767', '38.633428', '-112.060653')
+BuildStationInfo('PC198', 'Poverty Ridge', '6,844', '38.49699', '-112.21683')
 BuildStationInfo('UTBU1', 'Beaver Mt (Tushars)', '10,007', '38.28609', '-112.36122')
 BuildStationInfo('BYCU1', 'Bryce Canyon', '7,855', '37.641667', '-112.172222')    
 
@@ -131,6 +132,7 @@ async function getTimeSeries() {
         // Central Utah
         `&stid=KRIF` + 
         `&stid=SIGU1` +
+        `&stid=PC198` +
         `&stid=UTBU1` +
         `&stid=BYCU1` +
         `&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&obtimezone=local&timeformat=%-I:%M%20%p&` + 

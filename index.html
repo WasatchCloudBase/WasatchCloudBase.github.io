@@ -1058,7 +1058,56 @@
             </a>
         </div>
 
-        <!-- WIND BEAVEER PEAK, TUSHAR MOUNTAINS (UTBU1)-->
+        <!-- POVERTY RIDGE (PC198)-->
+        <div class="container-fluid mt-4">
+            <div id="PC198-main">
+                <div class="row rounded mt-1">
+                    <div class="col-auto bg-black align-self-center display-4 text-warning clickable" id="PC198-Forecast-toggle" onclick="toggleWindChart('PC198-Forecast')">fcst</div>
+                    <div class="bg-dark col mx-0 row rounded-4">
+                        <div class="col-auto">
+                            <div class="row display-4" id="PC198-Name"></div>
+                            <div class="col-auto row">
+                                <div class="col-auto fs-3 align-self-center text-info" id="PC198-Elevation"></div>
+                                <div class="col-auto fs-3 align-self-center text-info"></div>
+                                <div class="col-auto fs-1 align-self-center justify-content-end" id="PC198-time"></div>
+                            </div>
+                        </div>
+                        <div class="col align-self-end row justify-content-end">
+                            <div class="col-auto display-1" id="PC198-wdir"></div>
+                            <div class="col-auto display-1 align-self-center" id="PC198-wind">&nbsp;</div>
+                            <div class="collapse col-auto display-4 align-self-center pink" id="PC198-gust"></div>
+                        </div>
+                    </div>
+                    <div class="col-auto bg-black align-self-center display-2 text-warning clickable" id="PC198-toggle" onclick="toggleWindChart('PC198')">+</div>
+                </div>
+            </div>
+            <!-- HOURLY FORECAST EXPANSION -->
+            <div class="collapse" id="PC198-Forecast">
+                <div class="container-fluid p-0 mx-0 mt-2">
+                    <a href="https://forecast.weather.gov/Map" id="PC198-Forecast-URL" target="_blank">
+                        <img class="border border-dark" src="https://forecast.weather.gov" id="PC198-Forecast-Image" width="100%">
+                    </a>
+                </div>
+            </div>
+            <!-- WIND HISTORY EXPANSION -->
+            <a href="https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=PC198&table=1&banner=off" target="_blank">
+                <div class="collapse" id="PC198">
+                    <div class="row align-items-end bg-dark rounded-4 mx-0 mt-2" id="PC198-reading-main">
+                        <div class="col ps-0 pe-1" id="PC198-reading-0">
+                            <div class="pink h2" id="PC198-gust-0"></div>
+                            <div id="PC198-gbar-0"></div>
+                            <div class="bg-dark" id="PC198-break-0"></div>
+                            <div id="PC198-wbar-0"></div>
+                            <div class="fs-1" id="PC198-wind-0"></div>
+                            <div class="display-4" id="PC198-wdir-0"></div>
+                            <div class="fs-4 text-info" id="PC198-time-0"></div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- WIND BEAVER PEAK, TUSHAR MOUNTAINS (UTBU1)-->
         <div class="container-fluid mt-4">
             <div id="UTBU1-main">
                 <div class="row rounded mt-1">
