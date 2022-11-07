@@ -163,8 +163,8 @@ function doCORSRequest(options, result) {
     const response = await fetch(url)
     const DaylightData = await response.json()
     if (DaylightData) {
-        // Get timezone offset
-        const UTC_Adjustment = now.getTimezoneOffset() / 60
+        // Get timezone offset (and make negative as offset shows as positive)
+        const UTC_Adjustment = - now.getTimezoneOffset() / 60
 
         // Adjust sunrise for UTC / DST
         let sunrise_hour_digits = DaylightData.results.sunrise.search(`:`)
