@@ -398,3 +398,18 @@ function WeatherStreetBack() {
         }    
     })
 })();
+
+// IIFE ASYNC Get FlySkyHy custom airspace contents
+(async () => {
+    document.getElementById(`custom-airspace-contents`).innerText = 'START'
+    const url = 'https://drive.google.com/file/d/1ZQz9PWQb5JhQloA2bYV2BGB0zgbQwSI9/view?usp=sharing'
+    doCORSRequest({method: 'GET', url: url, data: ""}, function processResponse(result) {
+        document.getElementById("custom-airspace-contents").innerText = 'REQUEST PERFORMED'
+        if (result) {
+            let contents_position_start = result.search("<Contents>")+10
+            let contents_position_end = result.indexOf("</Contents>")-1
+            document.getElementById("custom-airspace-contents").innerText = result /*.substring(contents_position_start, contents_position_end) */
+        }
+    })
+})();
+
