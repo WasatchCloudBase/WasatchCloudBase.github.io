@@ -398,3 +398,38 @@ function WeatherStreetBack() {
         }    
     })
 })();
+
+// Get HTTP cam thumbnail images
+//
+// Default domain GitHub Pages requires HTTPS to be enforced.
+// With HTTPS enforced, unsecured HTTP calls do not return images.
+// This still seems to work on mobile (ios), but not on PCs (Chrome)
+// This function gets these images via server-based requests.
+
+// *********
+// This is commented out, due to problems processing the jpg result returned from the CORS request call
+// *********
+
+/* 
+(async () => {
+
+console.log('Started image function call')
+
+    const urlCreator = window.URL || window.webkitURL
+
+console.log('Established URL:' + urlCreator)
+
+    //SouthSaltLakeEastCam
+    try {
+        var CamURL = 'http://wwc.instacam.com/instacamimg/STHSL/STHSL_l.jpg'
+        doCORSRequest({method: 'GET', url: CamURL, data: ""}, function processResponse(result) {
+
+console.log('Completed CORS Request: ' + result)
+
+            let blobImage = new Blob(btoa(result), {type: 'image/jpeg'})
+            document.getElementById('SouthSaltLakeEastCam').src = URL.createObjectURL(blobImage)       
+        })
+    } catch (error) { 
+        console.log(error) }
+})();
+*/
