@@ -257,18 +257,20 @@ function WeatherStreetBack() {
             document.getElementById('AlertEvent').innerText = EachAlert.event
             document.getElementById('AlertHeadline').innerText = EachAlert.headline
             document.getElementById('AlertAreaDesc').innerText = EachAlert.areaDesc
+            // Clear notice that there no active weather alerts
+            document.getElementById('WeatherAlertNotice').innerText = ''
         } 
         else {
             // Clone division for additional alerts (as needed)
             let cloned_alert = document.getElementById('AlertDiv').cloneNode(true)
-            //Rename parent and children IDs
+            // Rename parent and children IDs
             cloned_alert.id = 'AlertDiv' + i
             cloned_alert.children[0].id = 'AlertEvent' + i
             cloned_alert.children[1].id = 'AlertHeadline' + i
             cloned_alert.children[2].id = 'AlertAreaDesc' + i
-            //Add clone to page
+            // Add clone to page
             document.getElementById('AlertGroupDiv').appendChild(cloned_alert)
-            //Populate additional alert
+            // Populate additional alert(s)
             document.getElementById(`AlertDiv${i}`).style.display = 'block'
             document.getElementById(`AlertEvent${i}`).innerText = EachAlert.event
             document.getElementById(`AlertHeadline${i}`).innerText = EachAlert.headline
@@ -369,18 +371,20 @@ function WeatherStreetBack() {
                             // Add line return formatting
                             document.getElementById('TFRDescription').innerText = xmlDoc.getElementsByTagName('txtDescrUSNS')[0].childNodes[0].nodeValue.replaceAll(`..`, `\r`)
                         })
+                        // Clear notice that there no active TFRs
+                        document.getElementById('TFRNotice').innerText = ''
                     } else {
                         // Clone division for additional TFRs (as needed)
                         let cloned_TFR = document.getElementById('TFRDiv').cloneNode(true)
-                        //Rename parent and children IDs
+                        // Rename parent and children IDs
                         cloned_TFR.id = 'TFRDiv' + TFRCount
                         cloned_TFR.children[0].id = 'TFRNotam' + TFRCount
                         cloned_TFR.children[1].id = 'TFRDate' + TFRCount
                         cloned_TFR.children[2].id = 'TFRType' + TFRCount
                         cloned_TFR.children[3].id = 'TFRAirDescription' + TFRCount
-                        //Add clone to page
+                        // Add clone to page
                         document.getElementById('TFRGroupDiv').appendChild(cloned_TFR)
-                        //Populate additional TFRs
+                        // Populate additional TFRs
                         document.getElementById(`TFRDiv${TFRCount}`).style.display = 'block'
                         document.getElementById(`TFRNotam${TFRCount}`).innerText = EachTFR.notam
                         document.getElementById(`TFRDate${TFRCount}`).innerText = EachTFR.date
