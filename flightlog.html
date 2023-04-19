@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+
+<head>
+    <title>Cloudbase Flight Log</title>
+
+    <!-- Load scripts, libraries, and icons-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.3.1/d3.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link rel="stylesheet" href="prod/css/main.css">
+    <link rel="apple-touch-icon" href="favicon/Paraglider icon.png">
+    <link rel="icon" type="image/png" href="favicon/Paraglider icon.png">
+ 
+    <!-- Page title and menu -->
+    <div class="container-fluid sticky-top bg-heading">
+        <div class="row align-items-center d-flex justify-content-around mb-2">
+            <div class="col display-2">Cloudbase Flight Log</div>
+            <div class="col-auto display-5 fs-1 align-self-center text-warning" id="user_name"></div>
+        </div>
+
+        <div class="dropdown text-start border-top border-bottom mt-2">
+            <div class="row">
+                <button class="col-auto btn-menu border-0 fw-bold display-2 bg-black rounded-4 text-warning my-2 py-3" id="btn-menu" onclick="menu()">&#9776;&#9662;</button>
+                <div class="col align-self-center display-1 text-center text-info pb-2" id="current-div"></div>
+                <img class="col-1 me-2 align-self-center clickable" src="prod/images/refresh.png" height="100%" width="100%" onclick="reload()">
+            </div>
+            <div class="dropdown-menu bg-dark border px-5 text-warning rounded-4" id="menu">
+                <div class="py-3 display-3 clickable" onclick="toggleDiv('Enter New Flight')">Enter New Flight</div>
+                <div class="py-3 display-3 clickable" onclick="toggleDiv('Flight Log Statistics')">Flight Log Statistics</div>
+                <div class="py-3 display-3 clickable" onclick="toggleDiv('Flight Log History')">Flight Log History</div>
+                <div class="py-3 display-3 clickable" onclick="toggleDiv('Manage Master Data')">Manage Master Data</div>
+                <div class="py-3 display-3 clickable" onclick="toggleDiv('Import Past Flights')">Import Past Flights</div>
+                <div class="py-3 display-3 clickable" onclick="toggleDiv('User Profile / Logout')">User Profile / Logout</div>
+                <div class="py-3 display-3 clickable" onclick="toggleDiv('About')">About</div>
+            </div>
+        </div>
+    </div>
+</head>
+
+<body>
+
+    <!-- Enter New Flight DIV ############################################################################################################################################ -->
+    <div class="mb-div-end" id="Enter New Flight">
+
+        <!-- Enter new flight -->
+        <div class="container-fluid px-4 py-4">
+            <div class="row border wwborder border-2 border-info bg-dark display-4 text-info">
+
+                <!-- Flight date -->
+                <div class="row">
+                    <div class="col-2 align-self-center text-start px-5 pb-3 display-5">Date</div>
+                    <input class="col zoomdatepicker bg-black border border-3 border-white rounded-4 text-white display-5 px-3" type="date" id="flightDate">
+                </div>
+
+                <!-- Flight location -->
+                <div class="align-self-center text-start px-5 pb-2 display-5">Location</div>
+                <div class="col px-5">
+                    <select class="form-select border border-1 border-white bg-black rounded-3 text-white" id="flightLocation" onchange="runcode()">
+                        <option selected>Select a location</option>
+                        <option value="POTM - North Side">POTM - North Side</option>
+                        <option value="POTM - South Side">POTM - South Side</option>
+                        <option value="The V">The V</option>
+                        <option value="Inspo">Inspo</option>
+                        <option value="Grandeur Peak">Grandeur Peak</option>
+                    </select>
+                </div>
+                <div class="w-100 py-2"></div>
+
+                <!-- Glider -->
+                <div class="align-self-center text-start px-5 pb-2 display-5">Glider</div>
+                <div class="col px-5">
+                    <select class="form-select border border-1 border-white bg-black rounded-3 text-white" id="flightGlider">
+                        <option selected>Select a glider</option>
+                        <option value="Advance Iota">Advance Iota</option>
+                        <option value="Advance Pi">Advance Pi</option>
+                        <option value="Gin Explorer">Gin Explorer</option>
+                    </select>
+                </div>
+                <div class="w-100 py-2"></div>
+
+                <!-- Flight duration -->
+                <div class="align-self-center text-start px-5 pb-2 display-5">Duration (minutes)</div>
+                <div class="col-1 px-5">
+                    <input class="bg-black border border-white rounded-3 display-5 px-5 py-3" type="number" id="flightDuration">
+                </div>
+                <div class="w-100 py-2"></div>
+            
+                <!-- Number of flights -->
+                <div class="align-self-center text-start px-5 pb-2 display-5">Number of Flights</div>
+                <div class="col-1 px-5">
+                    <input class="bg-black border border-white rounded-3 display-5 px-3 py-3" type="number" id="flightNumber">
+                </div>
+                <div class="w-100 py-2"></div>
+
+                <!-- Air buddies -->
+                <div class="align-self-center text-start px-5 pb-2 display-5">Pilots</div>
+                <div class="col-1 px-5">
+                    <select class="select rows-4 display-6 bg-black text-white border border-white rounded-3 display-5" multiple>
+                        <option value="Jasper">Jasper</option>
+                        <option value="Codde">1</option>
+                        <option value="Chris">2</option>
+                        <option value="Chris">3</option>
+                        <option value="Chris">4</option>
+                    </select>
+                </div>
+                <div class="w-100 py-2"></div>
+            
+                <!-- Notes -->
+                <div class="align-self-center text-start px-5 pb-2 display-5">Notes</div>
+                <div class="px-5">
+                    <textarea class="form-control col bg-black text-white border border-1 border-white rounded-3 display-5 px-3 py-3" id="flightNotes" rows="4"></textarea>
+                </div>
+                <div class="w-100 py-2"></div>
+            
+                <!-- Max altitude -->
+                <div class="align-self-center text-start px-5 pb-2 display-5">Max alt (ft)</div>
+                <div class="col-1 px-5">
+                    <input class="bg-black border border-white rounded-3 display-5 px-3 py-3" type="number" id="flightMaxAlt">
+                </div>
+                <div class="w-100 py-2"></div>
+
+                <!-- Max lift -->
+                <div class="align-self-center text-start px-5 pb-2 display-5">Max lift (m/s)</div>
+                <div class="col-1 px-5">
+                    <input class="bg-black border border-white rounded-3 display-5 px-3 py-3" type="number" id="flightMaxLift">
+                </div>
+                <div class="w-100 py-2"></div>
+            
+                <!-- XC points -->
+                <div class="align-self-center text-start px-5 pb-2 display-5">XC points</div>
+                <div class="col-1 px-5">
+                    <input class="bg-black border border-white rounded-3 display-5 px-3 py-3" type="number" id="flightXCPoints">
+                </div>
+                <div class="w-100 py-2"></div>
+                <div class="pb-3"></div>
+            </div>
+
+            <div class="py-5">
+            <button class="col-auto py-3 px-5 align-self-center display-4 border border-1 bg-dark text-warning border-warning rounded-4 clickable" onclick="SubmitFlight()">Submit Flight</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flight Log Statistics DIV  ###################################################################################################################################### -->
+    <div class="collapse mb-div-end" id="Flight Log Statistics">
+
+        <!-- Under construction notice -->
+        <div class="container-fluid px-4 py-4">
+            <div class="row border wwborder border-2 border-info bg-dark display-4 text-info">
+                    <div class="align-self-center px-5 pb-3">This page is under construction</div>
+            </div>
+        </div>     
+
+    </div>
+
+    <!-- Flight Log History DIV  ######################################################################################################################################### -->
+    <div class="collapse mb-div-end" id="Flight Log History">
+        
+        <!-- Under construction notice -->
+        <div class="container-fluid px-4 py-4">
+            <div class="row border wwborder border-2 border-info bg-dark display-4 text-info">
+                    <div class="align-self-center px-5 pb-3">This page is under construction</div>
+            </div>
+        </div>     
+ 
+    </div>
+
+        <!-- Manage Master Data DIV  ######################################################################################################################################## -->
+        <div class="collapse mb-div-end" id="Manage Master Data">
+        
+            <!-- Under construction notice -->
+            <div class="container-fluid px-4 py-4">
+                <div class="row border wwborder border-2 border-info bg-dark display-4 text-info">
+                        <div class="align-self-center px-5 pb-3">This page is under construction</div>
+                </div>
+            </div>     
+     
+        </div>
+        
+    <!-- Import Past Flights DIV  ######################################################################################################################################## -->
+    <div class="collapse mb-div-end" id="Import Past Flights">
+        
+        <!-- Under construction notice -->
+        <div class="container-fluid px-4 py-4">
+            <div class="row border wwborder border-2 border-info bg-dark display-4 text-info">
+                    <div class="align-self-center px-5 pb-3">This page is under construction</div>
+            </div>
+        </div>     
+ 
+    </div>
+
+    <!-- User Profile / Logout DIV  ###################################################################################################################################### -->
+    <div class="collapse mb-div-end" id="User Profile / Logout">
+        
+        <!-- Under construction notice -->
+        <div class="container-fluid px-4 py-4">
+            <div class="row border wwborder border-2 border-info bg-dark display-4 text-info">
+                    <div class="align-self-center px-5 pb-3">This page is under construction</div>
+            </div>
+        </div>     
+ 
+    </div>
+
+    <!-- ABOUT DIV ####################################################################################################################################################### -->
+    <div class="collapse mb-div-end" id="About">
+        <!-- ABOUT -->
+        <div class="container-fluid display-5 p-0 mb-5">
+            <div class="pt-4">Paragliding flight log application by Mike Brown</div>
+            <div class="pb-3">leveraging the framework developed by Matt Hansen.</div>
+            <div class="pb-3">Send comments to mike.del.brown@gmail.com.</div>
+        </div>
+        <div class="container-fluid border border-info row display-5 pt-3 pb-3 mb-5 rounded-4">
+            <div>Link to my fork of the Wasatch Wind site:</div>
+            <a href="https://wasatchcloudbase.github.io/" target="_blank">
+                <div class="text-warning display-4 fw-normal text-decoration-underline mb-3">Wasatch Wind Cloudbase Fork</div>
+            </a>
+            <div class="pt-3">Link to the original Wasatch Wind site by Matt Hansen:</div>
+            <a href="https://wasatchwind.github.io/" target="_blank">
+                <div class="text-warning display-4 fw-normal text-decoration-underline mb-3">Wasatch Wind</div>
+            </a>
+        </div>
+    </div>
+
+    <!-- LOCAL SCRIPTS -->
+    <script type="text/javascript" src="prod/js/flightlog.js"></script>
+</body>
+</html>

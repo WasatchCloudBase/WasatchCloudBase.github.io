@@ -1,0 +1,152 @@
+@media only screen and (min-width: 1081px) {
+  body {
+    margin-left: 30%;
+    margin-right: 30%;
+    zoom: 0.4;
+  }
+}
+@media only screen and (max-width: 1080px) {
+  body { width: 98%; }
+  .container-fluid {
+    margin-left: 1%;
+    margin-right: 1%;
+  }
+}
+body {
+  background-color: #000000;
+  color: white;
+  text-align: center;
+}
+.clickable { cursor: pointer}
+a:link {
+  color: white;
+  background-color: transparent;
+  text-decoration: none;
+}
+a:visited {
+  color: white;
+  background-color: transparent;
+  text-decoration: none;
+}
+a:active {
+  color: white;
+  background-color: transparent;
+  text-decoration: none;
+}
+.pink { color: pink; }
+.bg-heading { background-color: #000000; }
+.bg-aloft {
+  background-image: url('../images/aloft.png');
+  background-size: 100% 100%;
+}
+hr.dash { border: 3px dashed white !important; }
+.mb-div-end { margin-bottom: 8rem !important; }
+.wwborder { border-radius: 1rem !important; }
+
+/* D3 */
+.gridticks {
+  color: lightgray;
+  opacity: 0.5;
+}
+.svgbg { fill: #212529; }
+.xAxis { font-size: 175%; }
+.yAxis { font-size: 175%; }
+.maxtemp {
+  fill: #0dcaf0;
+  font-size: calc(1.475rem + 2.7vw);
+  font-weight: 500;
+  line-height: 1.2;
+}
+@media (min-width: 1200px) {
+  .maxtemp {
+    font-size: 3.5rem;
+  }
+}
+.dewpoint {
+  fill: #20c997;
+  font-size: calc(1.475rem + 2.7vw);
+  font-weight: 500;
+  line-height: 1.2;
+}
+@media (min-width: 1200px) {
+  .dewpoint {
+    font-size: 3.5rem;
+  }
+}
+.temp {
+  fill: #dc3545;
+  font-size: calc(1.475rem + 2.7vw);
+  font-weight: 500;
+  line-height: 1.2;
+}
+@media (min-width: 1200px) {
+  .temp {
+    font-size: 3.5rem;
+  }
+}
+.dalrlabel {
+  fill: #6c757d;
+  font-size: calc(1.325rem + 0.9vw);
+  font-weight: 500;
+}
+.neg3label {
+  fill: white;
+  font-size: 200%;
+}
+.tollabel {
+  fill: white;
+  font-size: 200%;
+}
+/* Don't zoom in when pressing buttons mulitple times quickly */
+.disable-dbl-tap-zoom {
+  touch-action: manipulation;
+}
+/* Container for site map view */
+.map-container {
+  position: relative;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+/* Sites on site map view */
+.map-site-block {
+  position: absolute;
+  background-color: black;
+  color: white;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+/* Container for site forecast table */
+.forecast-table-container {
+  overflow-x: scroll;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+th, tr, td {
+  border: 1px solid; 
+  border-color: white;
+  padding: 8px;
+  text-align: left;
+}
+
+/* Flight log CSS */
+/* Adjusting zoom for input elements since the zoom used for the rest of the page makes these unreadably small */
+.zoomdatepicker {
+  zoom: 2;
+  transform: scale(.5)
+}
+.form-select {
+  zoom: 2.5;
+}
+.form-control {
+  zoom: 2.5;
+}
+/* Make the date picker calendar icon white (dark background theme) */
+input {
+  color-scheme: dark;
+}
+.multiselect {
+  width: 100% !important;
+}

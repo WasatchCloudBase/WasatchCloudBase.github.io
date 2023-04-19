@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+
+<head>
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    
+    <title>Wasatch Wind</title>
+
+    <!-- Load scripts, libraries, and icons-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.3.1/d3.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link rel="stylesheet" href="prod/css/main.css">
+    <link rel="apple-touch-startup-image" href="favicon/PG-1170x2532.png" media="(-webkit-min-device-pixel-ratio: 3) and (orientation: portrait)">
+    <link rel="apple-touch-icon" href="favicon/Paraglider icon.png">
+    <link rel="icon" type="image/png" href="favicon/Paraglider icon.png">
+</head>
+
+<body>
+    <!-- Page title and menu -->
+    <div class="container-fluid sticky-top bg-heading">
+        <div class="row align-items-center d-flex justify-content-around mb-2">
+            <div class="col-auto"><img src="prod/images/Sun_icon_gold_black_canvas.png" height="50" width="50"></div>
+            <div class="col-auto display-5 fs-1 align-self-center text-warning" id="sunrise_time"></div>
+            <div class="col display-3">Wasatch Wind</div>
+            <div class="col-auto display-5 fs-1 align-self-center text-warning" id="sunset_time"></div>
+            <div class="col-auto"><img src="prod/images/Moon_icon_gold.png" height="50" width="50"></div>
+        </div>
+
+        <div class="dropdown text-start border-top border-bottom mt-2">
+            <div class="row">
+                <button class="col-auto btn-menu border-0 fw-bold display-2 bg-black rounded-3 text-warning" id="btn-menu" height="110%" width="110%" onclick="menu()">&#9776;&#9662;</button>
+                <div class="col align-self-center display-3 text-center text-info" id="current-div"></div>
+                <img class="col-1 me-2 align-self-center clickable disable-dbl-tap-zoom" src="prod/images/refresh.png" height="110%" width="110%" onclick="reload()">
+            </div>
+            <div class="dropdown-menu bg-dark border px-5 text-warning rounded-4 disable-dbl-tap-zoom" id="menu">
+                <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Site List')">Site List</div>
+                <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Map View')">Map View</div>
+                <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Weather Maps')">Weather Maps</div>
+                <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Weather Forecast')">Weather Forecast</div>
+                <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Soaring Forecast')">Soaring Forecast</div>
+                <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Weather Cams')">Weather Cams</div>
+                <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Flights and Links')">Flights and Links</div>
+                <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('About')">About</div>
+            </div>
+        </div>
+
+        <!-- SITE LIST AND SITE MAP REGION DROP DOWN DIV ######################################################################################################################################################## -->
+        <div class="collapse pb-4" id="Site Map Select">
+            <div class="dropdown text-start border border-info rounded-4 bg-dark mx-5 mt-4">
+                <div class="row">
+                    <button class="col-auto btn-MapMenu border-0 fw-bold display-3 text-info bg-dark my-2 mx-5" id="btn-MapMenu" onclick="MapMenu()">&#9776;&#9662;</button>
+                    <div class="col btn-MapMenu align-self-center display-3 text-center text-info pb-2 clickable disable-dbl-tap-zoom" id="current-map" onclick="MapMenu()"></div>
+                </div>
+                <div class="dropdown-menu bg-dark border px-5 text-info disable-dbl-tap-zoom" id="MapMenu">
+                    <div class="py-3 display-4 clickable disable-dbl-tap-zoom" id="MapMenu-prototype" onclick="toggleMap('Prototype map menu item')"></div>
+                </div>
+            </div>
+        </div>
+        <!-- SITE LIST AND SITE MAP REGION DROP DOWN DIV ######################################################################################################################################################## -->
+
+    </div>
+
+    <!-- SITE LIST DIV ######################################################################################################################################################## -->
+    <div class="collapse mb-div-end" id="Site List">
+        <!-- Prototype block for site list (actual sites added dynamically in sites.js) -->
+        <!-- Master div for region so all sites can be populated but only selected region sites are displayed -->
+        <div class="collapse container-fluid" id="region-prototype-site-list">
+            <!-- Site block -->
+            <div class="d-flex align-items-center justify-content-between pb-2 bg-dark mt-3 rounded-4 clickable disable-dbl-tap-zoom" id="prototype-site-list-site" onclick="siteDetail('prototype site')">
+                <div class="col row d-flex px-4 align-items-center" id="prototype-site-list-site-left-block">
+                    <div class="text-start display-4" id="prototype-site-list-site-name"></div>
+                    <div class="fs-2 text-start mx-3 text-info" id="prototype-site-list-site-alt"></div>
+                </div>
+                <div class="col-2 row display-4" id="prototype-site-list-pressure-block">
+                    <div class="fs-2" id="prototype-site-site-list-pressure-text"></div>
+                    <div class="display-3 fw-bold" id="prototype-site-list-pressure-zone"></div>
+                </div>
+                <div class="col-6 row d-flex px-4" id="prototype-site-list-site-right-block">
+                    <div class="col-auto fs-2 text-info justify-content-end" id="prototype-site-list-site-time"></div>
+                    <div class="col display-3" id="prototype-site-list-site-wdir"></div>
+                    <div class="col display-3" id="prototype-site-list-site-wind">&nbsp;</div>
+                    <div class="col display-5" id="prototype-site-list-site-gust"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- SITE LIST DIV ######################################################################################################################################################## -->
+
+    <!-- MAP VIEW DIV ######################################################################################################################################################## -->
+    <div class="collapse mb-div-end" id="Map View">
+        <!-- Prototype block for maps (actual maps added dynamically in sites.js) -->
+        <div class="collapse" id="prototype-map">
+            <div class="collapse container-fluid display-3" id="prototype-map-name">Prototype Map</div>
+            <div class="map-container rounded-4" id="prototype-map-container">
+                <img src="" alt="Prototype Map Image" style="width:100%" id="prototype-map-image" >
+                <!-- Prototype block for sites (actual sites added dynamically in sites.js) -->
+                <div class="collapse map-site-block clickable rounded-4 fs-2 disable-dbl-tap-zoom" style="width:205px" 
+                        id="prototype-map-prototype-site" onclick="siteDetail('prototype site')">
+                    <div id="prototype-map-prototype-site-name text-nowrap">Prototype Site</div>
+                    <div class="col row" id="prototype-map-prototype-site-reading">
+                        <div class="col-auto" id="prototype-map-prototype-site-wdir"></div>
+                        <div class="col-auto align-self-end" id="prototype-map-prototype-site-wind">&nbsp;</div>
+                        <div class="collapse g-0 col-auto" id="prototype-map-prototype-site-gust"></div>
+                    </div>
+                    <div class="align-self-center text-info fs-4" id="prototype-map-prototype-site-time"></div>
+                </div>
+            </div>
+        </div>
+    </div>    
+    <!-- SITE MAP VIEW DIV ####################################################################################################################################################### -->
+
+    <!-- SITE DETAILS DIV ################################################################################################################################################ -->
+    <div class="collapse mb-div-end" id="Site Details">
+
+        <!-- CLOSE DETAILS (BACK TO PRIOR PAGE) AND SITE GUIDE LINK -->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col clickable disable-dbl-tap-zoom border border-info bg-dark rounded-4 mt-4" onclick="returnFromSiteDetail()">
+                    <div class="text-info pb-2 display-5" id="site-details-return">Return to site map/list</div>
+                </div>
+                <div class="col-1" id="site-details-guide-spacer"></div>
+                <a href class="col clickable disable-dbl-tap-zoom border border-info bg-dark rounded-4 mt-4" id="site-details-guide-link" target="_blank">
+                    <div class="text-info pb-2 display-5" id="site-details-guide">Site Guide</div>
+                </a>
+            </div>
+        </div>
+
+        <!-- SITE DETAILS WIND READING HISTORY  (12 MOST RECENT READINGS)-->
+        <div class="container-fluid display-3 mt-4">Site Reading History</div>
+        <div class="container-fluid display-5 rounded-4 bg-dark lh-base mt-4">
+            <a href="https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=STATIONID&table=1&banner=off" target="_blank" id="site-details-history-href">
+                <div class="row fs-1 text-info pb-3">
+                    <div class="col-auto" id="site-details-readings-alt"></div>
+                    <div class="col-auto" id="site-details-readings-note"></div>
+                </div>
+                <div class="row align-items-end bg-dark rounded-4 mx-0 mt-2">
+                    <div class="col ps-0 pe-1" id="site-details-history-reading-0">
+                        <div class="pink h2" id="site-details-history-gust-0"></div>
+                        <div id="site-details-history-gbar-0"></div>
+                        <div class="bg-dark" id="site-details-history-break-0"></div>
+                        <div id="site-details-history-wbar-0"></div>
+                        <div class="fs-1" id="site-details-history-wind-0"></div>
+                        <div class="display-4" id="site-details-history-wdir-0"></div>
+                        <div class="fs-4 text-info" id="site-details-history-time-0"></div>
+                    </div>
+                    <div class="col ps-0 pe-1" id="site-details-history-reading-1">
+                        <div class="pink h2" id="site-details-history-gust-1"></div>
+                        <div id="site-details-history-gbar-1"></div>
+                        <div class="bg-dark" id="site-details-history-break-1"></div>
+                        <div id="site-details-history-wbar-1"></div>
+                        <div class="fs-1" id="site-details-history-wind-1"></div>
+                        <div class="display-4" id="site-details-history-wdir-1"></div>
+                        <div class="fs-4 text-info" id="site-details-history-time-1"></div>
+                    </div>
+                    <div class="col ps-0 pe-1" id="site-details-history-reading-2">
+                        <div class="pink h2" id="site-details-history-gust-2"></div>
+                        <div id="site-details-history-gbar-2"></div>
+                        <div class="bg-dark" id="site-details-history-break-2"></div>
+                        <div id="site-details-history-wbar-2"></div>
+                        <div class="fs-1" id="site-details-history-wind-2"></div>
+                        <div class="display-4" id="site-details-history-wdir-2"></div>
+                        <div class="fs-4 text-info" id="site-details-history-time-2"></div>
+                    </div>
+                    <div class="col ps-0 pe-1" id="site-details-history-reading-3">
+                        <div class="pink h2" id="site-details-history-gust-3"></div>
+                        <div id="site-details-history-gbar-3"></div>
+                        <div class="bg-dark" id="site-details-history-break-3"></div>
+                        <div id="site-details-history-wbar-3"></div>
+                        <div class="fs-1" id="site-details-history-wind-3"></div>
+                        <div class="display-4" id="site-details-history-wdir-3"></div>
+                        <div class="fs-4 text-info" id="site-details-history-time-3"></div>
+                    </div>
+                    <div class="col ps-0 pe-1" id="site-details-history-reading-4">
+                        <div class="pink h2" id="site-details-history-gust-4"></div>
+                        <div id="site-details-history-gbar-4"></div>
+                        <div class="bg-dark" id="site-details-history-break-4"></div>
+                        <div id="site-details-history-wbar-4"></div>
+                        <div class="fs-1" id="site-details-history-wind-4"></div>
+                        <div class="display-4" id="site-details-history-wdir-4"></div>
+                        <div class="fs-4 text-info" id="site-details-history-time-4"></div>
+                    </div>
+                    <div class="col ps-0 pe-1" id="site-details-history-reading-5">
+                        <div class="pink h2" id="site-details-history-gust-5"></div>
+                        <div id="site-details-history-gbar-5"></div>
+                        <div class="bg-dark" id="site-details-history-break-5"></div>
+                        <div id="site-details-history-wbar-5"></div>
+                        <div class="fs-1" id="site-details-history-wind-5"></div>
+                        <div class="display-4" id="site-details-history-wdir-5"></div>
+                        <div class="fs-4 text-info" id="site-details-history-time-5"></div>
+                    </div>
+                    <div class="col ps-0 pe-1" id="site-details-history-reading-6">
+                        <div class="pink h2" id="site-details-history-gust-6"></div>
+                        <div id="site-details-history-gbar-6"></div>
+                        <div class="bg-dark" id="site-details-history-break-6"></div>
+                        <div id="site-details-history-wbar-6"></div>
+                        <div class="fs-1" id="site-details-history-wind-6"></div>
+                        <div class="display-4" id="site-details-history-wdir-6"></div>
+                        <div class="fs-4 text-info" id="site-details-history-time-6"></div>
+                    </div>
+                    <div class="col ps-0 pe-1" id="site-details-history-reading-7">
+                        <div class="pink h2" id="site-details-history-gust-7"></div>
+                        <div id="site-details-history-gbar-7"></div>
+                        <div class="bg-dark" id="site-details-history-break-7"></div>
+                        <div id="site-details-history-wbar-7"></div>
+                        <div class="fs-1" id="site-details-history-wind-7"></div>
+                        <div class="display-4" id="site-details-history-wdir-7"></div>
+                        <div class="fs-4 text-info" id="site-details-history-time-7"></div>
+                    </div>
+                    <div class="col ps-0 pe-1" id="site-details-history-reading-8">
+                        <div class="pink h2" id="site-details-history-gust-8"></div>
+                        <div id="site-details-history-gbar-8"></div>
+                        <div class="bg-dark" id="site-details-history-break-8"></div>
+                        <div id="site-details-history-wbar-8"></div>
+                        <div class="fs-1" id="site-details-history-wind-8"></div>
+                        <div class="display-4" id="site-details-history-wdir-8"></div>
+                        <div class="fs-4 text-info" id="site-details-history-time-8"></div>
+                    </div>
+                    <div class="col ps-0 pe-1" id="site-details-history-reading-9">
+                        <div class="pink h2" id="site-details-history-gust-9"></div>
+                        <div id="site-details-history-gbar-9"></div>
+                        <div class="bg-dark" id="site-details-history-break-9"></div>
+                        <div id="site-details-history-wbar-9"></div>
+                        <div class="fs-1" id="site-details-history-wind-9"></div>
+                        <div class="display-4" id="site-details-history-wdir-9"></div>
+                        <div class="fs-4 text-info" id="site-details-history-time-9"></div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- PRESSURE HISTORY  -->
+        <div class="collapse container-fluid display-3 mt-4" id="site-details-pressure-title">Site Pressure Zone History</div>
+        <div class="collapse container-fluid display-5 rounded-4 bg-dark lh-base mt-4"  id="site-details-pressure-block">
+            <a href="https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=STATIONID&table=1&banner=off" target="_blank" id="site-details-pressure-href">
+                <div class="row align-items-end bg-dark rounded-4 mx-0 mt-2">
+                    <div class="col px-1" id="site-details-pressure-0">
+                        <div class="fs-1 mb-2"><div id="site-details-alti-0"></div></div>
+                        <div class="bg-info" id="site-details-altibar-0"></div>
+                        <div class="display-5 bg-secondary py-3" id="site-details-temp-0"></div>
+                        <div class="display-2 fw-bold" id="site-details-zone-0"></div>
+                        <div class="fs-4 text-info" id="site-details-alti-time-0"></div>
+                    </div>
+                    <div class="col px-1" id="site-details-pressure-1">
+                        <div class="fs-1 mb-2"><div id="site-details-alti-1"></div></div>
+                        <div class="bg-info" id="site-details-altibar-1"></div>
+                        <div class="display-5 bg-secondary py-3" id="site-details-temp-1"></div>
+                        <div class="display-2 fw-bold" id="site-details-zone-1"></div>
+                        <div class="fs-4 text-info" id="site-details-alti-time-1"></div>
+                    </div>
+                    <div class="col px-1" id="site-details-pressure-2">
+                        <div class="fs-1 mb-2"><div id="site-details-alti-2"></div></div>
+                        <div class="bg-info" id="site-details-altibar-2"></div>
+                        <div class="display-5 bg-secondary py-3" id="site-details-temp-2"></div>
+                        <div class="display-2 fw-bold" id="site-details-zone-2"></div>
+                        <div class="fs-4 text-info" id="site-details-alti-time-2"></div>
+                    </div>
+                    <div class="col px-1" id="site-details-pressure-3">
+                        <div class="fs-1 mb-2"><div id="site-details-alti-3"></div></div>
+                        <div class="bg-info" id="site-details-altibar-3"></div>
+                        <div class="display-5 bg-secondary py-3" id="site-details-temp-3"></div>
+                        <div class="display-2 fw-bold" id="site-details-zone-3"></div>
+                        <div class="fs-4 text-info" id="site-details-alti-time-3"></div>
+                    </div>
+                    <div class="col px-1" id="site-details-pressure-4">
+                        <div class="fs-1 mb-2"><div id="site-details-alti-4"></div></div>
+                        <div class="bg-info" id="site-details-altibar-4"></div>
+                        <div class="display-5 bg-secondary py-3" id="site-details-temp-4"></div>
+                        <div class="display-2 fw-bold" id="site-details-zone-4"></div>
+                        <div class="fs-4 text-info" id="site-details-alti-time-4"></div>
+                    </div>
+                    <div class="col px-1" id="site-details-pressure-5">
+                        <div class="fs-1 mb-2"><div id="site-details-alti-5"></div></div>
+                        <div class="bg-info" id="site-details-altibar-5"></div>
+                        <div class="display-5 bg-secondary py-3" id="site-details-temp-5"></div>
+                        <div class="display-2 fw-bold" id="site-details-zone-5"></div>
+                        <div class="fs-4 text-info" id="site-details-alti-time-5"></div>
+                    </div>
+                </div>
+            </a>
+            <a href="https://ambrosephoto.com/gauging-that-pressure/" target="_blank">
+                <div class=" collapse fs-1 mt-2 text-info text-decoration-underline" id="site-details-pressure-info">Explanation of pressure zones</div>
+            </a>
+        </div>        
+        
+        <!-- SITE FORECAST -->
+        <div class="container-fluid display-3 mt-4">Site Forecast</div>
+        <div class="container-fluid forecast-table-container display-5 rounded-4 bg-dark lh-base mt-4">
+            <div class="row fs-1 text-info pb-3">
+                <div class="col-auto" id="site-details-forecast-alt"></div>
+                <div class="col-auto" id="site-details-forecast-note"></div>
+            </div>
+            <table class="fs-1" id="forecastTable">
+                <tbody>
+                    <tr id="forecastDate"><td>Date</td></tr>
+                    <tr id="forecastTime"><td>Time</td></tr>
+                    <tr id="weatherCode"><td>Weather Code</td></tr>
+                    <tr id="cloudCover"><td>Cloud Cover</td></tr>
+                    <tr id="CAPE"><td>CAPE</td></tr>
+                    <tr id="liftedIndex"><td>Lifted Index</td></tr>
+                    <tr id="pressureZone"><td>Pressure Zone</td></tr>
+                    <tr id="reading500"><td>500hPa</td></tr>
+                    <tr id="reading550"><td>550hPa</td></tr>
+                    <tr id="reading600"><td>600hPa</td></tr>
+                    <tr id="reading650"><td>650hPa</td></tr>
+                    <tr id="reading700"><td>700hPa</td></tr>
+                    <tr id="reading750"><td>750hPa</td></tr>
+                    <tr id="reading800"><td>800hPa</td></tr>
+                    <tr id="reading850"><td>850hPa</td></tr>
+                    <tr id="reading900"><td>900hPa</td></tr>
+                    <tr id="surface80m"><td>Wind 80m</td></tr>
+                    <tr id="surface10m"><td>Wind 10m</td></tr>
+                    <tr id="surfaceTemp"><td>Surface Temp</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- PLACEHOLDER FOR FUTURE SITE DETAIL SECTIONS -->
+        <div class="collapse">
+            <!-- SITE WIND FORECAST -->
+            <div class="container-fluid display-3 mt-4">Wind Forecast (various alts over time)</div>
+
+            <!-- SITE LIFT FORECAST -->
+            <div class="container-fluid display-3 mt-4">Lift Forecast (various alts over time)</div>
+            <div class="container-fluid display-3 mt-4">Also pressure zone and temp over time</div>
+            <div class="container-fluid display-3 mt-4">Also clouds over time</div>
+            <div class="container-fluid display-3 mt-4">Also CAPE (below 300 good), LI (0 to -1 best) over time</div>
+            <div class="container-fluid display-3 mt-4">If possible, TI, TOL, -3 TOP, lapse rate over time</div>
+            <div class="container-fluid display-3 mt-4">If possible, % humidity above cloudbase (XCSkies) (below 30% good)</div>
+        </div>
+
+    </div>    
+    <!-- SITE DETAILS DIV ################################################################################################################################################ -->
+    
+    <!-- WEATHER MAPS DIV ################################################################################################################################################ -->
+    <div class="collapse mb-div-end" id="Weather Maps">
+
+        <!-- NORTHERN UTAH RADAR GIF -->
+        <div class="container-fluid p-0">
+            <a href="https://www.weather.gov/slc/radar" target="_blank">
+                <div class="display-3 py-4">Northern Utah Radar (past hour)</div>
+                <img class="border wwborder border-2" 
+                    src="https://radar.weather.gov/ridge/standard/KMTX_loop.gif" width="100%">
+            </a>
+        </div>
+
+        <!-- SOUTHERN UTAH RADAR GIF -->
+        <div class="container-fluid p-0">
+            <a href="https://www.weather.gov/slc/radar" target="_blank">
+                <div class="display-3 py-4">Southern Utah Radar (past hour)</div>
+                <img class="border wwborder border-2" 
+                    src="https://radar.weather.gov/ridge/standard/KICX_loop.gif" width="100%">
+            </a>
+        </div>
+
+        <!-- CLOUDS & PRECIP GIF -->
+        <div class="container-fluid p-0">
+            <a href="https://www.accuweather.com/en/us/utah/weather-radar-rs?play=1" target="_blank">
+                <div class="display-3 py-4">Clouds & Precipitation (past hour)</div>
+                <img class="border wwborder border-2" 
+                    src="https://sirocco.accuweather.com/sat_mosaic_640x480_public/rs/isarUT_.gif" width="100%">
+            </a>
+        </div>
+
+        <!-- SATELLITE GIF -->
+        <div class="container-fluid p-0">
+            <a href="https://www.star.nesdis.noaa.gov/goes/sector.php?sat=G17&sector=psw" target="_blank">
+                <div class="display-3 py-4">Satellite (past 4 hours)</div>
+                <img class="border wwborder border-2" 
+                    src="https://cdn.star.nesdis.noaa.gov/GOES17/ABI/SECTOR/psw/GEOCOLOR/GOES17-PSW-GEOCOLOR-600x600.gif" width="100%">
+            </a>
+        </div>
+
+        <!-- JETSTREAM -->
+        <div class="container-fluid p-0">
+            <a href="https://www.wunderground.com/maps/wind/jet-stream" target="_blank">
+                <div class="display-3 py-4">Jetstream (past 18 hours)</div>
+                    <img class="border wwborder border-2" 
+                        src="https://s.w-x.co/staticmaps/wu/wu/jetstream1200_cur/conus/animate.png" width="100%">
+            </a>
+        </div>
+
+    </div>
+    <!-- WEATHER MAPS DIV ################################################################################################################################################# -->
+
+    <!-- WEATHER FORECAST DIV ############################################################################################################################################## -->
+    <div class="collapse mb-div-end" id="Weather Forecast">
+    
+        <!-- REFERESH NOTE -->
+        <div class="container-fluid display-5 fs-2 text-info mt-3 mb-3" id="WeatherAlertNotice">There are no active weather alerts for Utah.</div>
+
+        <!-- WEATHER ALERTS FOR UTAH -->
+        <div class="collapse container-fluid p-0" id="UtahWeatherAlerts">
+            <a href="https://www.weather.gov/slc/WWA" target="_blank">
+                <div class="container-fluid p-0 mt-5 pb-3 text-danger display-3">Utah Weather Alerts</div>
+                <div class="container-fluid border wwborder border-4 border-danger display-5 rounded-4 bg-dark lh-base">
+                    <div id="AlertGroupDiv">
+                        <div class="row pt-3 pb-3" id="AlertDiv">
+                            <div class="col-auto text-start fw-bold text-warning" id="AlertEvent"></div>
+                            <div class="fs-1 col-auto text-start" id="AlertHeadline"></div>
+                            <div class="fs-1 col-auto text-start text-info" id="AlertAreaDesc"></div>
+                            <div><hr class="dash mt-3"></div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- AREA FORECAST DISCUSSION -->
+        <div class="container-fluid p-0 mt-5 pb-3 display-3">SLC Area Forecast Discussion</div>
+        <a href="https://www.weather.gov/wrh/TextProduct?product=xxxafdslc" target="_blank">
+            <div class="container-fluid display-5 rounded-4 bg-dark lh-base">
+                <div class="row pt-3 pb-3">
+                    <div class="col-auto text-warning">Forecast date:</div>
+                    <div class="col-auto text-start align-self-end" id="forecast-discussion-date"></div>
+                </div>
+                <div class="col-auto text-start text-warning">Synopsis</div>
+                <div class="fs-1 col-auto text-start pb-3" id="forecast-discussion-synopsis"></div>
+                <div class="row">
+                    <div class="col-auto text-warning">Aviation - SLC</div>
+                    <div class="fs-1 col-auto text-start pb-3" id="forecast-discussion-aviation"></div>
+                </div>
+                <div class="row" id="forecast-discussion-aviation-utah-block">
+                    <div class="col-auto text-warning">Aviation - rest of Utah</div>
+                    <div class="fs-1 col-auto text-start pb-3" id="forecast-discussion-aviation-utah"></div>
+                </div>
+            </div>
+        </a>
+        <a href="https://www.weather.gov/jetstream/append_intro" target="_blank">
+            <div class="fs-1 mt-2 text-info text-decoration-underline">Weather terms glossary and acronyms</div>
+        </a>    
+
+        <!-- NEXT 3 DAYS -->
+        <div class="container-fluid p-0 mt-3">
+            <div class="display-3 py-4">Daily Forecast (3 days)</div>
+
+            <!-- Drop down to select location for 3 day forecast -->
+            <div class="dropdown text-start border border-info rounded-4 bg-dark mx-5 mt-1 mb-5">
+                <div class="row">
+                    <button class="col-auto btn-LocMenu border-0 fw-bold display-3 text-info bg-dark my-2 mx-5" id="btn-LocMenu" onclick="LocMenu()">&#9776;&#9662;</button>
+                    <div class="col btn-LocMenu align-self-center display-3 text-center text-info pb-2 clickable disable-dbl-tap-zoom" id="current-loc" onclick="LocMenu()"></div>
+                </div>
+                <div class="dropdown-menu bg-dark border px-5 text-info" id="LocMenu">
+                    <div class="py-3 display-4 clickable disable-dbl-tap-zoom" onclick="toggleLoc('Salt Lake City')">Salt Lake City</div>
+                    <div class="py-3 display-4 clickable disable-dbl-tap-zoom" onclick="toggleLoc('The V')">The V</div>
+                    <div class="py-3 display-4 clickable disable-dbl-tap-zoom" onclick="toggleLoc('Inspo')">Inspo</div>
+                    <div class="py-3 display-4 clickable disable-dbl-tap-zoom" onclick="toggleLoc('Monroe Peak')">Monroe Peak</div>
+                </div>
+            </div>
+
+            <!-- Populate 3 day forecast -->
+            <a href="https://forecast.weather.gov/MapClick.php?lat=40.76031000000006&lon=-111.88821999999999#.YSqo945KhhF" id='Next3DayURL' target="_blank">
+                <div class="bg-dark py-3 rounded-4 lh-base">
+                    <div class="row mx-0">
+                        <div class="col-3 ms-4 align-self-center text-start">
+                            <img id="forecast-day1-img" height=200px>
+                        </div>
+                        <div class="col">
+                            <div class="display-5 text-warning text-start mb-3" id="forecast-day1-day"></div>
+                            <div class="fs-1 text-start" id="forecast-day1-txt"></div>
+                        </div><hr class="dash mt-3">
+                    </div>
+                    <div class="row mx-0">
+                        <div class="col-3 ms-4 align-self-center text-start">
+                            <img id="forecast-day2-img" height=200px>
+                        </div>
+                        <div class="col">
+                            <div class="display-5 text-warning text-start mb-3" id="forecast-day2-day"></div>
+                            <div class="fs-1 text-start" id="forecast-day2-txt">Data Error: Try again later</div>
+                        </div><hr class="dash mt-3">
+                    </div>
+                    <div class="row mx-0">
+                        <div class="col-3 ms-4 align-self-center text-start">
+                            <img id="forecast-day3-img" height=200px>
+                        </div>
+                        <div class="col">
+                            <div class="display-5 text-warning text-start mb-3" id="forecast-day3-day"></div>
+                            <div class="fs-1 text-start" id="forecast-day3-txt"></div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>        
+
+        <!-- FRONTS FORECAST (12 HOURS) -->
+        <div class="container-fluid p-0">
+            <div class="display-3 py-4">Fronts Forecast (12 hours)</div>
+            <a href="https://www.wpc.ncep.noaa.gov/basicwx/92fndfd.gif" target="_blank">
+                <img class="border wwborder border-2 img-fluid" 
+                    src="https://www.wpc.ncep.noaa.gov/basicwx/92fndfd.gif"  width="100%" alt="Forecast unavailable">
+                    <!-- Prior source that was replaced: https://uni.edu/storm/wximages/images/fronts.gif  -->
+            </a>
+        </div>        
+
+        <!-- WeatherStreet Forecast -->
+        <div class="container-fluid p-0">
+            <div class="display-3 pt-4">WeatherStreet 5 Day Forecast</div>
+            <div class="display-5 text-info pb-4">(6 hour intervals)</div>
+            <a href="https://weatherstreet.com/gfs_files/gfs_mslp_pcpn_frzn_clouds_us_1.png" target="_blank">
+                <img class="border wwborder border-2 img-fluid" id="WeatherStreetImg" 
+                    src="https://weatherstreet.com/gfs_files/gfs_mslp_pcpn_frzn_clouds_us_1.png" width="100%" alt="Forecast unavailable">
+            </a>
+            <div class="row align-items-center d-flex justify-content-around pt-3 mb-4">
+                <div class="col-1"></div>
+                <button class="col-3 disable-dbl-tap-zoom me-2 align-self-center display-4 border border-1 bg-dark text-info border-info rounded-4 clickable disable-dbl-tap-zoom" onclick="WeatherStreetBack()">Back</button>
+                <button class="col-3 disable-dbl-tap-zoom me-2 align-self-center display-4 border border-1 bg-dark text-info border-info rounded-4 clickable disable-dbl-tap-zoom" onclick="WeatherStreetNext()">Next</button>
+                <div class="col-1"></div>
+            </div>
+        </div>      
+
+        <!-- GRAPHICAL SKY COVER (CLOUD COVER AND PRECIPITATION) FORECAST -->
+        <div class="display-3 pt-4" id="SKYCOVERTEST">Cloud Cover and Precipitation Forecast</div>
+        <div class="fs-1 fw-bold text-info" id="sky-next-day"></div>
+        <a href="https://graphical.weather.gov/sectors/slc.php#tabs" target="_blank">
+            <div class="d-flex fs-1 fw-bold text-info justify-content-around">
+                <div>Morning</div>
+                <div>Mid-day</div>
+                <div>Afternoon</div>
+                <div>Evening</div>
+            </div>
+            <div class="d-flex mx-2 rounded-4">
+                <div class="col">
+                    <img class="rounded-4 img-fluid" id="graphical-sky-0">
+                    <img class="img-fluid" id="graphical-wx-0">
+                </div>
+                <div class="col">
+                    <img class="rounded-4 img-fluid" id="graphical-sky-1">
+                    <img class="img-fluid" id="graphical-wx-1">
+                </div>
+                <div class="col">
+                    <img class="rounded-4 img-fluid" id="graphical-sky-2">
+                    <img class="img-fluid" id="graphical-wx-2">
+                </div>
+                <div class="col">
+                    <img class="rounded-4 img-fluid" id="graphical-sky-3">
+                    <img class="img-fluid" id="graphical-wx-3">
+                </div>
+            </div>
+        </a>
+
+    </div>
+    <!-- WEATHER FORECAST DIV ############################################################################################################################################## -->
+
+    <!-- SOARING FORECAST DIV ###################################################################################################################################### -->
+    <div class="collapse mb-div-end" id="Soaring Forecast">
+    
+        <!-- REFERESH NOTE -->
+        <div class="container-fluid display-5 fs-2 text-info mt-3 mb-3" id="TFRNotice">There are no active TFRs for Utah.</div>
+
+        <!-- TFRs FOR UTAH -->
+        <div class="collapse container-fluid p-0" id="UtahTFRs">
+                <div class="container-fluid mb-3 p-0 mt-5 text-danger display-3">Utah TFRs</div>
+                <div class="container-fluid border wwborder border-4 border-danger display-5 rounded-4 bg-dark lh-base">
+                    <div id="TFRGroupDiv">            
+                        <div class="row pt-3 pb-3" id="TFRDiv">
+                            <a href="https://tfr.faa.gov/tfr_map_ims/html/ew/scale3/tile_2_2.html" target="_blank" class="col-auto text-start fw-bold text-warning" id="TFRNotam"></a>
+                            <div class="col-auto text-start text-warning" id="TFRDate"></div>
+                            <div class="col-auto text-start" id="TFRType"></div>
+                            <div class="fs-2 col-auto text-start" id="TFRDescription"></div>
+                            <div><hr class="dash mt-3"></div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- WIND ALOFT FORECAST -->
+       <div class="container-fluid p-0">
+           <a id="wind-aloft-link" target="_blank">
+               <div class="pt-4">
+                   <div class="display-3 pb-4">Wind Aloft Forecast</div>
+               </div>
+               <div class="fs-1 pb-2 text-info fw-bold">
+                   <span class="" id="aloft-start"></span>
+                   <span class="">&nbsp;-&nbsp;</span>
+                   <span class="" id="aloft-end"></span>
+                   <span class="next-day"></span>
+               </div>
+               <div class="bg-dark rounded-4">
+                   <div class="row mx-5 pt-2 pb-1">
+                       <div class="col-4 row display-4 align-self-center justify-content-end ps-2 mx-1">18,000 ft</div>
+                       <div class="col-1 display-2 align-self-center ms-1 me-4" id="dir-3"></div>
+                       <div class="col-md-auto align-self-center display-4" id="aloft-3">&nbsp;</div>
+                       <div class="col-auto display-3 align-self-center fw-bold text-info ms-2 pe-0" id="spd-3"></div>
+                       <div class="col-auto fs-3 text-info align-self-end mb-3 ps-3" id="mph-3"></div>
+                   </div><hr class="m-0 dash">
+                   <div class="row mx-5 pt-1 pb-1">
+                       <div class="col-4 row display-4 align-self-center justify-content-end ps-2 mx-1">12,000 ft</div>
+                       <div class="col-1 display-2 align-self-center ms-1 me-4" id="dir-2"></div>
+                       <div class="col-md-auto align-self-center display-4" id="aloft-2">&nbsp;</div>
+                       <div class="col-auto display-3 align-self-center fw-bold text-info ms-2 pe-0" id="spd-2"></div>
+                       <div class="col-auto fs-3 text-info align-self-end mb-3 ps-3" id="mph-2"></div>
+                   </div><hr class="m-0 dash">
+                   <div class="row mx-5 pt-1 pb-1">
+                       <div class="col-4 row display-4 align-self-center justify-content-end ps-2 mx-1">9,000 ft</div>
+                       <div class="col-1 display-2 align-self-center ms-1 me-4" id="dir-1"></div>
+                       <div class="col-md-auto align-self-center display-4" id="aloft-1">&nbsp;</div>
+                       <div class="col-auto display-3 align-self-center fw-bold text-info ms-2 pe-0" id="spd-1"></div>
+                       <div class="col-auto fs-3 text-info align-self-end mb-3 ps-3" id="mph-1"></div>
+                   </div><hr class="m-0 dash">
+                   <div class="row mx-5 pt-1 pb-2">
+                       <div class="col-4 row display-4 align-self-center justify-content-end ps-2 mx-1">6,000 ft</div>
+                       <div class="col-1 display-2 align-self-center ms-1 me-4" id="dir-0"></div>
+                       <div class="col-md-auto align-self-center display-4" id="aloft-0">&nbsp;</div>
+                       <div class="col-auto display-3 align-self-center fw-bold text-info ms-2 pe-0" id="spd-0"></div>
+                       <div class="col-auto fs-3 text-info align-self-end mb-3 ps-3" id="mph-0"></div>
+                   </div>
+               </div>
+           </a>
+       </div>
+
+        <!-- D3 CHART -->
+        <div class="container-fluid p-0 mt-5 pb-3 display-3">Decoded Skew-T (Hi-Res)</div>
+        <div class="container-fluid display-5 fs-6 bg-dark rounded-4 lh-base overflow-hidden tile-border">
+            <div id="skew-t-d3"></div>
+            <div class="display-3 d-flex justify-content-around my-3">
+                <div class="col">
+                    <div class="fs-1 text-info">Top of Lift (ft)</div>
+                    <div class="" id="user-tol"></div>
+                </div>
+                <div class="col">
+                    <div class="fs-1 text-info">Height of -3 Index (ft)</div>
+                    <div class="" id="user-neg3"></div>
+                </div>
+            </div>
+            <div class="border-bottom border-warning"></div>
+            <div class="display-4">Use alternate max temp:</div>
+            <div class="display-4 d-flex justify-content-around py-3 text-warning">
+                <div class="border rounded-4 border-warning clickable disable-dbl-tap-zoom px-5" onclick="d3Update()">Enter</div>
+                <input class="bg-dark border border-2 rounded-4 text-center" type="number" min="0" max="120" id="user-temp">
+                <div class="border rounded-4 border-warning clickable disable-dbl-tap-zoom px-5" onclick="d3Clear()">Clear</div>
+            </div>
+        </div>
+
+        <!-- NWS SOARING FORECAST (LIFT) -->
+        <div class="container-fluid p-0 mt-5 pb-3 display-3">NWS Lift Forecast for SLC (Low-Res)</div>
+        <a href="https://forecast.weather.gov/product.php?site=SLC&issuedby=SLC&product=SRG&format=TXT&version=1&glossary=0" target="_blank">
+            <div class="container-fluid rounded-4 bg-dark lh-base">
+                <div class="row pt-3 pb-3">
+                    <div class="fs-2 col-auto text-start font-monospace" id="soaring-forecast"></div>
+                </div>
+            </div>
+        </a>
+
+        <!-- MORNING SOUNDING SKEW-T -->
+        <!-- Collapsing this DIV, as the decoded skew-T is better -->
+        <div class="collapse container-fluid p-0">
+            <a href="https://climate.cod.edu/data/raob/KPVU/skewt" id="skew-t-href" target="_blank">
+                <div class="display-3 pt-5 pb-3">Morning Sounding Skew-T</div>
+                    <img class="border wwborder border-4 border-warning" id="skew-t-img" width="100%">
+            </a>
+        </div>
+
+        <!-- GRAPHICAL SURFACE WIND FORECAST (SHOWN ONLY BEFORE 2PM LOCAL TIME) -->
+        <div class="collapse container-fluid p-0" id="graphical-wind-div">
+            <div class="display-3 pt-5 pb-3">Surface Wind Forecast</div>
+            <div class="row fw-bold fs-1 justify-content-center">
+                <div class="col-4">Wind</div>
+                <div class="col-2 text-info" id="graphical-wind-time"></div>
+                <div class="col-4">Gust</div>
+            </div>
+            <a href="https://graphical.weather.gov/sectors/slc.php#tabs" target="_blank">
+                <div>
+                    <img class="border border-4 rounded-4 img-fluid me-1" id="graphical-wind-img" width="49%">
+                    <img class="border border-4 rounded-4 img-fluid ms-1" id="graphical-gust-img" width="49%">
+                </div>
+            </a>
+        </div>
+
+    </div>
+    <!-- SOARING FORECAST DIV ############################################################################################################################################## -->
+
+    <!-- CAMS & TRACKERS DIV ############################################################################################################################################# -->
+    <div class="collapse mb-div-end" id="Weather Cams">
+
+        <!-- Salt Lake Valley - one per row -->
+        <div class="container-fluid display-3 mt-5 mb-3">Salt Lake Valley</div>
+        <div class="container-fluid p-0 display-5 pt-4 mb-5 pb-2 rounded-4 bg-dark">
+            U of U looking West
+            <div class="mt-3 mb-5">
+                <a href="https://meso1.chpc.utah.edu/station_cameras/wbbw_cam/wbbw_cam_hour.mp4" target="_blank">
+                    <img class="rounded-4 border border-4 img-fluid bg-dark" 
+                        src="https://meso1.chpc.utah.edu/station_cameras/wbbw_cam/wbbw_cam_current.jpg" width="1000" height="800" alt="Click to access">
+                </a>
+            </div>
+            U of U looking South (towards POTM)
+            <div class="mt-3 mb-5">
+                <a href="https://meso1.chpc.utah.edu/station_cameras/wbbs_cam/wbbs_cam_hour.mp4" target="_blank">
+                    <img class="rounded-4 border border-4 img-fluid bg-dark" 
+                        src="https://meso1.chpc.utah.edu/station_cameras/wbbs_cam/wbbs_cam_current.jpg" width="1000" height="800" alt="Click to access">
+                </a>
+            </div>
+            South Salt Lake looking East (towards Grandeur)
+            <div class="mt-3 mb-5">
+                <a href="http://wwc.instacam.com/instacamimg/STHSL/STHSL_l.jpg" id="SouthSaltLakeEastCam" target="_blank">
+                    <img class="rounded-4 border border-4 img-fluid bg-dark" 
+                        src="http://wwc.instacam.com/instacamimg/STHSL/STHSL_l.jpg" width="1000" height="800" alt="Click to access">
+                </a>
+            </div>
+            Millcreek looking SE (towards Olympus)
+            <div class="mt-3 mb-5">
+                <a href="http://wa7xhome.ddns.net:5895/Latest12.jpg" target="_blank">
+                    <img class="rounded-4 border border-4 img-fluid bg-dark" 
+                        src="http://wa7xhome.ddns.net:5895/Latest12.jpg" width="1000" height="800" alt="Click to access">
+                </a>
+            </div>
+<!-- Commented out as the next web cam is similar location and higher quality
+            Olympus Cove looking West
+            <div class="mt-3 mb-5">
+                <a href="https://www.wrh.noaa.gov/images/slc/camera/latest/olympuscove.latest.jpg" target="_blank">
+                    <img class="rounded-4 border border-4 img-fluid bg-dark" 
+                        src="https://www.wrh.noaa.gov/images/slc/camera/latest/olympuscove.latest.jpg"  width="1000" height="800" alt="Click to access">
+                </a>
+            </div>
+-->
+            Cottonwood looking SW
+            <div class="mt-3 mb-5">
+                <a href="http://wwc.instacam.com/instacamimg/SLTWK/SLTWK_l.jpg" target="_blank">
+                    <img class="rounded-4 border border-4 img-fluid bg-dark" 
+                        src="http://wwc.instacam.com/instacamimg/SLTWK/SLTWK_l.jpg" width="1000" height="800" alt="Click to access">
+                </a>
+            </div>
+            West Valley looking East (towards Lone Peak)
+            <div class="mt-3 mb-5">
+                <a href="https://meso1.chpc.utah.edu/station_cameras/armstrong_cam/armstrong_cam_hour.mp4" target="_blank">
+                    <img class="rounded-4 border border-4 img-fluid bg-dark" 
+                        src="https://meso1.chpc.utah.edu/station_cameras/armstrong_cam/armstrong_cam_current.jpg"  width="1000" height="800" alt="Click to access">
+                </a>
+            </div>
+<!-- Commented out Daybreak cams as they have been down for several days
+            Daybreak looking West
+            <div class="mt-3 mb-5">
+                <a href="https://www.wrh.noaa.gov/images/slc/camera/latest/darrenS.latest.jpg" target="_blank">
+                    <img class="rounded-4 border border-4 img-fluid bg-dark" 
+                        src="https://www.wrh.noaa.gov/images/slc/camera/latest/darrenS.latest.jpg"  width="1000" height="800" alt="Click to access">
+                </a>
+            </div>
+            Daybreak looking East
+            <div class="mt-3 mb-5">
+                <a href="https://www.wrh.noaa.gov/images/slc/camera/latest/darren2.latest.jpg" target="_blank">
+                    <img class="rounded-4 border border-4 img-fluid bg-dark" 
+                        src="https://www.wrh.noaa.gov/images/slc/camera/latest/darren2.latest.jpg"  width="1000" height="800" alt="Click to access">
+                </a>
+            </div>
+-->
+            Draper looking West
+            <div class="mt-3 mb-5">
+                <a href="http://wwc.instacam.com/instacamimg/DRPRJ/DRPRJ_l.jpg" target="_blank">
+                    <img class="rounded-4 border border-4 img-fluid bg-dark" 
+                        src="http://wwc.instacam.com/instacamimg/DRPRJ/DRPRJ_l.jpg"  width="1000" height="800" alt="Click to access">
+                </a>
+            </div>
+        </div>
+
+        <!-- POTM -->
+        <div class="container-fluid display-3 mt-5 mb-3">Point of the Mountain Flight Parks</div>
+        <div class="container-fluid p-0 display-5 pt-4 mb-5 rounded-4 bg-dark">
+            <div class="row">
+                <div class="col">Point of the Mountain North Side
+                    <a href="http://74.122.78.35/aca/index.html#view" target="_blank">
+                        <img class="rounded-4 border border-4 bg-dark img-fluid mt-4 mb-4 px-5 py-5" 
+                            src="http://74.122.78.35/aca/index.html#view"  width="400" height="auto" alt="Click to access">
+                    </a>
+                </div>
+
+                <!-- SS not available.... 
+                <div class="col">Point of the Mountain South Side
+                    <a href="http://southcam.uhgpga.org/#view" target="_blank">
+                        <img class="rounded-4 border border-4 bg-dark img-fluid mt-4 mb-4 px-5 py-5" 
+                            src="prod/images/play-white-icon.png"  width="400" height="auto" alt="Click to access">
+                    </a>
+                </div>
+                -->
+                
+            </div>
+        </div>
+
+        <!-- Utah Valley -->
+        <div class="container-fluid display-3 mt-5 mb-3">Utah Valley</div>
+        <div class="container-fluid p-0 display-5 pt-4 mb-5 pb-2 rounded-4 bg-dark">
+            BYU looking NE (Timp)
+            <div class="mt-3 mb-5">
+                <a href="http://lswebcam.byu.edu/mjpg/LSB" target="_blank">
+                    <img class="rounded-4 border border-4 bg-dark img-fluid" 
+                        src="http://lswebcam.byu.edu/mjpg/LSB" width="1000" height="800" alt="Click to access">
+                </a>
+            </div>
+            Saratoga Springs looking SE
+            <div class="mt-3 mb-5">
+                <a href="https://www.wrh.noaa.gov/images/slc/camera/latest/UtahLake_4.latest.jpg" target="_blank">
+                    <img class="rounded-4 border border-4 bg-dark img-fluid" 
+                        src="https://www.wrh.noaa.gov/images/slc/camera/latest/UtahLake_4.latest.jpg"  width="1000" height="800" alt="Click to access">
+                </a>
+            </div>
+            Saratoga Springs looking NE
+            <div class="mt-3 mb-5">
+                <a href="https://www.wrh.noaa.gov/images/slc/camera/latest/UtahLake_5.latest.jpg" target="_blank">
+                    <img class="rounded-4 border border-4 bg-dark img-fluid" 
+                        src="https://www.wrh.noaa.gov/images/slc/camera/latest/UtahLake_5.latest.jpg"  width="1000" height="800" alt="Click to access">
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- FLIGHTS AND LINKS ################################################################################################################################################ -->
+    <div class="collapse mb-div-end" id="Flights and Links">
+
+        <!-- HEADER SECTIONS -->
+        <div class="container-fluid display-3 mt-5" id="live-tracking">Live Tracking</div>
+        <div class="container-fluid display-3 mt-5" id="flight-scoring">Flight Scoring</div>
+        <div class="container-fluid display-3 mt-5" id="flight-planning">Flight Planning</div>
+        <div class="container-fluid display-3 mt-5" id="site-guides">Utah Site Guides</div>
+        <div class="container-fluid display-3 mt-5" id="replay-flights">Replay Flights</div>
+        <div class="container-fluid display-3 mt-5" id="custom-airspace">LZs / No Land Areas for FlySkyHy
+            <div class="container rounded-4 border border-4 display-5 rounded-4 bg-dark text-info">FlySkyHy airspace file instructions
+                <div>
+                    <div class="row fs-1 px-4 pt-3">1. Click on link to download file</div>
+                    <div class="row fs-1 px-4">2. Open with FlySkyHy to import</div>
+                    <div class="row fs-1 px-4">3. Configure FlySKyHy airspace colors:</div>
+                    <div class="row fs-2 pb-4">
+                        <div class="col-1"></div>
+                        <div class="col">
+                            <div class="row pl-4 py-1">- W (Only Gliders) - Green (LZs)</div>
+                            <div class="row pl-4 py-1">- R (Restricted) - Red (No Land areas)</div>
+                            <div class="row pl-4 py-1">- SRZ (Special) - Yellow (seasonal raptor closures)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            <!-- LINK PROTOTYPE -->
+            <a href="https://tbd.com" target="_blank" id="prototype-link-href">
+                <div class="collapse container-fluid rounded-4 bg-dark my-4" id="prototype-link-block">
+                    <div class="row pt-2 px-4 display-4" id="prototype-link-name"></div>
+                    <div class="row px-4 pb-3 fs-1 text-info text-start" id="prototype-link-description"></div>
+                </div>
+            </a>
+
+    </div>
+
+    <!-- ABOUT DIV ###################################################################################################################################################### -->
+    <div class="collapse mb-div-end" id="About">
+
+        <!-- ABOUT -->
+        <div class="container-fluid display-5 mt-5 pt-5 mb-5">
+            <div class="pb-3">Feel free to log bugs and enhnacements at:</div>
+            <a href="https://github.com/WasatchCloudBase/WasatchCloudBase.github.io/issues" class="clickable text-decoration-underline">Github repository</a>
+            <div> </div>
+            <div class="py-4">Contact info:  mike.del.brown@gmail.com</div>
+        </div>
+        <div class="container-fluid border border-info row display-5 pt-3 pb-3 mb-5 rounded-4">
+            <div>This is a fork of Wasatch Wind by Matt Hansen.</div>
+            <div>Link to the original Wasatch Wind site:</div>
+            <a href="https://wasatchwind.github.io/" target="_blank">
+                <div class="text-warning display-4 fw-normal text-decoration-underline mb-3">Wasatch Wind</div>
+            </a>
+        </div>
+    </div>
+
+    <!-- LOCAL SCRIPTS -->
+    <script type="text/javascript" src="prod/js/main.js"></script>
+    <script type="text/javascript" src="prod/js/sites.js"></script>
+    <script type="text/javascript" src="prod/js/weather.js"></script>
+    <script type="text/javascript" src="prod/js/siteforecast.js"></script>
+    <script type="text/javascript" src="prod/js/d3.js"></script>
+    <script type="text/javascript" src="prod/js/links.js"></script>
+</body>
+</html>
