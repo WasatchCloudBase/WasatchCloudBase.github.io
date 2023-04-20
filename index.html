@@ -30,10 +30,10 @@
         </div>
 
         <div class="dropdown text-start border-top border-bottom mt-2">
-            <div class="row">
-                <button class="col-auto btn-menu border-0 fw-bold display-2 bg-black rounded-3 text-warning" id="btn-menu" height="110%" width="110%" onclick="menu()">&#9776;&#9662;</button>
-                <div class="col align-self-center display-3 text-center text-info" id="current-div"></div>
-                <img class="col-1 me-2 align-self-center clickable disable-dbl-tap-zoom" src="prod/images/refresh.png" height="110%" width="110%" onclick="reload()">
+            <div class="row display-3 py-1">
+                <button class="col-auto btn-menu border-0 fw-bold bg-black rounded-3 text-warning" id="btn-menu" height="80%" width="80%" onclick="menu()">&#9776;&#9662;</button>
+                <div class="col align-self-center text-center text-warning my-1" id="current-div"></div>
+                <img class="col-1 me-2 align-self-center clickable disable-dbl-tap-zoom" src="prod/images/refresh.png" height="100%" width="100%" onclick="reload()">
             </div>
             <div class="dropdown-menu bg-dark border px-5 text-warning rounded-4 disable-dbl-tap-zoom" id="menu">
                 <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Site List')">Site List</div>
@@ -61,6 +61,19 @@
         </div>
         <!-- SITE LIST AND SITE MAP REGION DROP DOWN DIV ######################################################################################################################################################## -->
 
+        <!-- SITE DETAILS BACK-TO-PRIOR-PAGE AND SITE GUIDE LINK STICKY BUTTONS -->
+        <div class="collapse container-fluid sticky-top" id="Site Details buttons">
+            <div class="row">
+                <div class="col clickable disable-dbl-tap-zoom border border-info bg-dark rounded-4 my-3 py-2" onclick="returnFromSiteDetail()">
+                    <div class="text-info pb-2 display-5" id="site-details-return">Return to site map/list</div>
+                </div>
+                <div class="col-1" id="site-details-guide-spacer"></div>
+                <a href class="col clickable disable-dbl-tap-zoom border border-info bg-dark rounded-4 my-3 py-2" id="site-details-guide-link" target="_blank">
+                    <div class="text-info pb-2 display-5" id="site-details-guide">Site Guide</div>
+                </a>
+            </div>
+        </div>
+        
     </div>
 
     <!-- SITE LIST DIV ######################################################################################################################################################## -->
@@ -115,22 +128,9 @@
     <!-- SITE DETAILS DIV ################################################################################################################################################ -->
     <div class="collapse mb-div-end" id="Site Details">
 
-        <!-- CLOSE DETAILS (BACK TO PRIOR PAGE) AND SITE GUIDE LINK -->
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col clickable disable-dbl-tap-zoom border border-info bg-dark rounded-4 mt-4" onclick="returnFromSiteDetail()">
-                    <div class="text-info pb-2 display-5" id="site-details-return">Return to site map/list</div>
-                </div>
-                <div class="col-1" id="site-details-guide-spacer"></div>
-                <a href class="col clickable disable-dbl-tap-zoom border border-info bg-dark rounded-4 mt-4" id="site-details-guide-link" target="_blank">
-                    <div class="text-info pb-2 display-5" id="site-details-guide">Site Guide</div>
-                </a>
-            </div>
-        </div>
-
         <!-- SITE DETAILS WIND READING HISTORY  (12 MOST RECENT READINGS)-->
-        <div class="container-fluid display-3 mt-4">Site Reading History</div>
-        <div class="container-fluid display-5 rounded-4 bg-dark lh-base mt-4">
+        <div class="container-fluid display-3">Wind History</div>
+        <div class="container-fluid display-5 rounded-4 bg-dark lh-base mt-3">
             <a href="https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=STATIONID&table=1&banner=off" target="_blank" id="site-details-history-href">
                 <div class="row fs-1 text-info pb-3">
                     <div class="col-auto" id="site-details-readings-alt"></div>
@@ -232,8 +232,8 @@
         </div>
 
         <!-- PRESSURE HISTORY  -->
-        <div class="collapse container-fluid display-3 mt-4" id="site-details-pressure-title">Site Pressure Zone History</div>
-        <div class="collapse container-fluid display-5 rounded-4 bg-dark lh-base mt-4"  id="site-details-pressure-block">
+        <div class="collapse container-fluid display-3 mt-3" id="site-details-pressure-title">Pressure Zone History</div>
+        <div class="collapse container-fluid display-5 rounded-4 bg-dark lh-base mt-3"  id="site-details-pressure-block">
             <a href="https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=STATIONID&table=1&banner=off" target="_blank" id="site-details-pressure-href">
                 <div class="row align-items-end bg-dark rounded-4 mx-0 mt-2">
                     <div class="col px-1" id="site-details-pressure-0">
@@ -286,9 +286,9 @@
         </div>        
         
         <!-- SITE FORECAST -->
-        <div class="container-fluid display-3 mt-4">Site Forecast</div>
-        <div class="container-fluid forecast-table-container display-5 rounded-4 bg-dark lh-base mt-4">
-            <div class="row fs-1 text-info pb-3">
+        <div class="container-fluid display-3 mt-3">Forecast</div>
+        <div class="container-fluid forecast-table-container display-5 rounded-4 bg-dark lh-base mt-3" id="forecastTableContainer">
+            <div class="row fs-1 text-info pb-2">
                 <div class="col-auto" id="site-details-forecast-alt"></div>
                 <div class="col-auto" id="site-details-forecast-note"></div>
             </div>
@@ -336,24 +336,6 @@
     
     <!-- WEATHER MAPS DIV ################################################################################################################################################ -->
     <div class="collapse mb-div-end" id="Weather Maps">
-
-        <!-- NORTHERN UTAH RADAR GIF -->
-        <div class="container-fluid p-0">
-            <a href="https://www.weather.gov/slc/radar" target="_blank">
-                <div class="display-3 py-4">Northern Utah Radar (past hour)</div>
-                <img class="border wwborder border-2" 
-                    src="https://radar.weather.gov/ridge/standard/KMTX_loop.gif" width="100%">
-            </a>
-        </div>
-
-        <!-- SOUTHERN UTAH RADAR GIF -->
-        <div class="container-fluid p-0">
-            <a href="https://www.weather.gov/slc/radar" target="_blank">
-                <div class="display-3 py-4">Southern Utah Radar (past hour)</div>
-                <img class="border wwborder border-2" 
-                    src="https://radar.weather.gov/ridge/standard/KICX_loop.gif" width="100%">
-            </a>
-        </div>
 
         <!-- CLOUDS & PRECIP GIF -->
         <div class="container-fluid p-0">
@@ -813,10 +795,11 @@
         <div class="container-fluid display-3 mt-5" id="flight-planning">Flight Planning</div>
         <div class="container-fluid display-3 mt-5" id="site-guides">Utah Site Guides</div>
         <div class="container-fluid display-3 mt-5" id="replay-flights">Replay Flights</div>
+        <div class="container-fluid display-3 mt-5" id="weather-links">Weather</div>
         <div class="container-fluid display-3 mt-5" id="custom-airspace">LZs / No Land Areas for FlySkyHy
             <div class="container rounded-4 border border-4 display-5 rounded-4 bg-dark text-info">FlySkyHy airspace file instructions
                 <div>
-                    <div class="row fs-1 px-4 pt-3">1. Click on link to download file</div>
+                    <div class="row fs-1 px-4 pt-3">1. Click on link below to download file</div>
                     <div class="row fs-1 px-4">2. Open with FlySkyHy to import</div>
                     <div class="row fs-1 px-4">3. Configure FlySKyHy airspace colors:</div>
                     <div class="row fs-2 pb-4">

@@ -123,8 +123,15 @@ function toggleDiv(newDiv) {
         document.getElementById('Site Map Select').style.display = 'none' 
     }
 
-    // Update the returnToPage unless going to site detail
-    if ( newDiv != 'Site Details' ) { returnToPage = newDiv }
+    // Hide or display return-to-prior-page and site guide buttons based on selected DIV
+    if ( newDiv === 'Site Details' ) {
+        document.getElementById('Site Details buttons').style.display = 'block'
+        document.getElementById('forecastTableContainer').scrollLeft = 0
+    } else {
+        document.getElementById('Site Details buttons').style.display = 'none'
+        // Update the returnToPage to current page
+        returnToPage = newDiv 
+    }
 }
 
 function siteDetail(site) {

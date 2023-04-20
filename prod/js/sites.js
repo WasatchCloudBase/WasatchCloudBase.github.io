@@ -258,8 +258,9 @@ function showCurrentReadings(data) {
             }
 
             // Show latest wind speed (or calm) and set color based on speed and type of site
+            var currentWind = 0
             if (data.wind_speed_set_1) {
-                var currentWind = data.wind_speed_set_1[data.wind_speed_set_1.length-1]
+                currentWind = data.wind_speed_set_1[data.wind_speed_set_1.length-1]
                 if (Math.round(currentWind) >= 1) { currentWind = Math.round(currentWind) }
                 else { currentWind = '<span class="fs-3 fw-normal">Calm</span>'}
                 var siteWindColor = windColor(currentWind, currentSiteData.SiteType)
@@ -269,23 +270,10 @@ function showCurrentReadings(data) {
                 document.getElementById(siteListHeading + `-wind`).style.color = siteWindColor
             }
 
-            // Show wind direction
-            if (data.wind_direction_set_1) {
-                var currentWindDir = data.wind_direction_set_1[data.wind_direction_set_1.length-1]
-                var currentWindImage = '&nbsp;'
-                var currentWindDirRotation = 0
-                if (currentWindDir >= 0) { 
-                    currentWindDirRotation = currentWindDir + 90
-                    currentWindImage = '&#10148;' }
-                document.getElementById(siteMapHeading + `-wdir`).innerHTML = currentWindImage
-                document.getElementById(siteMapHeading + `-wdir`).style.transform = `rotate(${currentWindDirRotation}deg)`
-                document.getElementById(siteListHeading + `-wdir`).innerHTML = currentWindImage
-                document.getElementById(siteListHeading + `-wdir`).style.transform = `rotate(${currentWindDirRotation}deg)`
-            }
-
             // Show wind gust speed (hidden if missing)
+            var currentGust = 0
             if (data.wind_gust_set_1) {
-                var currentGust = data.wind_gust_set_1[data.wind_gust_set_1.length-1]
+                currentGust = data.wind_gust_set_1[data.wind_gust_set_1.length-1]
                 if (Math.round(currentGust) >= 1) { 
                     currentGust = Math.round(currentGust)
                     document.getElementById(siteMapHeading + `-gust`).innerText = `g` + currentGust
@@ -299,6 +287,26 @@ function showCurrentReadings(data) {
                     document.getElementById(siteListHeading + `-gust`).innerText = ``
                     document.getElementById(siteMapHeading + `-gust`).style.display = 'none' 
                 }
+            }
+            
+            // Show wind direction
+            if (data.wind_direction_set_1) {
+                var currentWindDir = data.wind_direction_set_1[data.wind_direction_set_1.length-1]
+                var currentWindImage = '&nbsp;'
+                var currentWindDirRotation = 0
+                if (currentWindDir >= 0) { 
+                    currentWindDirRotation = currentWindDir + 90
+                    currentWindImage = '&#10148;' }
+                // Only display wind direction if there is wind or gust; otherwise display space (null causes incorrect spacing on page)
+                document.getElementById(siteMapHeading + `-wdir`).innerHTML = `&nbsp;`
+                document.getElementById(siteListHeading + `-wdir`).innerHTML = `&nbsp;`
+                if ( Math.round(currentWind) >= 1 || Math.round(currentGust) >= 1 ) {
+                    document.getElementById(siteMapHeading + `-wdir`).innerHTML = currentWindImage
+                    document.getElementById(siteMapHeading + `-wdir`).style.transform = `rotate(${currentWindDirRotation}deg)`
+                    document.getElementById(siteListHeading + `-wdir`).innerHTML = currentWindImage
+                    document.getElementById(siteListHeading + `-wdir`).style.transform = `rotate(${currentWindDirRotation}deg)`
+                }
+
             }
 
             // Show pressure zone for airport sites only
@@ -388,8 +396,9 @@ function siteDetailContent(site) {
         if (siteTime) { document.getElementById(`site-details-history-time-${i}`).innerHTML = siteTime }
 
         // Show wind speed (or calm) and set color based on speed and type of site
+        var readingWind = 0
         if (siteReadingsData.wind_speed_set_1) {
-            var readingWind = siteReadingsData.wind_speed_set_1[i]
+            readingWind = siteReadingsData.wind_speed_set_1[i]
             var readingWindDisplay = ''
             if (Math.round(readingWind) >= 1) { readingWindDisplay = Math.round(readingWind) }
             else { readingWindDisplay = '<span class="fs-3 fw-normal">Calm</span>'}
@@ -402,21 +411,10 @@ function siteDetailContent(site) {
             document.getElementById(`site-details-history-reading-${i}`).style.display = 'block'
         }
 
-        // Show wind direction
-        if (siteReadingsData.wind_direction_set_1) {
-            var readingWindDir = siteReadingsData.wind_direction_set_1[i]
-            var readingWindImage = '&nbsp;'
-            var readingWindDirRotation = 0
-            if (readingWindDir >= 0) { 
-                readingWindDirRotation = readingWindDir + 90
-                readingWindImage = '&#10148;' }
-            document.getElementById(`site-details-history-wdir-${i}`).innerHTML = readingWindImage
-            document.getElementById(`site-details-history-wdir-${i}`).style.transform = `rotate(${readingWindDirRotation}deg)`
-        }
-
         // Show wind gust speed (hidden if missing)
+        var readingGust = 0
         if (siteReadingsData.wind_gust_set_1) {
-            var readingGust = siteReadingsData.wind_gust_set_1[i]
+            readingGust = siteReadingsData.wind_gust_set_1[i]
             if (Math.round(readingGust) >= 1) { 
                 readingGust = Math.round(readingGust)
                 var siteGustColor = windColor(readingGust, detailSiteData.SiteType)
@@ -435,6 +433,23 @@ function siteDetailContent(site) {
             }
         }
 
+        // Show wind direction
+        if (siteReadingsData.wind_direction_set_1) {
+            var readingWindDir = siteReadingsData.wind_direction_set_1[i]
+            var readingWindImage = '&nbsp;'
+            var readingWindDirRotation = 0
+            if (readingWindDir >= 0) { 
+                readingWindDirRotation = readingWindDir + 90
+                readingWindImage = '&#10148;' 
+            }
+            // Only display wind direction if there is wind or gust; otherwise display space (null causes incorrect spacing on page)
+            document.getElementById(`site-details-history-wdir-${i}`).innerHTML = `&nbsp;`
+            if ( Math.round(readingWind) >= 1 || Math.round(readingGust) >= 1 ) {
+                document.getElementById(`site-details-history-wdir-${i}`).innerHTML = readingWindImage
+                document.getElementById(`site-details-history-wdir-${i}`).style.transform = `rotate(${readingWindDirRotation}deg)`
+            }
+        }
+
     }
 
     // Hide remaining history DIVs if fewer than 10 readings
@@ -448,6 +463,11 @@ function siteDetailContent(site) {
         document.getElementById(`site-details-pressure-title`).style.display = 'block'
         document.getElementById(`site-details-pressure-block`).style.display = 'block'
         document.getElementById(`site-details-pressure-info`).style.display = 'block'
+
+        // Update link to full history URL
+        document.getElementById(`site-details-pressure-href`).href = 
+        `https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=${detailSiteData.ReadingsStation}&table=1&banner=off`
+    
 
         // Find site pressure observations in pressureReadingsData array for the selected site
         var pressureSiteReadingsData = {}

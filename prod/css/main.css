@@ -130,6 +130,11 @@ th, tr, td {
   padding: 8px;
   text-align: left;
 }
+/* Class for table cells that will have only a portion (wind direction arrow) rotated */
+.rotatedWindDir {
+  display: inline-block;
+  transform: rotate(0deg);
+}
 
 /* Flight log CSS */
 /* Adjusting zoom for input elements since the zoom used for the rest of the page makes these unreadably small */

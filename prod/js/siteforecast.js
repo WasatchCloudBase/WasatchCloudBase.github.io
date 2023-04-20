@@ -22,17 +22,39 @@ const rowWind900        = tableRows[15]
 const rowWind80m        = tableRows[16]
 const rowWind10m        = tableRows[17]
 const rowTemp2m         = tableRows[18]
-var previousDate = ``
-var previousDateStart = ``
+var forecastTableBuilt = false  /* Only build the table data cells the first time the function is called */
 
 // Get forecast data for site
 async function siteForecast(site) {
+
+    // If there was a previous site forecast, delete all of the previous cells except for column 0 (prototype cells).
+    // This approach is taken to prevent any issues if different forecasts have a different number of hourly forecasts
+    // or if the days cover a different number of hourly forecast (colspan for the header).
+    // It also ensure no leftover data is displayed.
+    var rows = tableID.rows
+    for (var i = 0; i < rows.length; i++) {
+        var cells = rows[i].cells
+        for (var j = cells.length - 1; j > 0; j--) {
+            rows[i].deleteCell(j);  // delete the cell
+        }
+    }
+
+    // Un-hide all wind rows in case a previous forecast hid those below surface + 80m
+    rowWind900.style.visibility = `visible`
+    rowWind850.style.visibility = `visible`
+    rowWind800.style.visibility = `visible`
+    rowWind750.style.visibility = `visible`
+    rowWind700.style.visibility = `visible`
+    rowWind650.style.visibility = `visible`
+    rowWind600.style.visibility = `visible`
+    rowWind550.style.visibility = `visible`
+    rowWind500.style.visibility = `visible`
 
     // Find site data for the selected site
     var detailSiteData = siteData.find(item => item.SiteID === site)
 
     // Update forecast location info
-    document.getElementById(`site-details-forecast-alt`).innerHTML = detailSiteData.ForecastAlt + '&nbsp;ft'
+    document.getElementById(`site-details-forecast-alt`).innerHTML = null
     document.getElementById(`site-details-forecast-note`).innerHTML = null
     if ( detailSiteData.ForecastNote ) { document.getElementById(`site-details-forecast-note`).innerHTML = ' (forecast for zone including ' + detailSiteData.ForecastNote + ')' }
     
@@ -62,11 +84,19 @@ async function siteForecast(site) {
     var height_550_sum = 0
     var height_500_sum = 0
     var forecastCount = 0
+    var previousDate = ``
+    var previousDateStart = ``
+    var surfaceAlt = ``
 
     var response = await fetch(forecast_url)
     var forecastData = await response.json()
     if (forecastData) {
         try {
+
+            // Add elevation being returned by forecast to check against requested site altitude
+            surfaceAlt = Math.round(forecastData.elevation * 3.28084) // converts meters to feet
+            document.getElementById(`site-details-forecast-alt`).innerHTML = surfaceAlt.toLocaleString() + `&nbsp;ft`
+
             // Process each hourly forecast
             for (let i=0; i<forecastData.hourly.time.length; i++) {
                 try {
@@ -78,22 +108,22 @@ async function siteForecast(site) {
                     const dayOfMonth = fullDateTime.getDate()
                     const formattedDate = `${dayOfWeek}, ${monthName} ${dayOfMonth}`
                     var formattedHour = fullDateTime.getHours().toString()
-                    
-                    // Only include forecasts between sunrise and sunset (converting sunset to 24 hour format)
-                    if ( formattedHour >= sunrise_hour-1 && formattedHour <= sunset_hour + 13 ) {
+
+                    // Only include forecasts between sunrise and sunset (converting sunset to 24 hour format) and are not more than 1 hour old
+                    var relativeForecastTime = ( fullDateTime - now ) / 3600000  //converting milliseconds to hours       
+                    if ( formattedHour >= sunrise_hour-1 && formattedHour <= sunset_hour + 13 && relativeForecastTime >= -1 ) {
                         forecastCount = forecastCount + 1
 
                         // Convert 24 hour format to 12 hour format
                         if ( formattedHour > 12 ) { formattedHour = formattedHour - 12 }
 
                         // Create a new column (e.g., cell for each row) to store the current hourly forecast
+                        // (only create on the first call; otherwise reset the column span for headers)
                         for (let rowi=0; rowi<tableRows.length; rowi++) {
                             var tableData = document.createElement(`td`)
                             tableData.id = tableRows[rowi].id + '-' + i
                             tableRows[rowi].appendChild(tableData)
                         }
-
-                        // Build wind forecast values
 
                         // Populate cells with hourly forecast
                         rowTime         .childNodes[forecastCount].innerText = formattedHour
@@ -102,18 +132,54 @@ async function siteForecast(site) {
                         rowCAPE         .childNodes[forecastCount].innerText = forecastData.hourly.cape[i]
                         rowLI           .childNodes[forecastCount].innerText = forecastData.hourly.lifted_index[i]
                         rowPressureZone .childNodes[forecastCount].innerText = forecastData.hourly.pressure_msl[i]
-                        rowWind500      .childNodes[forecastCount].innerText = forecastData.hourly.windspeed_500hPa[i]
-                        rowWind550      .childNodes[forecastCount].innerText = forecastData.hourly.windspeed_550hPa[i]
-                        rowWind600      .childNodes[forecastCount].innerText = forecastData.hourly.windspeed_600hPa[i]
-                        rowWind650      .childNodes[forecastCount].innerText = forecastData.hourly.windspeed_650hPa[i]
-                        rowWind700      .childNodes[forecastCount].innerText = forecastData.hourly.windspeed_700hPa[i]
-                        rowWind750      .childNodes[forecastCount].innerText = forecastData.hourly.windspeed_750hPa[i]
-                        rowWind800      .childNodes[forecastCount].innerText = forecastData.hourly.windspeed_800hPa[i]
-                        rowWind850      .childNodes[forecastCount].innerText = forecastData.hourly.windspeed_850hPa[i] 
-                        rowWind900      .childNodes[forecastCount].innerText = forecastData.hourly.windspeed_900hPa[i]
-                        rowWind80m      .childNodes[forecastCount].innerText = forecastData.hourly.windspeed_80m[i]
-                        rowWind10m      .childNodes[forecastCount].innerText = forecastData.hourly.windspeed_10m[i]
                         rowTemp2m       .childNodes[forecastCount].innerText = Math.round(forecastData.hourly.temperature_2m[i]) + `\u00B0`
+                        
+                        // Build and populate wind forecast values at each pressure level (and surface levels)
+                        var fullWindDisplay = ''
+                        // 500 hPa
+                        fullWindDisplay = buildWindDisplay(forecastData.hourly.windspeed_500hPa[i], forecastData.hourly.winddirection_500hPa[i], 0, detailSiteData.SiteType)
+                        rowWind500      .childNodes[forecastCount].innerHTML = fullWindDisplay.windDisplay
+                        rowWind500      .childNodes[forecastCount].getElementsByClassName("rotatedWindDir")[0].style.transform = fullWindDisplay.windDirTransform
+                        // 550 hPa
+                        fullWindDisplay = buildWindDisplay(forecastData.hourly.windspeed_550hPa[i], forecastData.hourly.winddirection_550hPa[i], 0, detailSiteData.SiteType)
+                        rowWind550      .childNodes[forecastCount].innerHTML = fullWindDisplay.windDisplay
+                        rowWind550      .childNodes[forecastCount].getElementsByClassName("rotatedWindDir")[0].style.transform = fullWindDisplay.windDirTransform
+                        // 600 hPa
+                        fullWindDisplay = buildWindDisplay(forecastData.hourly.windspeed_600hPa[i], forecastData.hourly.winddirection_600hPa[i], 0, detailSiteData.SiteType)
+                        rowWind600      .childNodes[forecastCount].innerHTML = fullWindDisplay.windDisplay
+                        rowWind600      .childNodes[forecastCount].getElementsByClassName("rotatedWindDir")[0].style.transform = fullWindDisplay.windDirTransform
+                        // 650 hPa
+                        fullWindDisplay = buildWindDisplay(forecastData.hourly.windspeed_650hPa[i], forecastData.hourly.winddirection_650hPa[i], 0, detailSiteData.SiteType)
+                        rowWind650      .childNodes[forecastCount].innerHTML = fullWindDisplay.windDisplay
+                        rowWind650      .childNodes[forecastCount].getElementsByClassName("rotatedWindDir")[0].style.transform = fullWindDisplay.windDirTransform
+                        // 700 hPa
+                        fullWindDisplay = buildWindDisplay(forecastData.hourly.windspeed_700hPa[i], forecastData.hourly.winddirection_700hPa[i], 0, detailSiteData.SiteType)
+                        rowWind700      .childNodes[forecastCount].innerHTML = fullWindDisplay.windDisplay
+                        rowWind700      .childNodes[forecastCount].getElementsByClassName("rotatedWindDir")[0].style.transform = fullWindDisplay.windDirTransform
+                        // 750 hPa
+                        fullWindDisplay = buildWindDisplay(forecastData.hourly.windspeed_750hPa[i], forecastData.hourly.winddirection_750hPa[i], 0, detailSiteData.SiteType)
+                        rowWind750      .childNodes[forecastCount].innerHTML = fullWindDisplay.windDisplay
+                        rowWind750      .childNodes[forecastCount].getElementsByClassName("rotatedWindDir")[0].style.transform = fullWindDisplay.windDirTransform
+                        // 800 hPa
+                        fullWindDisplay = buildWindDisplay(forecastData.hourly.windspeed_800hPa[i], forecastData.hourly.winddirection_800hPa[i], 0, detailSiteData.SiteType)
+                        rowWind800      .childNodes[forecastCount].innerHTML = fullWindDisplay.windDisplay
+                        rowWind800      .childNodes[forecastCount].getElementsByClassName("rotatedWindDir")[0].style.transform = fullWindDisplay.windDirTransform
+                        // 850 hPa
+                        fullWindDisplay = buildWindDisplay(forecastData.hourly.windspeed_850hPa[i], forecastData.hourly.winddirection_850hPa[i], 0, detailSiteData.SiteType)
+                        rowWind850      .childNodes[forecastCount].innerHTML = fullWindDisplay.windDisplay
+                        rowWind850      .childNodes[forecastCount].getElementsByClassName("rotatedWindDir")[0].style.transform = fullWindDisplay.windDirTransform
+                        // 900 hPa
+                        fullWindDisplay = buildWindDisplay(forecastData.hourly.windspeed_900hPa[i], forecastData.hourly.winddirection_900hPa[i], 0, detailSiteData.SiteType)
+                        rowWind900      .childNodes[forecastCount].innerHTML = fullWindDisplay.windDisplay
+                        rowWind900      .childNodes[forecastCount].getElementsByClassName("rotatedWindDir")[0].style.transform = fullWindDisplay.windDirTransform
+                        // 80m above surface
+                        fullWindDisplay = buildWindDisplay(forecastData.hourly.windspeed_80m[i], forecastData.hourly.winddirection_80m[i], 0, detailSiteData.SiteType)
+                        rowWind80m      .childNodes[forecastCount].innerHTML = fullWindDisplay.windDisplay
+                        rowWind80m      .childNodes[forecastCount].getElementsByClassName("rotatedWindDir")[0].style.transform = fullWindDisplay.windDirTransform
+                        // 10m above surface
+                        fullWindDisplay = buildWindDisplay(forecastData.hourly.windspeed_10m[i], forecastData.hourly.winddirection_10m[i], 0, detailSiteData.SiteType)
+                        rowWind10m      .childNodes[forecastCount].innerHTML = fullWindDisplay.windDisplay
+                        rowWind10m      .childNodes[forecastCount].getElementsByClassName("rotatedWindDir")[0].style.transform = fullWindDisplay.windDirTransform
 
                         // If date is the same as the prior column, merge the cells
                         if ( formattedDate === previousDate ) {
@@ -142,16 +208,39 @@ async function siteForecast(site) {
                 }
             }
 
-            // Display average geopotential heights as row headers (rounded to nearest 100 and displayed with commas)
-            rowWind500      .childNodes[0].innerText = (Math.round((height_500_sum / forecastCount)/100)*100).toLocaleString("en-US")
-            rowWind550      .childNodes[0].innerText = (Math.round((height_550_sum / forecastCount)/100)*100).toLocaleString("en-US")
-            rowWind600      .childNodes[0].innerText = (Math.round((height_600_sum / forecastCount)/100)*100).toLocaleString("en-US")
-            rowWind650      .childNodes[0].innerText = (Math.round((height_650_sum / forecastCount)/100)*100).toLocaleString("en-US")
-            rowWind700      .childNodes[0].innerText = (Math.round((height_700_sum / forecastCount)/100)*100).toLocaleString("en-US")
-            rowWind750      .childNodes[0].innerText = (Math.round((height_750_sum / forecastCount)/100)*100).toLocaleString("en-US")
-            rowWind800      .childNodes[0].innerText = (Math.round((height_800_sum / forecastCount)/100)*100).toLocaleString("en-US")
-            rowWind850      .childNodes[0].innerText = (Math.round((height_850_sum / forecastCount)/100)*100).toLocaleString("en-US")
-            rowWind900      .childNodes[0].innerText = (Math.round((height_900_sum / forecastCount)/100)*100).toLocaleString("en-US")
+            // Calculate average geopotential heights rounded to the nearest 100 ft
+            var wind500Alt = Math.round((height_500_sum / forecastCount)/100)*100
+            var wind550Alt = Math.round((height_550_sum / forecastCount)/100)*100
+            var wind600Alt = Math.round((height_600_sum / forecastCount)/100)*100
+            var wind650Alt = Math.round((height_650_sum / forecastCount)/100)*100
+            var wind700Alt = Math.round((height_700_sum / forecastCount)/100)*100
+            var wind750Alt = Math.round((height_750_sum / forecastCount)/100)*100
+            var wind800Alt = Math.round((height_800_sum / forecastCount)/100)*100
+            var wind850Alt = Math.round((height_850_sum / forecastCount)/100)*100
+            var wind900Alt = Math.round((height_900_sum / forecastCount)/100)*100
+            
+            // Display average geopotential heights as row headers (and displayed with commas)
+            rowWind500      .childNodes[0].innerText = wind500Alt.toLocaleString()
+            rowWind550      .childNodes[0].innerText = wind550Alt.toLocaleString()
+            rowWind600      .childNodes[0].innerText = wind600Alt.toLocaleString()
+            rowWind650      .childNodes[0].innerText = wind650Alt.toLocaleString()
+            rowWind700      .childNodes[0].innerText = wind700Alt.toLocaleString()
+            rowWind750      .childNodes[0].innerText = wind750Alt.toLocaleString()
+            rowWind800      .childNodes[0].innerText = wind800Alt.toLocaleString()
+            rowWind850      .childNodes[0].innerText = wind850Alt.toLocaleString()
+            rowWind900      .childNodes[0].innerText = wind900Alt.toLocaleString()
+
+            // Hide wind reading rows where the altitude is less than surface + 80m
+            var surfaceAlt80m =  (forecastData.elevation + 80) * 3.28084  // converts meters to feet
+            if ( wind900Alt <= surfaceAlt80m ) { rowWind900.style.visibility = `hidden` }
+            if ( wind850Alt <= surfaceAlt80m ) { rowWind850.style.visibility = `hidden` }
+            if ( wind800Alt <= surfaceAlt80m ) { rowWind800.style.visibility = `hidden` }
+            if ( wind750Alt <= surfaceAlt80m ) { rowWind750.style.visibility = `hidden` }
+            if ( wind700Alt <= surfaceAlt80m ) { rowWind700.style.visibility = `hidden` }
+            if ( wind650Alt <= surfaceAlt80m ) { rowWind650.style.visibility = `hidden` }
+            if ( wind600Alt <= surfaceAlt80m ) { rowWind600.style.visibility = `hidden` }
+            if ( wind550Alt <= surfaceAlt80m ) { rowWind550.style.visibility = `hidden` }
+            if ( wind500Alt <= surfaceAlt80m ) { rowWind500.style.visibility = `hidden` }
 
         } catch (error) { 
             console.log('Error processing forecastData: ' + error )
@@ -159,56 +248,35 @@ async function siteForecast(site) {
     }
 }
 
-async function buildWindDisplay(
-    
-) {
-/*
-    // Show wind speed (or calm) and set color based on speed and type of site
-    if (siteReadingsData.wind_speed_set_1) {
-        var readingWind = siteReadingsData.wind_speed_set_1[i]
-        var readingWindDisplay = ''
-        if (Math.round(readingWind) >= 1) { readingWindDisplay = Math.round(readingWind) }
-        else { readingWindDisplay = '<span class="fs-3 fw-normal">Calm</span>'}
-        var siteWindColor = windColor(readingWind, detailSiteData.SiteType)
-        document.getElementById(`site-details-history-wind-${i}`).innerHTML = readingWindDisplay
-        document.getElementById(`site-details-history-wind-${i}`).style.color = siteWindColor
-        document.getElementById(`site-details-history-wbar-${i}`).style.height = `${readingWind * 3}px`
-        document.getElementById(`site-details-history-wbar-${i}`).style.backgroundColor = siteWindColor
-        document.getElementById(`site-details-history-break-${i}`).style.height = `5px`
-        document.getElementById(`site-details-history-reading-${i}`).style.display = 'block'
-    }
+function buildWindDisplay( windSpeed, windDir, windGust, siteType )
+// Returns an object: { windDisplay (format # g#), windDirDisplay (image), windDirTransform (string to send to style.transform for span displaySpanID) }
+{
+    var windDisplay = ''
 
-    // Show wind direction
-    if (siteReadingsData.wind_direction_set_1) {
-        var readingWindDir = siteReadingsData.wind_direction_set_1[i]
-        var readingWindImage = '&nbsp;'
-        var readingWindDirRotation = 0
-        if (readingWindDir >= 0) { 
-            readingWindDirRotation = readingWindDir + 90
-            readingWindImage = '&#10148;' }
-        document.getElementById(`site-details-history-wdir-${i}`).innerHTML = readingWindImage
-        document.getElementById(`site-details-history-wdir-${i}`).style.transform = `rotate(${readingWindDirRotation}deg)`
+    // Determine wind direction
+    var windDirRotation = 0
+    if (windDir >= 0) { 
+        windDirRotation = windDir + 90
+        windDisplay = '<span class="rotatedWindDir">&#10148;</span>' 
     }
+    var windDirTransform = `rotate(${windDirRotation}deg)`
 
-    // Show wind gust speed (hidden if missing)
-    if (siteReadingsData.wind_gust_set_1) {
-        var readingGust = siteReadingsData.wind_gust_set_1[i]
-        if (Math.round(readingGust) >= 1) { 
-            readingGust = Math.round(readingGust)
-            var siteGustColor = windColor(readingGust, detailSiteData.SiteType)
-            document.getElementById(`site-details-history-gust-${i}`).innerText = `g` + readingGust
-            document.getElementById(`site-details-history-gust-${i}`).style.color = siteGustColor
-            var readingGustDiff = (readingGust - readingWind)
-            document.getElementById(`site-details-history-gbar-${i}`).style.height = `${readingGustDiff * 3}px`
-            document.getElementById(`site-details-history-gbar-${i}`).style.backgroundColor = siteGustColor
-            document.getElementById(`site-details-history-gust-${i}`).style.display = 'block'
-            document.getElementById(`site-details-history-gbar-${i}`).style.display = 'block'
+    // Determine wind speed (or calm) and set color based on speed and type of site
+    if (windSpeed) {
+        var windColorDisplay = windColor(windSpeed, siteType)
+        if (Math.round(windSpeed) >= 1) { 
+            windDisplay = windDisplay + '<span style="color: ' + windColorDisplay + ';">' + Math.round(windSpeed) + '</span>'
+        } else { 
+            windDisplay = windDisplay + '<span class="fs-3 fw-normal">Calm</span>'
         }
-        else { 
-            document.getElementById(`site-details-history-gust-${i}`).style.display = 'none' 
-            document.getElementById(`site-details-history-gbar-${i}`).style.height = `0px`
-            document.getElementById(`site-details-history-gbar-${i}`).style.display = 'none' 
+    }    
+
+    // Determine wind gust speed (hidden if missing)
+    if (windGust) {
+        var gustColorDisplay = windColor(windGust, siteType)
+        if (Math.round(windGust) >= 1) { 
+            windDisplay = windDisplay + '&nbsp;<span id="${displaySpanID}" style="color: ' + gustColorDisplay + ';">g' + Math.round(windGust) + '</span>'
         }
     }
- */                   
+    return { windDisplay, windDirTransform }
 }
