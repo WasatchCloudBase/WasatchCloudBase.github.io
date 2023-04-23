@@ -28,6 +28,7 @@ let returnToPage = currentDiv   // Sets page to return to from site detail
 let liftParams = {}, maxTempF, soundingData = {}  // Defaults for decoded skew-T
 let sunrise_hour = ''
 let sunset_hour = ''
+let weatherCodes = ''
 
 // Make CORS requests to external sites via proxy server
 function doCORSRequest(options, result) {
@@ -68,6 +69,23 @@ function doCORSRequest(options, result) {
         //Update page elements
         document.getElementById(`sunrise_time`).innerText = sunrise + 'am'
         document.getElementById(`sunset_time`).innerText = sunset + 'pm'
+    }
+})();
+
+// Build array of weather codes and images for forecast
+(async () => {
+    // Retrieve weathercode table and image names in JSON format from Google sheets API
+    // Maintain weather code data here:  https://docs.google.com/spreadsheets/d/1nBEJuTCWkUidSFKQjBjcJgKeteC_oy8LqL2P7uhGyLQ/edit#gid=626521820
+    var weatherCode_data_url = "https://sheets.googleapis.com/v4/spreadsheets/1nBEJuTCWkUidSFKQjBjcJgKeteC_oy8LqL2P7uhGyLQ/values/WeatherCodes/?alt=json" +
+        "&key=AIzaSyDSro1lDdAQsNEZq06IxwjOlQQP1tip-fs"
+    var response = await fetch(weatherCode_data_url)
+    var weatherCodeRawJSON = await response.json()
+    if (weatherCodeRawJSON) {
+        // Convert first row (headers) to JSON keys
+        var weatherCodeData = setJSONKeys(weatherCodeRawJSON.values)
+
+        // Build array of weather codes and images
+        weatherCodes = Object.entries(weatherCodeData)
     }
 })();
 

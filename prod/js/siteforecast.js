@@ -7,21 +7,24 @@ const rowDate           = tableRows[0]
 const rowTime           = tableRows[1]
 const rowWeatherCode    = tableRows[2]
 const rowCloudCover     = tableRows[3]
-const rowCAPE           = tableRows[4]
-const rowLI             = tableRows[5]
-const rowPressureZone   = tableRows[6]
-const rowWind500        = tableRows[7]
-const rowWind550        = tableRows[8]
-const rowWind600        = tableRows[9]
-const rowWind650        = tableRows[10]
-const rowWind700        = tableRows[11]
-const rowWind750        = tableRows[12]
-const rowWind800        = tableRows[13]
-const rowWind850        = tableRows[14]
-const rowWind900        = tableRows[15]
-const rowWind80m        = tableRows[16]
-const rowWind10m        = tableRows[17]
-const rowTemp2m         = tableRows[18]
+const rowCloudCoverLow  = tableRows[4]
+const rowCloudCoverMid  = tableRows[5]
+const rowCloudCoverHigh = tableRows[6]
+const rowCAPE           = tableRows[7]
+const rowLI             = tableRows[8]
+const rowPressureZone   = tableRows[9]
+const rowWind500        = tableRows[10]
+const rowWind550        = tableRows[11]
+const rowWind600        = tableRows[12]
+const rowWind650        = tableRows[13]
+const rowWind700        = tableRows[14]
+const rowWind750        = tableRows[15]
+const rowWind800        = tableRows[16]
+const rowWind850        = tableRows[17]
+const rowWind900        = tableRows[18]
+const rowWind80m        = tableRows[19]
+const rowWind10m        = tableRows[20]
+const rowTemp2m         = tableRows[21]
 var forecastTableBuilt = false  /* Only build the table data cells the first time the function is called */
 
 // Get forecast data for site
@@ -64,7 +67,7 @@ async function siteForecast(site) {
     "latitude=" + detailSiteData.ForecastLat +
     "&longitude=" + detailSiteData.ForecastLon + 
     "&hourly=temperature_2m,relativehumidity_2m,pressure_msl,surface_pressure," +
-    "precipitation,precipitation_probability,weathercode,cloudcover,cape,lifted_index," +
+    "precipitation,precipitation_probability,weathercode,cloudcover,cloudcover_low,cloudcover_mid,cloudcover_high,cape,lifted_index," +
     "windspeed_10m,windspeed_80m,winddirection_10m,winddirection_80m,windgusts_10m," +
     "temperature_900hPa,temperature_850hPa,temperature_800hPa,temperature_750hPa,temperature_700hPa,temperature_650hPa,temperature_600hPa,temperature_550hPa,temperature_500hPa," +
     "dewpoint_900hPa,dewpoint_850hPa,dewpoint_800hPa,dewpoint_750hPa,dewpoint_700hPa,dewpoint_650hPa,dewpoint_600hPa,dewpoint_550hPa,dewpoint_500hPa," +
@@ -126,14 +129,20 @@ async function siteForecast(site) {
                         }
 
                         // Populate cells with hourly forecast
-                        rowTime         .childNodes[forecastCount].innerText = formattedHour
-                        rowWeatherCode  .childNodes[forecastCount].innerText = forecastData.hourly.weathercode[i]
-                        rowCloudCover   .childNodes[forecastCount].innerText = forecastData.hourly.cloudcover[i] + "%"
-                        rowCAPE         .childNodes[forecastCount].innerText = forecastData.hourly.cape[i]
-                        rowLI           .childNodes[forecastCount].innerText = forecastData.hourly.lifted_index[i]
-                        rowPressureZone .childNodes[forecastCount].innerText = forecastData.hourly.pressure_msl[i]
-                        rowTemp2m       .childNodes[forecastCount].innerText = Math.round(forecastData.hourly.temperature_2m[i]) + `\u00B0`
-                        
+                        rowTime             .childNodes[forecastCount].innerText = formattedHour
+                        rowWeatherCode      .childNodes[forecastCount].innerHTML = `<img src="prod/images/weather/` +
+                            weatherCodes[forecastData.hourly.weathercode[i]][1].Image + `.png" width="80">`
+
+console.log('weathercode:' + forecastData.hourly.weathercode[i] + '; image is:' + rowWeatherCode      .childNodes[forecastCount].innerHTML)
+                        rowCloudCover       .childNodes[forecastCount].innerText = forecastData.hourly.cloudcover[i] + "%"
+                        rowCloudCoverLow    .childNodes[forecastCount].innerText = forecastData.hourly.cloudcover_low[i] + "%"
+                        rowCloudCoverMid    .childNodes[forecastCount].innerText = forecastData.hourly.cloudcover_mid[i] + "%"
+                        rowCloudCoverHigh   .childNodes[forecastCount].innerText = forecastData.hourly.cloudcover_high[i] + "%"
+                        rowCAPE             .childNodes[forecastCount].innerText = forecastData.hourly.cape[i]
+                        rowLI               .childNodes[forecastCount].innerText = forecastData.hourly.lifted_index[i]
+                        rowPressureZone     .childNodes[forecastCount].innerText = forecastData.hourly.pressure_msl[i]
+                        rowTemp2m           .childNodes[forecastCount].innerText = Math.round(forecastData.hourly.temperature_2m[i]) + `\u00B0`
+
                         // Build and populate wind forecast values at each pressure level (and surface levels)
                         var fullWindDisplay = ''
                         // 500 hPa
@@ -232,15 +241,15 @@ async function siteForecast(site) {
 
             // Hide wind reading rows where the altitude is less than surface + 80m
             var surfaceAlt80m =  (forecastData.elevation + 80) * 3.28084  // converts meters to feet
-            if ( wind900Alt <= surfaceAlt80m ) { rowWind900.style.visibility = `hidden` }
-            if ( wind850Alt <= surfaceAlt80m ) { rowWind850.style.visibility = `hidden` }
-            if ( wind800Alt <= surfaceAlt80m ) { rowWind800.style.visibility = `hidden` }
-            if ( wind750Alt <= surfaceAlt80m ) { rowWind750.style.visibility = `hidden` }
-            if ( wind700Alt <= surfaceAlt80m ) { rowWind700.style.visibility = `hidden` }
-            if ( wind650Alt <= surfaceAlt80m ) { rowWind650.style.visibility = `hidden` }
-            if ( wind600Alt <= surfaceAlt80m ) { rowWind600.style.visibility = `hidden` }
-            if ( wind550Alt <= surfaceAlt80m ) { rowWind550.style.visibility = `hidden` }
-            if ( wind500Alt <= surfaceAlt80m ) { rowWind500.style.visibility = `hidden` }
+            if ( wind900Alt <= surfaceAlt80m ) { rowWind900.style.visibility = `collapse` }
+            if ( wind850Alt <= surfaceAlt80m ) { rowWind850.style.visibility = `collapse` }
+            if ( wind800Alt <= surfaceAlt80m ) { rowWind800.style.visibility = `collapse` }
+            if ( wind750Alt <= surfaceAlt80m ) { rowWind750.style.visibility = `collapse` }
+            if ( wind700Alt <= surfaceAlt80m ) { rowWind700.style.visibility = `collapse` }
+            if ( wind650Alt <= surfaceAlt80m ) { rowWind650.style.visibility = `collapse` }
+            if ( wind600Alt <= surfaceAlt80m ) { rowWind600.style.visibility = `collapse` }
+            if ( wind550Alt <= surfaceAlt80m ) { rowWind550.style.visibility = `collapse` }
+            if ( wind500Alt <= surfaceAlt80m ) { rowWind500.style.visibility = `collapse` }
 
         } catch (error) { 
             console.log('Error processing forecastData: ' + error )
