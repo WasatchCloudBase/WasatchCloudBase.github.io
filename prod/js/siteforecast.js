@@ -132,8 +132,6 @@ async function siteForecast(site) {
                         rowTime             .childNodes[forecastCount].innerText = formattedHour
                         rowWeatherCode      .childNodes[forecastCount].innerHTML = `<img src="prod/images/weather/` +
                             weatherCodes[forecastData.hourly.weathercode[i]][1].Image + `.png" width="80">`
-
-console.log('weathercode:' + forecastData.hourly.weathercode[i] + '; image is:' + rowWeatherCode      .childNodes[forecastCount].innerHTML)
                         rowCloudCover       .childNodes[forecastCount].innerText = forecastData.hourly.cloudcover[i] + "%"
                         rowCloudCoverLow    .childNodes[forecastCount].innerText = forecastData.hourly.cloudcover_low[i] + "%"
                         rowCloudCoverMid    .childNodes[forecastCount].innerText = forecastData.hourly.cloudcover_mid[i] + "%"
