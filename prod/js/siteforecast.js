@@ -128,17 +128,62 @@ async function siteForecast(site) {
                             tableRows[rowi].appendChild(tableData)
                         }
 
+                        // Determine weather code based on value and, if it shows as cloudy, then based on cloud coverage %
+                        var weatherCodeValue = forecastData.hourly.weathercode[i]
+                        if (    forecastData.hourly.weathercode[i] === 1 || 
+                                forecastData.hourly.weathercode[i] === 2 || 
+                                forecastData.hourly.weathercode[i] === 3 ) {
+                            if ( forecastData.hourly.cloudcover[i] < 25 ) { weatherCodeValue = 0 }      // Sunny
+                            else if ( forecastData.hourly.cloudcover[i] > 75 ) { weatherCodeValue = 2 } // Cloudy
+                            else { weatherCodeValue = 1 }                                               // Partly cloudy
+                        }
+                        rowWeatherCode.childNodes[forecastCount].innerHTML = `<img src="prod/images/weather/` + weatherCodes[weatherCodeValue][1].Image + `.png" width="80">`
+
+                        // Convert pressure from hPa to inHg and find pressure zone
+                        const forecastAlti = parseFloat(forecastData.hourly.pressure_msl[i]).toFixed(2) / 33.863886666667
+                        const forecastTemp = Math.round(forecastData.hourly.temperature_2m[i])
+                        var forecastZone = calculateZone(forecastAlti, forecastTemp)
+                        const forecastZoneColor = getZoneColor(forecastZone)
+                        forecastZone = forecastZone===0 ? '&#9471;' : (forecastZone==='LoP') ? 'LoP' : `&#1010${forecastZone+1}`
+                        rowPressureZone.childNodes[forecastCount].innerHTML = forecastZone
+                        rowPressureZone.childNodes[forecastCount].style.fontWeight = "bold";
+                        rowPressureZone.childNodes[forecastCount].style.color = forecastZoneColor
+
+                        // Set color for CAPE
+                        var CAPEvalue = forecastData.hourly.cape[i]
+                        var CAPEcolor = wwGrn
+                        if (CAPEvalue < 300) {CAPEcolor = wwGrn}
+                        else if (CAPEvalue < 450 ) {CAPEcolor = wwYlw}
+                        else if (CAPEvalue < 600) {CAPEcolor = wwOrg}
+                        else if (CAPEvalue >= 750) {CAPEcolor = wwRed}
+                        rowCAPE.childNodes[forecastCount].innerText = CAPEvalue
+                        rowCAPE.childNodes[forecastCount].style.color = CAPEcolor
+
+                        // Set color for LI
+                        /*  XCSkies references wikipedia as follows:
+                            LI 6 or Greater, Very Stable Conditions
+                            LI Between 1 and 6 : Stable Conditions, Thunderstorms Not Likely
+                            LI Between 0 and -2 : Slightly Unstable, Thunderstorms Possible, With Lifting Mechanism (i.e., cold front, daytime heating, ...)
+                            LI Between -2 and -6 : Unstable, Thunderstorms Likely, Some Severe With Lifting Mechanism
+                            LI Less Than -6: Very Unstable, Severe Thunderstorms Likely With Lifting Mechanism
+                            For safe and comfortable soaring, a typical rule is that an LI value of anything less than -2 is not going to be a very fun day. 
+                            Typical ranges of 2 through -2 tend to be good fair weather soaring conditions in areas of higher elevations.                       */
+                        var LIvalue = forecastData.hourly.lifted_index[i]
+                        var LIcolor = 'white'
+                        if (LIvalue > 6) {LIcolor = 'white'}
+                        else if (LIvalue > 1 ) {LIcolor = wwGrn}
+                        else if (LIvalue > -2 ) {LIcolor = wwYlw}
+                        else if (LIvalue > -6 ) {LIcolor = wwOrg}
+                        else if (LIvalue <= -6 ) {LIcolor = wwRed}
+                        rowLI.childNodes[forecastCount].innerText = LIvalue
+                        rowLI.childNodes[forecastCount].style.color = LIcolor
+
                         // Populate cells with hourly forecast
                         rowTime             .childNodes[forecastCount].innerText = formattedHour
-                        rowWeatherCode      .childNodes[forecastCount].innerHTML = `<img src="prod/images/weather/` +
-                            weatherCodes[forecastData.hourly.weathercode[i]][1].Image + `.png" width="80">`
-                        rowCloudCover       .childNodes[forecastCount].innerText = forecastData.hourly.cloudcover[i] + "%"
-                        rowCloudCoverLow    .childNodes[forecastCount].innerText = forecastData.hourly.cloudcover_low[i] + "%"
-                        rowCloudCoverMid    .childNodes[forecastCount].innerText = forecastData.hourly.cloudcover_mid[i] + "%"
-                        rowCloudCoverHigh   .childNodes[forecastCount].innerText = forecastData.hourly.cloudcover_high[i] + "%"
-                        rowCAPE             .childNodes[forecastCount].innerText = forecastData.hourly.cape[i]
-                        rowLI               .childNodes[forecastCount].innerText = forecastData.hourly.lifted_index[i]
-                        rowPressureZone     .childNodes[forecastCount].innerText = forecastData.hourly.pressure_msl[i]
+                        rowCloudCover       .childNodes[forecastCount].innerText = forecastData.hourly.cloudcover[i]
+                        rowCloudCoverLow    .childNodes[forecastCount].innerText = forecastData.hourly.cloudcover_low[i]
+                        rowCloudCoverMid    .childNodes[forecastCount].innerText = forecastData.hourly.cloudcover_mid[i]
+                        rowCloudCoverHigh   .childNodes[forecastCount].innerText = forecastData.hourly.cloudcover_high[i]
                         rowTemp2m           .childNodes[forecastCount].innerText = Math.round(forecastData.hourly.temperature_2m[i]) + `\u00B0`
 
                         // Build and populate wind forecast values at each pressure level (and surface levels)

@@ -116,19 +116,43 @@ hr.dash { border: 3px dashed white !important; }
   padding-left: 20px;
   padding-right: 20px;
 }
-/* Container for site forecast table */
+/* Styles for site forecast table */
 .forecast-table-container {
   overflow-x: scroll;
 }
 table {
   border-collapse: collapse;
   width: 100%;
+  white-space: nowrap;
 }
-th, tr, td {
+tr {
+  border: 1px solid; 
+  border-color: white;
+  text-align: left;
+}
+th {
+  border: 1px solid; 
+  border-color: white;
+  text-align: center;
+}
+td {
   border: 1px solid; 
   border-color: white;
   padding: 8px;
-  text-align: left;
+  text-align: center;
+  white-space: nowrap;
+}
+th:first-child,
+td:first-child {
+	position: sticky;
+	left: 0;
+	z-index: 1;
+	background-color: #000000;
+}
+/* Thicker borders between forecast categories */
+table tr:nth-of-type(2), table tr:nth-of-type(7), table tr:nth-of-type(10), table tr:nth-of-type(21) {
+	border-bottom: 5px solid;
+  border-color: #0dcaf0;
 }
 /* Class for table cells that will have only a portion (wind direction arrow) rotated */
 .rotatedWindDir {
