@@ -91,42 +91,59 @@ function doCORSRequest(options, result) {
 })();
 
 // Load prior navigation from local storage (if exists due to hitting reload button)
-if ( window.sessionStorage.getItem('currentDiv') ) { 
-    toggleDiv( window.sessionStorage.getItem('currentDiv') ) 
+if ( window.localStorage.getItem('currentDiv') ) { 
+    toggleDiv( window.localStorage.getItem('currentDiv') ) 
 }
 // If local storage didn't exist, display default page
 else { toggleDiv(currentDiv) }
 
 // Load prior map from local storage (if exists due to hitting reload button)
-if ( window.sessionStorage.getItem('currentMap') ) { 
-    currentMap = window.sessionStorage.getItem('currentMap')
+if ( window.localStorage.getItem('currentMap') ) { 
+    currentMap = window.localStorage.getItem('currentMap')
     // Sites.js will display the correct map after the map Divs are created
 }
 
 // Load prior returnToPage and site if reload occurred on site detail page
 if ( currentDiv === 'Site Details' ) {
-    if ( window.sessionStorage.getItem('returnToPage') ) { 
-        returnToPage = window.sessionStorage.getItem('returnToPage') 
+    if ( window.localStorage.getItem('returnToPage') ) { 
+        returnToPage = window.localStorage.getItem('returnToPage') 
     }
-    if ( window.sessionStorage.getItem('currentSite') ) { 
-        currentSite = window.sessionStorage.getItem('currentSite')
+    if ( window.localStorage.getItem('currentSite') ) { 
+        currentSite = window.localStorage.getItem('currentSite')
     }
     // Note that siteDetail(currentSite) function is called at the end of the sites.js async function to repopulate page
 
 }
 
-// Functions to handle page navigation
-function reload() {
+// Reload the page when switching back to the browser
+// if more than 2 minutes have passed since last reload
+window.onfocus = function() {
+    var checkDateTime = new Date()
+    var ElapsedTime = ( checkDateTime - now ) / ( 1000  * 60 )  //convert milliseconds to minutes
+    if ( ElapsedTime >= 2 ) { location.reload() }
+  };
 
-    // Store current navigation in local storage for use after reload
-    window.sessionStorage.setItem('currentDiv', currentDiv)
-    window.sessionStorage.setItem('currentMap', currentMap)
-    window.sessionStorage.setItem('currentSite', currentSite)
-    window.sessionStorage.setItem('returnToPage', returnToPage)
+// Store current navigation in local storage for use after reload
+function storeNavSettings() {
+    window.localStorage.setItem('currentDiv', currentDiv)
+    window.localStorage.setItem('currentMap', currentMap)
+    window.localStorage.setItem('currentSite', currentSite)
+    window.localStorage.setItem('returnToPage', returnToPage)
+}
+
+// Handle reload button in browser
+window.onbeforeunload = function() {
+    storeNavSettings()
+}
+
+// Handle refresh button in page
+function reload() {
+    storeNavSettings()
     history.scrollRestoration = 'manual'
     location.reload()
 }
 
+// Handle navigation from page menu
 function toggleDiv(newDiv) {
     document.getElementById(currentDiv).style.display = 'none'
     currentDiv = newDiv

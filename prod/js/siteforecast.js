@@ -39,28 +39,43 @@ var forecastTableBuilt = false  /* Only build the table data cells the first tim
 // Get forecast data for site
 async function siteForecast(site) {
 
+    // Un-hide all wind and vvel rows in case a previous forecast hid those below surface + 10m
+    rowWind900.style.display = `table-row`
+    rowWind850.style.display = `table-row`
+    rowWind800.style.display = `table-row`
+    rowWind750.style.display = `table-row`
+    rowWind700.style.display = `table-row`
+    rowWind650.style.display = `table-row`
+    rowWind600.style.display = `table-row`
+    rowWind550.style.display = `table-row`
+    rowWind500.style.display = `table-row`
+    rowVVel900.style.display = `table-row`
+    rowVVel850.style.display = `table-row`
+    rowVVel800.style.display = `table-row`
+    rowVVel750.style.display = `table-row`
+    rowVVel700.style.display = `table-row`
+    rowVVel650.style.display = `table-row`
+    rowVVel600.style.display = `table-row`
+    rowVVel550.style.display = `table-row`
+    rowVVel500.style.display = `table-row` 
+
     // If there was a previous site forecast, delete all of the previous cells except for column 0 (prototype cells).
     // This approach is taken to prevent any issues if different forecasts have a different number of hourly forecasts
     // or if the days cover a different number of hourly forecast (colspan for the header).
     // It also ensure no leftover data is displayed.
     var rows = tableID.rows
     for (var i = 0; i < rows.length; i++) {
+
+        // Un-hide and reset header row in case it was updated to group forecasts by date
+        rows[i].cells.colSpan = 1
+        rows[i].style.display = `table-row`
+
+         // Delete cells after column 0
         var cells = rows[i].cells
         for (var j = cells.length - 1; j > 0; j--) {
             rows[i].deleteCell(j);  // delete the cell
         }
     }
-
-    // Un-hide all wind rows in case a previous forecast hid those below surface + 80m
-    rowWind900.style.visibility = `visible`
-    rowWind850.style.visibility = `visible`
-    rowWind800.style.visibility = `visible`
-    rowWind750.style.visibility = `visible`
-    rowWind700.style.visibility = `visible`
-    rowWind650.style.visibility = `visible`
-    rowWind600.style.visibility = `visible`
-    rowWind550.style.visibility = `visible`
-    rowWind500.style.visibility = `visible`
 
     // Find site data for the selected site
     var detailSiteData = siteData.find(item => item.SiteID === site)
@@ -332,17 +347,28 @@ async function siteForecast(site) {
             rowWind850.childNodes[0].innerText = rowVVel850.childNodes[0].innerText = wind850Alt.toLocaleString()
             rowWind900.childNodes[0].innerText = rowVVel900.childNodes[0].innerText = wind900Alt.toLocaleString()
 
-            // Hide wind and vvel reading rows where the altitude is less than surface + 80m
-            var surfaceAlt80m =  (forecastData.elevation + 80) * 3.28084  // converts meters to feet
-            if ( wind900Alt <= surfaceAlt80m ) { rowWind900.style.visibility = rowVVel900.style.visibility = `collapse` }
-            if ( wind850Alt <= surfaceAlt80m ) { rowWind850.style.visibility = rowVVel850.style.visibility = `collapse` }
-            if ( wind800Alt <= surfaceAlt80m ) { rowWind800.style.visibility = rowVVel800.style.visibility = `collapse` }
-            if ( wind750Alt <= surfaceAlt80m ) { rowWind750.style.visibility = rowVVel750.style.visibility = `collapse` }
-            if ( wind700Alt <= surfaceAlt80m ) { rowWind700.style.visibility = rowVVel700.style.visibility = `collapse` }
-            if ( wind650Alt <= surfaceAlt80m ) { rowWind650.style.visibility = rowVVel650.style.visibility = `collapse` }
-            if ( wind600Alt <= surfaceAlt80m ) { rowWind600.style.visibility = rowVVel600.style.visibility = `collapse` }
-            if ( wind550Alt <= surfaceAlt80m ) { rowWind550.style.visibility = rowVVel550.style.visibility = `collapse` }
-            if ( wind500Alt <= surfaceAlt80m ) { rowWind500.style.visibility = rowVVel500.style.visibility = `collapse` }
+            // Hide wind and vvel reading rows where the altitude is less than surface + 10m
+            var surfaceAlt10m =  (forecastData.elevation + 10) * 3.28084  // converts meters to feet
+/*
+            if ( wind900Alt <= surfaceAlt10m ) { rowWind900.style.visibility = rowVVel900.style.visibility = `collapse` }
+            if ( wind850Alt <= surfaceAlt10m ) { rowWind850.style.visibility = rowVVel850.style.visibility = `collapse` }
+            if ( wind800Alt <= surfaceAlt10m ) { rowWind800.style.visibility = rowVVel800.style.visibility = `collapse` }
+            if ( wind750Alt <= surfaceAlt10m ) { rowWind750.style.visibility = rowVVel750.style.visibility = `collapse` }
+            if ( wind700Alt <= surfaceAlt10m ) { rowWind700.style.visibility = rowVVel700.style.visibility = `collapse` }
+            if ( wind650Alt <= surfaceAlt10m ) { rowWind650.style.visibility = rowVVel650.style.visibility = `collapse` }
+            if ( wind600Alt <= surfaceAlt10m ) { rowWind600.style.visibility = rowVVel600.style.visibility = `collapse` }
+            if ( wind550Alt <= surfaceAlt10m ) { rowWind550.style.visibility = rowVVel550.style.visibility = `collapse` }
+            if ( wind500Alt <= surfaceAlt10m ) { rowWind500.style.visibility = rowVVel500.style.visibility = `collapse` }
+*/
+            if ( wind900Alt <= surfaceAlt10m ) { rowWind900.style.display = rowVVel900.style.display = `none` }
+            if ( wind850Alt <= surfaceAlt10m ) { rowWind850.style.display = rowVVel850.style.display = `none` }
+            if ( wind800Alt <= surfaceAlt10m ) { rowWind800.style.display = rowVVel800.style.display = `none` }
+            if ( wind750Alt <= surfaceAlt10m ) { rowWind750.style.display = rowVVel750.style.display = `none` }
+            if ( wind700Alt <= surfaceAlt10m ) { rowWind700.style.display = rowVVel700.style.display = `none` }
+            if ( wind650Alt <= surfaceAlt10m ) { rowWind650.style.display = rowVVel650.style.display = `none` }
+            if ( wind600Alt <= surfaceAlt10m ) { rowWind600.style.display = rowVVel600.style.display = `none` }
+            if ( wind550Alt <= surfaceAlt10m ) { rowWind550.style.display = rowVVel550.style.display = `none` }
+            if ( wind500Alt <= surfaceAlt10m ) { rowWind500.style.display = rowVVel500.style.display = `none` }
 
         } catch (error) { 
             console.log('Error processing forecastData: ' + error )

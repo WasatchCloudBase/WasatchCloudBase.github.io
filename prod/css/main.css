@@ -132,6 +132,7 @@ tr {
 }
 th {
   text-align: center;
+  overflow: hidden;
 }
 td {
   border: 1px solid; 
@@ -139,6 +140,7 @@ td {
   padding: 8px;
   text-align: center;
   white-space: nowrap;
+  overflow: hidden;
 }
 th:first-child,
 td:first-child {
