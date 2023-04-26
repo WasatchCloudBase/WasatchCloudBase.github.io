@@ -131,8 +131,6 @@ tr {
   text-align: left;
 }
 th {
-  border: 1px solid; 
-  border-color: white;
   text-align: center;
 }
 td {
@@ -150,7 +148,7 @@ td:first-child {
 	background-color: #000000;
 }
 /* Thicker borders between forecast categories */
-table tr:nth-of-type(2), table tr:nth-of-type(7), table tr:nth-of-type(10), table tr:nth-of-type(21) {
+table tr:nth-of-type(5), table tr:nth-of-type(8), table tr:nth-of-type(19) {
 	border-bottom: 5px solid;
   border-color: #0dcaf0;
 }

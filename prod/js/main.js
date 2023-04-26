@@ -44,6 +44,7 @@ function doCORSRequest(options, result) {
 
 // GET SUNRISE AND SUNSET FOR SLC AIRPORT
 (async () => {
+
     //  example url = 'https://api.sunrise-sunset.org/json?lat=40.7862&lng=-111.9801&date=2022-09-09'
     const ISO_format_today = now.toISOString().substring(0,10)
     const url = `https://api.sunrise-sunset.org/json?lat=40.7862&lng=-111.9801&date=` + ISO_format_today

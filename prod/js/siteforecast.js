@@ -12,19 +12,28 @@ const rowCloudCoverMid  = tableRows[5]
 const rowCloudCoverHigh = tableRows[6]
 const rowCAPE           = tableRows[7]
 const rowLI             = tableRows[8]
-const rowPressureZone   = tableRows[9]
-const rowWind500        = tableRows[10]
-const rowWind550        = tableRows[11]
-const rowWind600        = tableRows[12]
-const rowWind650        = tableRows[13]
-const rowWind700        = tableRows[14]
-const rowWind750        = tableRows[15]
-const rowWind800        = tableRows[16]
-const rowWind850        = tableRows[17]
-const rowWind900        = tableRows[18]
-const rowWind80m        = tableRows[19]
-const rowWind10m        = tableRows[20]
-const rowTemp2m         = tableRows[21]
+const rowVVel500        = tableRows[9]
+const rowVVel550        = tableRows[10]
+const rowVVel600        = tableRows[11]
+const rowVVel650        = tableRows[12]
+const rowVVel700        = tableRows[13]
+const rowVVel750        = tableRows[14]
+const rowVVel800        = tableRows[15]
+const rowVVel850        = tableRows[16]
+const rowVVel900        = tableRows[17]
+const rowPressureZone   = tableRows[18]
+const rowWind500        = tableRows[19]
+const rowWind550        = tableRows[20]
+const rowWind600        = tableRows[21]
+const rowWind650        = tableRows[22]
+const rowWind700        = tableRows[23]
+const rowWind750        = tableRows[24]
+const rowWind800        = tableRows[25]
+const rowWind850        = tableRows[26]
+const rowWind900        = tableRows[27]
+const rowWind80m        = tableRows[28]
+const rowWind10m        = tableRows[29]
+const rowTemp2m         = tableRows[30]
 var forecastTableBuilt = false  /* Only build the table data cells the first time the function is called */
 
 // Get forecast data for site
@@ -117,15 +126,22 @@ async function siteForecast(site) {
                     if ( formattedHour >= sunrise_hour-1 && formattedHour <= sunset_hour + 13 && relativeForecastTime >= -1 ) {
                         forecastCount = forecastCount + 1
 
-                        // Convert 24 hour format to 12 hour format
-                        if ( formattedHour > 12 ) { formattedHour = formattedHour - 12 }
-
                         // Create a new column (e.g., cell for each row) to store the current hourly forecast
                         // (only create on the first call; otherwise reset the column span for headers)
                         for (let rowi=0; rowi<tableRows.length; rowi++) {
                             var tableData = document.createElement(`td`)
                             tableData.id = tableRows[rowi].id + '-' + i
                             tableRows[rowi].appendChild(tableData)
+                        }
+
+                        // Convert 24 hour format to 12 hour format and display
+                        if ( formattedHour > 12 ) { 
+                            formattedHour = formattedHour - 12
+                            rowTime.childNodes[forecastCount].innerText = formattedHour.toString() + 'pm' 
+                        } else if ( formattedHour == 12 ) { 
+                            rowTime.childNodes[forecastCount].innerText = formattedHour.toString() + 'pm' 
+                        } else {
+                            rowTime.childNodes[forecastCount].innerText = formattedHour.toString() + 'am' 
                         }
 
                         // Determine weather code based on value and, if it shows as cloudy, then based on cloud coverage %
@@ -138,16 +154,6 @@ async function siteForecast(site) {
                             else { weatherCodeValue = 1 }                                               // Partly cloudy
                         }
                         rowWeatherCode.childNodes[forecastCount].innerHTML = `<img src="prod/images/weather/` + weatherCodes[weatherCodeValue][1].Image + `.png" width="80">`
-
-                        // Convert pressure from hPa to inHg and find pressure zone
-                        const forecastAlti = parseFloat(forecastData.hourly.pressure_msl[i]).toFixed(2) / 33.863886666667
-                        const forecastTemp = Math.round(forecastData.hourly.temperature_2m[i])
-                        var forecastZone = calculateZone(forecastAlti, forecastTemp)
-                        const forecastZoneColor = getZoneColor(forecastZone)
-                        forecastZone = forecastZone===0 ? '&#9471;' : (forecastZone==='LoP') ? 'LoP' : `&#1010${forecastZone+1}`
-                        rowPressureZone.childNodes[forecastCount].innerHTML = forecastZone
-                        rowPressureZone.childNodes[forecastCount].style.fontWeight = "bold";
-                        rowPressureZone.childNodes[forecastCount].style.color = forecastZoneColor
 
                         // Set color for CAPE
                         var CAPEvalue = forecastData.hourly.cape[i]
@@ -178,8 +184,46 @@ async function siteForecast(site) {
                         rowLI.childNodes[forecastCount].innerText = LIvalue
                         rowLI.childNodes[forecastCount].style.color = LIcolor
 
+                        // Set color and display vertical velocity at each pressure level
+                        // 500 hPa
+                        rowVVel500.childNodes[forecastCount].innerText = forecastData.hourly.vertical_velocity_500hPa[i]
+                        rowVVel500.childNodes[forecastCount].style.color = getVVelColor(forecastData.hourly.vertical_velocity_500hPa[i])
+                        // 550 hPa
+                        rowVVel550.childNodes[forecastCount].innerText = forecastData.hourly.vertical_velocity_550hPa[i]
+                        rowVVel550.childNodes[forecastCount].style.color = getVVelColor(forecastData.hourly.vertical_velocity_550hPa[i])
+                        // 600 hPa
+                        rowVVel600.childNodes[forecastCount].innerText = forecastData.hourly.vertical_velocity_600hPa[i]
+                        rowVVel600.childNodes[forecastCount].style.color = getVVelColor(forecastData.hourly.vertical_velocity_600hPa[i])
+                        // 650 hPa
+                        rowVVel650.childNodes[forecastCount].innerText = forecastData.hourly.vertical_velocity_650hPa[i]
+                        rowVVel650.childNodes[forecastCount].style.color = getVVelColor(forecastData.hourly.vertical_velocity_650hPa[i])
+                        // 700 hPa
+                        rowVVel700.childNodes[forecastCount].innerText = forecastData.hourly.vertical_velocity_700hPa[i]
+                        rowVVel700.childNodes[forecastCount].style.color = getVVelColor(forecastData.hourly.vertical_velocity_700hPa[i])
+                        // 750 hPa
+                        rowVVel750.childNodes[forecastCount].innerText = forecastData.hourly.vertical_velocity_750hPa[i]
+                        rowVVel750.childNodes[forecastCount].style.color = getVVelColor(forecastData.hourly.vertical_velocity_750hPa[i])
+                        // 800 hPa
+                        rowVVel800.childNodes[forecastCount].innerText = forecastData.hourly.vertical_velocity_800hPa[i]
+                        rowVVel800.childNodes[forecastCount].style.color = getVVelColor(forecastData.hourly.vertical_velocity_800hPa[i])
+                        // 850 hPa
+                        rowVVel850.childNodes[forecastCount].innerText = forecastData.hourly.vertical_velocity_850hPa[i]
+                        rowVVel850.childNodes[forecastCount].style.color = getVVelColor(forecastData.hourly.vertical_velocity_850hPa[i])
+                        // 900 hPa
+                        rowVVel900.childNodes[forecastCount].innerText = forecastData.hourly.vertical_velocity_900hPa[i]
+                        rowVVel900.childNodes[forecastCount].style.color = getVVelColor(forecastData.hourly.vertical_velocity_900hPa[i])
+
+                        // Convert pressure from hPa to inHg and find pressure zone
+                        const forecastAlti = parseFloat(forecastData.hourly.pressure_msl[i]).toFixed(2) / 33.863886666667
+                        const forecastTemp = Math.round(forecastData.hourly.temperature_2m[i])
+                        var forecastZone = calculateZone(forecastAlti, forecastTemp)
+                        const forecastZoneColor = getZoneColor(forecastZone)
+                        forecastZone = forecastZone===0 ? '&#9471;' : (forecastZone==='LoP') ? 'LoP' : `&#1010${forecastZone+1}`
+                        rowPressureZone.childNodes[forecastCount].innerHTML = forecastZone
+                        rowPressureZone.childNodes[forecastCount].style.fontWeight = "bold";
+                        rowPressureZone.childNodes[forecastCount].style.color = forecastZoneColor
+
                         // Populate cells with hourly forecast
-                        rowTime             .childNodes[forecastCount].innerText = formattedHour
                         rowCloudCover       .childNodes[forecastCount].innerText = forecastData.hourly.cloudcover[i]
                         rowCloudCoverLow    .childNodes[forecastCount].innerText = forecastData.hourly.cloudcover_low[i]
                         rowCloudCoverMid    .childNodes[forecastCount].innerText = forecastData.hourly.cloudcover_mid[i]
@@ -242,6 +286,12 @@ async function siteForecast(site) {
                             rowDate.childNodes[forecastCount].innerText = formattedDate
                             previousDateStart = forecastCount
                             previousDate = formattedDate
+
+                            // Set a distinct border when the date changes
+                            tableRows[0].getElementsByTagName("td")[forecastCount].style.borderRight = "3px solid yellow"
+                            for (let rowi=1; rowi<tableRows.length; rowi++) {
+                                tableRows[rowi].getElementsByTagName("td")[forecastCount-1].style.borderRight = "3px solid yellow"
+                            }    
                         }
 
                         // Add up the geopotential height for each pressure (will be used to calculate an average below)
@@ -271,28 +321,28 @@ async function siteForecast(site) {
             var wind850Alt = Math.round((height_850_sum / forecastCount)/100)*100
             var wind900Alt = Math.round((height_900_sum / forecastCount)/100)*100
             
-            // Display average geopotential heights as row headers (and displayed with commas)
-            rowWind500      .childNodes[0].innerText = wind500Alt.toLocaleString()
-            rowWind550      .childNodes[0].innerText = wind550Alt.toLocaleString()
-            rowWind600      .childNodes[0].innerText = wind600Alt.toLocaleString()
-            rowWind650      .childNodes[0].innerText = wind650Alt.toLocaleString()
-            rowWind700      .childNodes[0].innerText = wind700Alt.toLocaleString()
-            rowWind750      .childNodes[0].innerText = wind750Alt.toLocaleString()
-            rowWind800      .childNodes[0].innerText = wind800Alt.toLocaleString()
-            rowWind850      .childNodes[0].innerText = wind850Alt.toLocaleString()
-            rowWind900      .childNodes[0].innerText = wind900Alt.toLocaleString()
+            // Display average geopotential heights as row headers for wind and vvel (and displayed with commas)
+            rowWind500.childNodes[0].innerText = rowVVel500.childNodes[0].innerText = wind500Alt.toLocaleString()
+            rowWind550.childNodes[0].innerText = rowVVel550.childNodes[0].innerText = wind550Alt.toLocaleString()
+            rowWind600.childNodes[0].innerText = rowVVel600.childNodes[0].innerText = wind600Alt.toLocaleString()
+            rowWind650.childNodes[0].innerText = rowVVel650.childNodes[0].innerText = wind650Alt.toLocaleString()
+            rowWind700.childNodes[0].innerText = rowVVel700.childNodes[0].innerText = wind700Alt.toLocaleString()
+            rowWind750.childNodes[0].innerText = rowVVel750.childNodes[0].innerText = wind750Alt.toLocaleString()
+            rowWind800.childNodes[0].innerText = rowVVel800.childNodes[0].innerText = wind800Alt.toLocaleString()
+            rowWind850.childNodes[0].innerText = rowVVel850.childNodes[0].innerText = wind850Alt.toLocaleString()
+            rowWind900.childNodes[0].innerText = rowVVel900.childNodes[0].innerText = wind900Alt.toLocaleString()
 
-            // Hide wind reading rows where the altitude is less than surface + 80m
+            // Hide wind and vvel reading rows where the altitude is less than surface + 80m
             var surfaceAlt80m =  (forecastData.elevation + 80) * 3.28084  // converts meters to feet
-            if ( wind900Alt <= surfaceAlt80m ) { rowWind900.style.visibility = `collapse` }
-            if ( wind850Alt <= surfaceAlt80m ) { rowWind850.style.visibility = `collapse` }
-            if ( wind800Alt <= surfaceAlt80m ) { rowWind800.style.visibility = `collapse` }
-            if ( wind750Alt <= surfaceAlt80m ) { rowWind750.style.visibility = `collapse` }
-            if ( wind700Alt <= surfaceAlt80m ) { rowWind700.style.visibility = `collapse` }
-            if ( wind650Alt <= surfaceAlt80m ) { rowWind650.style.visibility = `collapse` }
-            if ( wind600Alt <= surfaceAlt80m ) { rowWind600.style.visibility = `collapse` }
-            if ( wind550Alt <= surfaceAlt80m ) { rowWind550.style.visibility = `collapse` }
-            if ( wind500Alt <= surfaceAlt80m ) { rowWind500.style.visibility = `collapse` }
+            if ( wind900Alt <= surfaceAlt80m ) { rowWind900.style.visibility = rowVVel900.style.visibility = `collapse` }
+            if ( wind850Alt <= surfaceAlt80m ) { rowWind850.style.visibility = rowVVel850.style.visibility = `collapse` }
+            if ( wind800Alt <= surfaceAlt80m ) { rowWind800.style.visibility = rowVVel800.style.visibility = `collapse` }
+            if ( wind750Alt <= surfaceAlt80m ) { rowWind750.style.visibility = rowVVel750.style.visibility = `collapse` }
+            if ( wind700Alt <= surfaceAlt80m ) { rowWind700.style.visibility = rowVVel700.style.visibility = `collapse` }
+            if ( wind650Alt <= surfaceAlt80m ) { rowWind650.style.visibility = rowVVel650.style.visibility = `collapse` }
+            if ( wind600Alt <= surfaceAlt80m ) { rowWind600.style.visibility = rowVVel600.style.visibility = `collapse` }
+            if ( wind550Alt <= surfaceAlt80m ) { rowWind550.style.visibility = rowVVel550.style.visibility = `collapse` }
+            if ( wind500Alt <= surfaceAlt80m ) { rowWind500.style.visibility = rowVVel500.style.visibility = `collapse` }
 
         } catch (error) { 
             console.log('Error processing forecastData: ' + error )
@@ -300,7 +350,16 @@ async function siteForecast(site) {
     }
 }
 
-function buildWindDisplay( windSpeed, windDir, windGust, siteType )
+function getVVelColor ( vvel ) {
+    var VVelcolor = 'white'
+    if (vvel < 0) {return 'white'}
+    else if (vvel < 3 ) {return wwGrn}
+    else if (vvel < 4 ) {return wwYlw}
+    else if (vvel < 6 ) {return wwOrg}
+    else if (vvel >= 6 ) {return wwRed}
+}
+
+function buildWindDisplay ( windSpeed, windDir, windGust, siteType )
 // Returns an object: { windDisplay (format # g#), windDirDisplay (image), windDirTransform (string to send to style.transform for span displaySpanID) }
 {
     var windDisplay = ''

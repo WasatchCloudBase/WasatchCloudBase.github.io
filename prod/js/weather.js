@@ -135,8 +135,9 @@ function WeatherStreetBack() {
 // Get graphical forecast images
 (async () => {
     const url = 'https://graphical.weather.gov/images/slc/'
-    const timeStr = (now.getHours()>18 || now.getHours()<7) ? 5 : 1
-    const nextDay = now.getHours()>18 ? `( ${new Date(now.setHours(now.getHours()+24)).toLocaleString('en-us', {weekday: 'short'})} )` : null
+    const forecastDate = new Date()
+    const timeStr = (forecastDate.getHours()>18 || forecastDate.getHours()<7) ? 5 : 1
+    const nextDay = forecastDate.getHours()>18 ? `( ${new Date(forecastDate.setHours(forecastDate.getHours()+24)).toLocaleString('en-us', {weekday: 'short'})} )` : null
     document.getElementById('sky-next-day').innerHTML = nextDay
     for (let i=0; i<4; i++) {
         document.getElementById(`graphical-sky-${i}`).src = `${url}Sky${timeStr+i}_slc.png`
