@@ -116,11 +116,11 @@ if ( currentDiv === 'Site Details' ) {
 }
 
 // Reload the page when switching back to the browser
-// if more than 2 minutes have passed since last reload
+// if more than 5 minutes have passed since last reload
 window.onfocus = function() {
     var checkDateTime = new Date()
     var ElapsedTime = ( checkDateTime - now ) / ( 1000  * 60 )  //convert milliseconds to minutes
-    if ( ElapsedTime >= 2 ) { location.reload() }
+    if ( ElapsedTime >= 5 ) { location.reload() }
   };
 
 // Store current navigation in local storage for use after reload

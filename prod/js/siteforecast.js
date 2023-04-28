@@ -6,34 +6,38 @@ const tableRows         = tableID.getElementsByTagName(`tr`)
 const rowDate           = tableRows[0]
 const rowTime           = tableRows[1]
 const rowWeatherCode    = tableRows[2]
-const rowCloudCover     = tableRows[3]
-const rowCloudCoverLow  = tableRows[4]
-const rowCloudCoverMid  = tableRows[5]
-const rowCloudCoverHigh = tableRows[6]
-const rowCAPE           = tableRows[7]
-const rowLI             = tableRows[8]
-const rowVVel500        = tableRows[9]
-const rowVVel550        = tableRows[10]
-const rowVVel600        = tableRows[11]
-const rowVVel650        = tableRows[12]
-const rowVVel700        = tableRows[13]
-const rowVVel750        = tableRows[14]
-const rowVVel800        = tableRows[15]
-const rowVVel850        = tableRows[16]
-const rowVVel900        = tableRows[17]
-const rowPressureZone   = tableRows[18]
-const rowWind500        = tableRows[19]
-const rowWind550        = tableRows[20]
-const rowWind600        = tableRows[21]
-const rowWind650        = tableRows[22]
-const rowWind700        = tableRows[23]
-const rowWind750        = tableRows[24]
-const rowWind800        = tableRows[25]
-const rowWind850        = tableRows[26]
-const rowWind900        = tableRows[27]
-const rowWind80m        = tableRows[28]
-const rowWind10m        = tableRows[29]
-const rowTemp2m         = tableRows[30]
+const rowTemp2m         = tableRows[3]
+const rowCloudCover     = tableRows[4]
+const rowCloudCoverLow  = tableRows[5]
+const rowCloudCoverMid  = tableRows[6]
+const rowCloudCoverHigh = tableRows[7]
+const rowCAPE           = tableRows[8]
+const rowLI             = tableRows[9]
+const rowDateThermal    = tableRows[10]
+const rowTimeThermal    = tableRows[11]
+const rowVVel500        = tableRows[12]
+const rowVVel550        = tableRows[13]
+const rowVVel600        = tableRows[14]
+const rowVVel650        = tableRows[15]
+const rowVVel700        = tableRows[16]
+const rowVVel750        = tableRows[17]
+const rowVVel800        = tableRows[18]
+const rowVVel850        = tableRows[19]
+const rowVVel900        = tableRows[20]
+const rowPressureZone   = tableRows[21]
+const rowDateWind       = tableRows[22]
+const rowTimeWind       = tableRows[23]
+const rowWind500        = tableRows[24]
+const rowWind550        = tableRows[25]
+const rowWind600        = tableRows[26]
+const rowWind650        = tableRows[27]
+const rowWind700        = tableRows[28]
+const rowWind750        = tableRows[29]
+const rowWind800        = tableRows[30]
+const rowWind850        = tableRows[31]
+const rowWind900        = tableRows[32]
+const rowWind80m        = tableRows[33]
+const rowWind10m        = tableRows[34]
 var forecastTableBuilt = false  /* Only build the table data cells the first time the function is called */
 
 // Get forecast data for site
@@ -150,14 +154,13 @@ async function siteForecast(site) {
                         }
 
                         // Convert 24 hour format to 12 hour format and display
-                        if ( formattedHour > 12 ) { 
-                            formattedHour = formattedHour - 12
-                            rowTime.childNodes[forecastCount].innerText = formattedHour.toString() + 'pm' 
-                        } else if ( formattedHour == 12 ) { 
-                            rowTime.childNodes[forecastCount].innerText = formattedHour.toString() + 'pm' 
-                        } else {
-                            rowTime.childNodes[forecastCount].innerText = formattedHour.toString() + 'am' 
-                        }
+                        var DisplayHour = ''
+                        if ( formattedHour > 12 ) { DisplayHour = (formattedHour - 12).toString() + 'pm' } 
+                        else if ( formattedHour == 12 ) { DisplayHour = formattedHour.toString() + 'pm' } 
+                        else { DisplayHour = formattedHour.toString() + 'am' }
+                        rowTime.childNodes[forecastCount].innerText = DisplayHour
+                        rowTimeThermal.childNodes[forecastCount].innerText = DisplayHour
+                        rowTimeWind.childNodes[forecastCount].innerText = DisplayHour
 
                         // Determine weather code based on value and, if it shows as cloudy, then based on cloud coverage %
                         var weatherCodeValue = forecastData.hourly.weathercode[i]
@@ -296,17 +299,26 @@ async function siteForecast(site) {
                         if ( formattedDate === previousDate ) {
                             rowDate.childNodes[previousDateStart].colSpan = rowDate.childNodes[previousDateStart].colSpan + 1
                             rowDate.childNodes[forecastCount].style.display = `none`
+                            rowDateThermal.childNodes[previousDateStart].colSpan = rowDateThermal.childNodes[previousDateStart].colSpan + 1
+                            rowDateThermal.childNodes[forecastCount].style.display = `none`
+                            rowDateWind.childNodes[previousDateStart].colSpan = rowDateWind.childNodes[previousDateStart].colSpan + 1
+                            rowDateWind.childNodes[forecastCount].style.display = `none`
                         } else
                         {
                             rowDate.childNodes[forecastCount].innerText = formattedDate
+                            rowDateThermal.childNodes[forecastCount].innerText = formattedDate
+                            rowDateWind.childNodes[forecastCount].innerText = formattedDate
+
                             previousDateStart = forecastCount
                             previousDate = formattedDate
 
-                            // Set a distinct border when the date changes
-                            tableRows[0].getElementsByTagName("td")[forecastCount].style.borderRight = "3px solid yellow"
+                            // Set a distinct border when the date changes for date/time header rows and all data rows
                             for (let rowi=1; rowi<tableRows.length; rowi++) {
-                                tableRows[rowi].getElementsByTagName("td")[forecastCount-1].style.borderRight = "3px solid yellow"
+                                tableRows[rowi].childNodes[forecastCount-1].style.borderRight = "2px solid yellow"
                             }    
+                            // Remove yellow border for date rows only
+                            rowDateThermal.childNodes[forecastCount-1].style.borderRight = "2px solid black"
+                            rowDateWind.childNodes[forecastCount-1].style.borderRight = "2px solid black"
                         }
 
                         // Add up the geopotential height for each pressure (will be used to calculate an average below)
@@ -335,7 +347,7 @@ async function siteForecast(site) {
             var wind800Alt = Math.round((height_800_sum / forecastCount)/100)*100
             var wind850Alt = Math.round((height_850_sum / forecastCount)/100)*100
             var wind900Alt = Math.round((height_900_sum / forecastCount)/100)*100
-            
+          
             // Display average geopotential heights as row headers for wind and vvel (and displayed with commas)
             rowWind500.childNodes[0].innerText = rowVVel500.childNodes[0].innerText = wind500Alt.toLocaleString()
             rowWind550.childNodes[0].innerText = rowVVel550.childNodes[0].innerText = wind550Alt.toLocaleString()
@@ -349,17 +361,6 @@ async function siteForecast(site) {
 
             // Hide wind and vvel reading rows where the altitude is less than surface + 10m
             var surfaceAlt10m =  (forecastData.elevation + 10) * 3.28084  // converts meters to feet
-/*
-            if ( wind900Alt <= surfaceAlt10m ) { rowWind900.style.visibility = rowVVel900.style.visibility = `collapse` }
-            if ( wind850Alt <= surfaceAlt10m ) { rowWind850.style.visibility = rowVVel850.style.visibility = `collapse` }
-            if ( wind800Alt <= surfaceAlt10m ) { rowWind800.style.visibility = rowVVel800.style.visibility = `collapse` }
-            if ( wind750Alt <= surfaceAlt10m ) { rowWind750.style.visibility = rowVVel750.style.visibility = `collapse` }
-            if ( wind700Alt <= surfaceAlt10m ) { rowWind700.style.visibility = rowVVel700.style.visibility = `collapse` }
-            if ( wind650Alt <= surfaceAlt10m ) { rowWind650.style.visibility = rowVVel650.style.visibility = `collapse` }
-            if ( wind600Alt <= surfaceAlt10m ) { rowWind600.style.visibility = rowVVel600.style.visibility = `collapse` }
-            if ( wind550Alt <= surfaceAlt10m ) { rowWind550.style.visibility = rowVVel550.style.visibility = `collapse` }
-            if ( wind500Alt <= surfaceAlt10m ) { rowWind500.style.visibility = rowVVel500.style.visibility = `collapse` }
-*/
             if ( wind900Alt <= surfaceAlt10m ) { rowWind900.style.display = rowVVel900.style.display = `none` }
             if ( wind850Alt <= surfaceAlt10m ) { rowWind850.style.display = rowVVel850.style.display = `none` }
             if ( wind800Alt <= surfaceAlt10m ) { rowWind800.style.display = rowVVel800.style.display = `none` }
@@ -377,7 +378,6 @@ async function siteForecast(site) {
 }
 
 function getVVelColor ( vvel ) {
-    var VVelcolor = 'white'
     if (vvel < 0) {return 'white'}
     else if (vvel < 3 ) {return wwGrn}
     else if (vvel < 4 ) {return wwYlw}

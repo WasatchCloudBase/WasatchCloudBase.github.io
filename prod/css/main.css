@@ -97,6 +97,13 @@ hr.dash { border: 3px dashed white !important; }
   fill: white;
   font-size: 200%;
 }
+/* Make sure no divs open in front (e.g., of menu drop down) */
+.bring-to-front-1 {
+  z-index: 2;
+}
+.bring-to-front-2 {
+  z-index: 3;
+}
 /* Don't zoom in when pressing buttons mulitple times quickly */
 .disable-dbl-tap-zoom {
   touch-action: manipulation;
@@ -126,8 +133,8 @@ table {
   white-space: nowrap;
 }
 tr {
-  border: 1px solid; 
-  border-color: white;
+  border: 2px solid; 
+  border-color: black;
   text-align: left;
 }
 th {
@@ -135,8 +142,8 @@ th {
   overflow: hidden;
 }
 td {
-  border: 1px solid; 
-  border-color: white;
+  border: 2px solid; 
+  border-color: black;
   padding: 8px;
   text-align: center;
   white-space: nowrap;
@@ -146,14 +153,15 @@ th:first-child,
 td:first-child {
 	position: sticky;
 	left: 0;
-	z-index: 1;
-	background-color: #000000;
+  z-index: 1;
+	background-color: black;
 }
-/* Thicker borders between forecast categories */
-table tr:nth-of-type(5), table tr:nth-of-type(8), table tr:nth-of-type(19) {
-	border-bottom: 5px solid;
+/* Distinct borders between forecast categories */
+/*table tr:nth-of-type(4), table tr:nth-of-type(8), table tr:nth-of-type(19) {
+	border-bottom: 2px solid;
   border-color: #0dcaf0;
 }
+*/
 /* Class for table cells that will have only a portion (wind direction arrow) rotated */
 .rotatedWindDir {
   display: inline-block;

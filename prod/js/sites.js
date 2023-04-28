@@ -544,7 +544,8 @@ function calculateZone(alti, temp, currentZones = []) {
     const zoneIntercept = [29.91, 30.01, 30.11, 30.27, 30.43, 30.53, 30.65, 100]
     for (let i=0; i<zoneSlope.length; i++) currentZones.push(Math.round((zoneSlope[i]/-110*temp+zoneIntercept[i])*100)/100)
     const zone = currentZones.findIndex(d => d >= alti)
-    return alti===currentZones[3] ? 'LoP' : zone
+    // Original Wasatch Wind returned 'LoP' if alti===currentZones[3]; not sure why this was, so removed
+    return zone
 }
 
 // Set wind speed font and bar colors
