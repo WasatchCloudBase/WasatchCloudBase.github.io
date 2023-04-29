@@ -29,6 +29,7 @@ let liftParams = {}, maxTempF, soundingData = {}  // Defaults for decoded skew-T
 let sunrise_hour = ''
 let sunset_hour = ''
 let weatherCodes = ''
+let helpTopics = ''
 
 // Make CORS requests to external sites via proxy server
 function doCORSRequest(options, result) {
@@ -168,6 +169,9 @@ function toggleDiv(newDiv) {
         // Update the returnToPage to current page
         returnToPage = newDiv 
     }
+
+    // Hide the help pop up (in case it was visible)
+    document.getElementById(`Forecast Help Info`).style.display = 'none'
 }
 
 function siteDetail(site) {
@@ -176,6 +180,10 @@ function siteDetail(site) {
 };
 
 function returnFromSiteDetail() {
+    // Hide the help pop up (in case it was visible)
+    document.getElementById(`Forecast Help Info`).style.display = 'none'
+
+    // Navigate back
     toggleDiv(returnToPage)
 };
 
@@ -206,10 +214,56 @@ function toggleMap(newMap) {
     document.getElementById('current-map').innerText = document.getElementById(`${newMap}-name`).innerText
     // Display new map
     document.getElementById(newMap).style.display = 'block'
-
     // Update site list page
     document.getElementById(currentMap + `-site-list`).style.display = 'none'
     document.getElementById(newMap + `-site-list`).style.display = 'block'
-
     currentMap = newMap
+}
+
+// Load forecast help info
+(async () => {
+
+    // Retrieve forecast help data in JSON format from Google sheets API
+    // Maintain forecast help data here:  https://docs.google.com/spreadsheets/d/1nBEJuTCWkUidSFKQjBjcJgKeteC_oy8LqL2P7uhGyLQ/edit#gid=2058004785
+    var help_data_url = "https://sheets.googleapis.com/v4/spreadsheets/1nBEJuTCWkUidSFKQjBjcJgKeteC_oy8LqL2P7uhGyLQ/values/HelpInfo/?alt=json" +
+        "&key=AIzaSyDSro1lDdAQsNEZq06IxwjOlQQP1tip-fs"
+    var response = await fetch(help_data_url)
+    var helpRawJSON = await response.json()
+    if (helpRawJSON) {
+
+        // Convert first row (headers) to JSON keys
+        var helpData = setJSONKeys(helpRawJSON.values)
+
+        // Build and populate each link div
+        for (let i=0; i<helpData.length; i++) {
+            try {
+                // Build array of help topic titles and text
+                helpTopics = Object.entries(helpData)
+            } catch (error) { 
+                console.log('Help build error: ' + error + ' for help topic: ' + helpData[i].helpTopicID)
+            }
+        }
+    }
+})();
+
+// Handle click to display forecast help info (clicked on forecast table row headings)
+function helpInfo(infoType) {
+    document.getElementById(`Forecast Help Info`).style.display = 'block'
+
+    // Find help topic in the arry
+    for (let i=0; i<helpTopics.length; i++) {
+        try {
+            if ( helpTopics[i][1].HelpTopicID === infoType ) {
+                document.getElementById(`forecast-help-topic`).innerHTML = helpTopics[i][1].HelpTitle
+                document.getElementById(`forecast-help-text`).innerText = helpTopics[i][1].HelpText
+            }
+        } catch (error) { 
+            console.log('Help processing and display error: ' + error + ' for help topic: ' + infoType)
+        }
+    }
+}
+
+// Close forecast table help pop up when clicked
+function closeHelpInfo() {
+    document.getElementById(`Forecast Help Info`).style.display = 'none'
 }

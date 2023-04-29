@@ -13,31 +13,32 @@ const rowCloudCoverMid  = tableRows[6]
 const rowCloudCoverHigh = tableRows[7]
 const rowCAPE           = tableRows[8]
 const rowLI             = tableRows[9]
-const rowDateThermal    = tableRows[10]
-const rowTimeThermal    = tableRows[11]
-const rowVVel500        = tableRows[12]
-const rowVVel550        = tableRows[13]
-const rowVVel600        = tableRows[14]
-const rowVVel650        = tableRows[15]
-const rowVVel700        = tableRows[16]
-const rowVVel750        = tableRows[17]
-const rowVVel800        = tableRows[18]
-const rowVVel850        = tableRows[19]
-const rowVVel900        = tableRows[20]
-const rowPressureZone   = tableRows[21]
-const rowDateWind       = tableRows[22]
-const rowTimeWind       = tableRows[23]
-const rowWind500        = tableRows[24]
-const rowWind550        = tableRows[25]
-const rowWind600        = tableRows[26]
-const rowWind650        = tableRows[27]
-const rowWind700        = tableRows[28]
-const rowWind750        = tableRows[29]
-const rowWind800        = tableRows[30]
-const rowWind850        = tableRows[31]
-const rowWind900        = tableRows[32]
-const rowWind80m        = tableRows[33]
-const rowWind10m        = tableRows[34]
+const rowKI             = tableRows[10]
+const rowDateThermal    = tableRows[11]
+const rowTimeThermal    = tableRows[12]
+const rowVVel500        = tableRows[13]
+const rowVVel550        = tableRows[14]
+const rowVVel600        = tableRows[15]
+const rowVVel650        = tableRows[16]
+const rowVVel700        = tableRows[17]
+const rowVVel750        = tableRows[18]
+const rowVVel800        = tableRows[19]
+const rowVVel850        = tableRows[20]
+const rowVVel900        = tableRows[21]
+const rowPressureZone   = tableRows[22]
+const rowDateWind       = tableRows[23]
+const rowTimeWind       = tableRows[24]
+const rowWind500        = tableRows[25]
+const rowWind550        = tableRows[26]
+const rowWind600        = tableRows[27]
+const rowWind650        = tableRows[28]
+const rowWind700        = tableRows[29]
+const rowWind750        = tableRows[30]
+const rowWind800        = tableRows[31]
+const rowWind850        = tableRows[32]
+const rowWind900        = tableRows[33]
+const rowWind80m        = tableRows[34]
+const rowWind10m        = tableRows[35]
 var forecastTableBuilt = false  /* Only build the table data cells the first time the function is called */
 
 // Get forecast data for site
@@ -173,34 +174,21 @@ async function siteForecast(site) {
                         }
                         rowWeatherCode.childNodes[forecastCount].innerHTML = `<img src="prod/images/weather/` + weatherCodes[weatherCodeValue][1].Image + `.png" width="80">`
 
-                        // Set color for CAPE
+                        // Set value and color for CAPE
                         var CAPEvalue = forecastData.hourly.cape[i]
-                        var CAPEcolor = wwGrn
-                        if (CAPEvalue < 300) {CAPEcolor = wwGrn}
-                        else if (CAPEvalue < 450 ) {CAPEcolor = wwYlw}
-                        else if (CAPEvalue < 600) {CAPEcolor = wwOrg}
-                        else if (CAPEvalue >= 750) {CAPEcolor = wwRed}
                         rowCAPE.childNodes[forecastCount].innerText = CAPEvalue
-                        rowCAPE.childNodes[forecastCount].style.color = CAPEcolor
+                        rowCAPE.childNodes[forecastCount].style.color = getCAPEColor(CAPEvalue) 
 
-                        // Set color for LI
-                        /*  XCSkies references wikipedia as follows:
-                            LI 6 or Greater, Very Stable Conditions
-                            LI Between 1 and 6 : Stable Conditions, Thunderstorms Not Likely
-                            LI Between 0 and -2 : Slightly Unstable, Thunderstorms Possible, With Lifting Mechanism (i.e., cold front, daytime heating, ...)
-                            LI Between -2 and -6 : Unstable, Thunderstorms Likely, Some Severe With Lifting Mechanism
-                            LI Less Than -6: Very Unstable, Severe Thunderstorms Likely With Lifting Mechanism
-                            For safe and comfortable soaring, a typical rule is that an LI value of anything less than -2 is not going to be a very fun day. 
-                            Typical ranges of 2 through -2 tend to be good fair weather soaring conditions in areas of higher elevations.                       */
+                        // Set color and value for LI
                         var LIvalue = forecastData.hourly.lifted_index[i]
-                        var LIcolor = 'white'
-                        if (LIvalue > 6) {LIcolor = 'white'}
-                        else if (LIvalue > 1 ) {LIcolor = wwGrn}
-                        else if (LIvalue > -2 ) {LIcolor = wwYlw}
-                        else if (LIvalue > -6 ) {LIcolor = wwOrg}
-                        else if (LIvalue <= -6 ) {LIcolor = wwRed}
-                        rowLI.childNodes[forecastCount].innerText = LIvalue
-                        rowLI.childNodes[forecastCount].style.color = LIcolor
+                        rowLI.childNodes[forecastCount].innerText = Math.round(LIvalue)
+                        rowLI.childNodes[forecastCount].style.color = getLIColor(LIvalue)
+
+                        // Set value and color for K-index
+                        var KIvalue = getKIndex (parseFloat(forecastData.hourly.temperature_850hPa[i]), parseFloat(forecastData.hourly.temperature_700hPa[i]),
+                            parseFloat(forecastData.hourly.temperature_500hPa[i]), parseFloat(forecastData.hourly.dewpoint_850hPa[i]), parseFloat(forecastData.hourly.dewpoint_700hPa[i]))
+                        rowKI.childNodes[forecastCount].innerText = Math.round(KIvalue)
+                        rowKI.childNodes[forecastCount].style.color = getKIndexColor(KIvalue)
 
                         // Set color and display vertical velocity at each pressure level
                         // 500 hPa
@@ -241,11 +229,11 @@ async function siteForecast(site) {
                         rowPressureZone.childNodes[forecastCount].style.fontWeight = "bold";
                         rowPressureZone.childNodes[forecastCount].style.color = forecastZoneColor
 
-                        // Populate cells with hourly forecast
-                        rowCloudCover       .childNodes[forecastCount].innerText = forecastData.hourly.cloudcover[i]
-                        rowCloudCoverLow    .childNodes[forecastCount].innerText = forecastData.hourly.cloudcover_low[i]
-                        rowCloudCoverMid    .childNodes[forecastCount].innerText = forecastData.hourly.cloudcover_mid[i]
-                        rowCloudCoverHigh   .childNodes[forecastCount].innerText = forecastData.hourly.cloudcover_high[i]
+                        // Populate cells with hourly forecast (display '-' if clouds are 0%)
+                        rowCloudCover       .childNodes[forecastCount].innerText = (forecastData.hourly.cloudcover[i]>0) ? forecastData.hourly.cloudcover[i] : '-'
+                        rowCloudCoverLow    .childNodes[forecastCount].innerText = (forecastData.hourly.cloudcover_low[i]>0) ? forecastData.hourly.cloudcover_low[i] : '-'
+                        rowCloudCoverMid    .childNodes[forecastCount].innerText = (forecastData.hourly.cloudcover_mid[i]>0) ? forecastData.hourly.cloudcover_mid[i] : '-'
+                        rowCloudCoverHigh   .childNodes[forecastCount].innerText = (forecastData.hourly.cloudcover_high[i]>0) ? forecastData.hourly.cloudcover_high[i] : '-'
                         rowTemp2m           .childNodes[forecastCount].innerText = Math.round(forecastData.hourly.temperature_2m[i]) + `\u00B0`
 
                         // Build and populate wind forecast values at each pressure level (and surface levels)
@@ -383,6 +371,66 @@ function getVVelColor ( vvel ) {
     else if (vvel < 4 ) {return wwYlw}
     else if (vvel < 6 ) {return wwOrg}
     else if (vvel >= 6 ) {return wwRed}
+}
+
+function getCAPEColor ( CAPEvalue ) {
+/* NEED TO VALIDATE VALUES; XCSkies is very different.
+    CAPE below 0: Stable.
+    CAPE = 0 to 1000: Marginally unstable.
+    CAPE = 1000 to 2500: Moderately unstable.
+    CAPE = 2500 to 3500: Very unstable.
+    CAPE above 3500-4000: Extremely unstable.
+This function uses Lisa V's guidance isntead as below:
+*/
+    if (CAPEvalue < 300) {return wwGrn}
+    else if (CAPEvalue < 600 ) {return wwYlw}
+    else if (CAPEvalue < 800) {return wwOrg}
+    else if (CAPEvalue >= 800) {return wwRed}
+}
+
+function getLIColor ( LIvalue ) {
+/*  XCSkies references wikipedia as follows:
+    LI 6 or Greater, Very Stable Conditions
+    LI Between 1 and 6 : Stable Conditions, Thunderstorms Not Likely
+    LI Between 0 and -2 : Slightly Unstable, Thunderstorms Possible, With Lifting Mechanism (i.e., cold front, daytime heating, ...)
+    LI Between -2 and -6 : Unstable, Thunderstorms Likely, Some Severe With Lifting Mechanism
+    LI Less Than -6: Very Unstable, Severe Thunderstorms Likely With Lifting Mechanism
+    For safe and comfortable soaring, a typical rule is that an LI value of anything less than -2 is not going to be a very fun day. 
+    Typical ranges of 2 through -2 tend to be good fair weather soaring conditions in areas of higher elevations.                       */
+    if (LIvalue > 6) {return 'white'}
+    else if (LIvalue > 1 ) {return wwGrn}
+    else if (LIvalue > -2 ) {return wwYlw}
+    else if (LIvalue > -6 ) {return wwOrg}
+    else if (LIvalue <= -6 ) {return wwRed}
+}    
+
+function getKIndex ( temp850, temp700, temp500, td850, td700 ) {
+/* From Wikipedia:
+    K = (T850 - T500) + Td850 - (T700 - Td700)
+    T = temp (C) at pressure level
+    Td = dew point temp (C) at pressure level
+*/
+    return ( (tempFtoC(temp850)-tempFtoC(temp500)) + tempFtoC(td850) - (tempFtoC(temp700)-tempFtoC(td700)) )
+}
+
+function getKIndexColor ( KIndex ) {
+/* From Wikipedia:
+    K-index value (in °C)	Thunderstorm Probability            Lisa V's ratings
+    Less than 20	        None                                Below -10 is a stable airmass; 10 to +20 is best for soaring
+    20 to 25	            Isolated thunderstorms              >20 is likely overdevelopment
+    26 to 30	            Widely scattered thunderstorms      >25 is very likely overdevelopment
+    31 to 35	            Scattered thunderstorms             >30 will overdevelop
+    Above 35	            Numerous thunderstorms
+*/
+    if (KIndex < -10) {return 'white'}
+    else if (KIndex < 20 ) {return wwGrn}
+    else if (KIndex < 25 ) {return wwYlw}
+    else if (KIndex < 30 ) {return wwOrg}
+    else if (KIndex >= 30 ) {return wwRed}
+}
+
+function tempFtoC ( tempF ) {
+    return ( tempF - 32 ) / 1.8
 }
 
 function buildWindDisplay ( windSpeed, windDir, windGust, siteType )

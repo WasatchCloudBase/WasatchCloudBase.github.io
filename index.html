@@ -20,7 +20,7 @@
 
 <body>
     <!-- Page title and menu -->
-    <div class="container-fluid sticky-top bg-heading bring-to-front-1">
+    <div class="container-fluid sticky-top bg-heading bring-to-front-2">
         <div class="row align-items-center d-flex justify-content-around mb-2">
             <div class="col-auto"><img src="prod/images/Sun_icon_gold_black_canvas.png" height="50" width="50"></div>
             <div class="col-auto display-5 fs-1 align-self-center text-warning" id="sunrise_time"></div>
@@ -48,7 +48,7 @@
         </div>
 
         <!-- SITE LIST AND SITE MAP REGION DROP DOWN DIV ######################################################################################################################################################## -->
-        <div class="collapse sticky-top pb-4 bring-to-front-2" id="Site Map Select">
+        <div class="collapse sticky-top pb-4 bring-to-front-3" id="Site Map Select">
             <div class="dropdown text-start border border-info rounded-4 bg-dark mx-5 mt-4">
                 <div class="row">
                     <button class="col-auto btn-MapMenu border-0 fw-bold display-3 text-info bg-dark my-2 mx-5" id="btn-MapMenu" onclick="MapMenu()">&#9776;&#9662;</button>
@@ -62,7 +62,7 @@
         <!-- SITE LIST AND SITE MAP REGION DROP DOWN DIV ######################################################################################################################################################## -->
 
         <!-- SITE DETAILS BACK-TO-PRIOR-PAGE AND SITE GUIDE LINK STICKY BUTTONS -->
-        <div class="collapse sticky-top container-fluid bring-to-front-2" id="Site Details buttons">
+        <div class="collapse sticky-top container-fluid bring-to-front-3" id="Site Details buttons">
             <div class="row">
                 <div class="col clickable disable-dbl-tap-zoom border border-info bg-dark rounded-4 my-3 py-2" onclick="returnFromSiteDetail()">
                     <div class="text-info pb-2 display-5" id="site-details-return">Return to site map/list</div>
@@ -127,6 +127,14 @@
 
     <!-- SITE DETAILS DIV ################################################################################################################################################ -->
     <div class="collapse mb-div-end" id="Site Details">
+
+        <!-- "pop up" for detailed info on forecast table row headings -->
+        <div class="collapse container help-info clickable text-start border border-info rounded-4 display-1 bg-dark px-5 py-3 mx-2 my-2 fs-1" 
+                id="Forecast Help Info" onclick="closeHelpInfo()">
+            <div class="text-info text-center align-items-center display-3 py-3" id="forecast-help-topic">Topic heading</div>
+            <div class="" id="forecast-help-text"> Topic body</div>
+            <div class="text-center align-items-center py-3 text-warning"> Click this box to close</div>
+        </div>
 
         <!-- SITE DETAILS WIND READING HISTORY  (12 MOST RECENT READINGS)-->
         <div class="container-fluid display-3">Wind History</div>
@@ -300,14 +308,15 @@
                 <tbody>
                     <tr class="text-info bg-black" id="forecastDate"><td></td></tr>
                     <tr class="text-info bg-black" id="forecastTime"><td></td></tr>
-                    <tr id="weatherCode"><td>Skies</td></tr>
+                    <tr id="weatherCode"><td class="clickable text-decoration-underline" onclick="helpInfo('forecast-skies')">Skies</td></tr>
                     <tr id="surfaceTemp"><td>Temp</td></tr>
                     <tr id="cloudCover"><td>Cloud %</td></tr>
                     <tr id="cloudCoverHigh"><td>High %</td></tr>
                     <tr id="cloudCoverMid"><td>Mid %</td></tr>
                     <tr id="cloudCoverLow"><td>Low %</td></tr>
-                    <tr id="CAPE"><td>CAPE</td></tr>
-                    <tr id="liftedIndex"><td>LI</td></tr>
+                    <tr id="CAPE"><td class="clickable text-decoration-underline" onclick="helpInfo('forecast-CAPE')">CAPE</td></tr>
+                    <tr id="liftedIndex"><td class="clickable text-decoration-underline" onclick="helpInfo('forecast-LI')">LI</td></tr>
+                    <tr id="KIndex"><td class="clickable text-decoration-underline" onclick="helpInfo('forecast-KI')">K Index</td></tr>
                     <tr class="text-info bg-black" id="forecastDate-thermal"><td></td></tr>
                     <tr class="text-info bg-black" id="forecastTime-thermal"><td>Lift</td></tr>
                     <tr id="vvel500"><td>vv500hPa</td></tr>
@@ -335,20 +344,6 @@
                     <tr id="surface10m"><td>10m</td></tr>
                 </tbody>
             </table>
-        </div>
-
-        <!-- PLACEHOLDER FOR FUTURE SITE DETAIL SECTIONS -->
-        <div class="collapse">
-            <!-- SITE WIND FORECAST -->
-            <div class="container-fluid display-3 mt-4">Wind Forecast (various alts over time)</div>
-
-            <!-- SITE LIFT FORECAST -->
-            <div class="container-fluid display-3 mt-4">Lift Forecast (various alts over time)</div>
-            <div class="container-fluid display-3 mt-4">Also pressure zone and temp over time</div>
-            <div class="container-fluid display-3 mt-4">Also clouds over time</div>
-            <div class="container-fluid display-3 mt-4">Also CAPE (below 300 good), LI (0 to -1 best) over time</div>
-            <div class="container-fluid display-3 mt-4">If possible, TI, TOL, -3 TOP, lapse rate over time</div>
-            <div class="container-fluid display-3 mt-4">If possible, % humidity above cloudbase (XCSkies) (below 30% good)</div>
         </div>
 
     </div>    

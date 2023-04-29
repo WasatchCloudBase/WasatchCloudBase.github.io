@@ -387,135 +387,137 @@ function siteDetailContent(site) {
     }
 
     // Populate history wind readings
-    for (let i=0; i<siteReadingsData.date_time.length; i++) {
+    if ( siteReadingsData.date_time ) {
+        for (let i=0; i<siteReadingsData.date_time.length; i++) {
 
-        // Remove trailing characters (am/pm) and show reading time
-        var siteTime = siteReadingsData.date_time[i].toLowerCase()
-        var site_time_space_position = siteTime.search(" ")
-        siteTime = siteTime.substring(0,site_time_space_position)
-        if (siteTime) { document.getElementById(`site-details-history-time-${i}`).innerHTML = siteTime }
+            // Remove trailing characters (am/pm) and show reading time
+            var siteTime = siteReadingsData.date_time[i].toLowerCase()
+            var site_time_space_position = siteTime.search(" ")
+            siteTime = siteTime.substring(0,site_time_space_position)
+            if (siteTime) { document.getElementById(`site-details-history-time-${i}`).innerHTML = siteTime }
 
-        // Show wind speed (or calm) and set color based on speed and type of site
-        var readingWind = 0
-        if (siteReadingsData.wind_speed_set_1) {
-            readingWind = siteReadingsData.wind_speed_set_1[i]
-            var readingWindDisplay = ''
-            if (Math.round(readingWind) >= 1) { readingWindDisplay = Math.round(readingWind) }
-            else { readingWindDisplay = '<span class="fs-3 fw-normal">Calm</span>'}
-            var siteWindColor = windColor(readingWind, detailSiteData.SiteType)
-            document.getElementById(`site-details-history-wind-${i}`).innerHTML = readingWindDisplay
-            document.getElementById(`site-details-history-wind-${i}`).style.color = siteWindColor
-            document.getElementById(`site-details-history-wbar-${i}`).style.height = `${readingWind * 3}px`
-            document.getElementById(`site-details-history-wbar-${i}`).style.backgroundColor = siteWindColor
-            document.getElementById(`site-details-history-break-${i}`).style.height = `5px`
-            document.getElementById(`site-details-history-reading-${i}`).style.display = 'block'
-        }
-
-        // Show wind gust speed (hidden if missing)
-        var readingGust = 0
-        if (siteReadingsData.wind_gust_set_1) {
-            readingGust = siteReadingsData.wind_gust_set_1[i]
-            if (Math.round(readingGust) >= 1) { 
-                readingGust = Math.round(readingGust)
-                var siteGustColor = windColor(readingGust, detailSiteData.SiteType)
-                document.getElementById(`site-details-history-gust-${i}`).innerText = `g` + readingGust
-                document.getElementById(`site-details-history-gust-${i}`).style.color = siteGustColor
-                var readingGustDiff = (readingGust - readingWind)
-                document.getElementById(`site-details-history-gbar-${i}`).style.height = `${readingGustDiff * 3}px`
-                document.getElementById(`site-details-history-gbar-${i}`).style.backgroundColor = siteGustColor
-                document.getElementById(`site-details-history-gust-${i}`).style.display = 'block'
-                document.getElementById(`site-details-history-gbar-${i}`).style.display = 'block'
+            // Show wind speed (or calm) and set color based on speed and type of site
+            var readingWind = 0
+            if (siteReadingsData.wind_speed_set_1) {
+                readingWind = siteReadingsData.wind_speed_set_1[i]
+                var readingWindDisplay = ''
+                if (Math.round(readingWind) >= 1) { readingWindDisplay = Math.round(readingWind) }
+                else { readingWindDisplay = '<span class="fs-3 fw-normal">Calm</span>'}
+                var siteWindColor = windColor(readingWind, detailSiteData.SiteType)
+                document.getElementById(`site-details-history-wind-${i}`).innerHTML = readingWindDisplay
+                document.getElementById(`site-details-history-wind-${i}`).style.color = siteWindColor
+                document.getElementById(`site-details-history-wbar-${i}`).style.height = `${readingWind * 3}px`
+                document.getElementById(`site-details-history-wbar-${i}`).style.backgroundColor = siteWindColor
+                document.getElementById(`site-details-history-break-${i}`).style.height = `5px`
+                document.getElementById(`site-details-history-reading-${i}`).style.display = 'block'
             }
-            else { 
-                document.getElementById(`site-details-history-gust-${i}`).style.display = 'none' 
-                document.getElementById(`site-details-history-gbar-${i}`).style.height = `0px`
-                document.getElementById(`site-details-history-gbar-${i}`).style.display = 'none' 
-            }
-        }
 
-        // Show wind direction
-        if (siteReadingsData.wind_direction_set_1) {
-            var readingWindDir = siteReadingsData.wind_direction_set_1[i]
-            var readingWindImage = '&nbsp;'
-            var readingWindDirRotation = 0
-            if (readingWindDir >= 0) { 
-                readingWindDirRotation = readingWindDir + 90
-                readingWindImage = '&#10148;' 
-            }
-            // Only display wind direction if there is wind or gust; otherwise display space (null causes incorrect spacing on page)
-            document.getElementById(`site-details-history-wdir-${i}`).innerHTML = `&nbsp;`
-            if ( Math.round(readingWind) >= 1 || Math.round(readingGust) >= 1 ) {
-                document.getElementById(`site-details-history-wdir-${i}`).innerHTML = readingWindImage
-                document.getElementById(`site-details-history-wdir-${i}`).style.transform = `rotate(${readingWindDirRotation}deg)`
-            }
-        }
-
-    }
-
-    // Hide remaining history DIVs if fewer than 10 readings
-    for (let i=siteReadingsData.date_time.length; i<10; i++) {
-        document.getElementById(`site-details-history-reading-${i}`).style.display = 'none'
-    }
-
-    // Show pressure zone for airport sites only
-    if ( detailSiteData.SiteType === `Airport` ) {
-        // Show pressure history DIV
-        document.getElementById(`site-details-pressure-title`).style.display = 'block'
-        document.getElementById(`site-details-pressure-block`).style.display = 'block'
-        document.getElementById(`site-details-pressure-info`).style.display = 'block'
-
-        // Update link to full history URL
-        document.getElementById(`site-details-pressure-href`).href = 
-        `https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=${detailSiteData.ReadingsStation}&table=1&banner=off`
-    
-
-        // Find site pressure observations in pressureReadingsData array for the selected site
-        var pressureSiteReadingsData = {}
-        for (let i=0; i<pressureReadingsData.length; i++) {
-            if ( pressureReadingsData[i].stid === detailSiteData.ReadingsStation ) { 
-                pressureSiteReadingsData = pressureReadingsData[i] 
-            }
-        }
-
-        if (pressureSiteReadingsData.altimeter_set_1) {
-            // Create arrays to store hourly pressure readings to be displayed (hourly; not every pressure reading is displayed)
-            var time=[], alti=[], temp=[]
-
-            // Read each pressure reading and add pressure readings hourly to the array based on the minutes specified in the site info
-            for (let i=0; i<pressureSiteReadingsData.date_time.length; i++) {
-                if ( parseInt(pressureSiteReadingsData.date_time[i].slice(-5,-3),10) === parseInt(detailSiteData.PressureZoneReadingTime, 10) )
-                {
-                    time.push(pressureSiteReadingsData.date_time[i].toLowerCase().replace(/:\d{2}/g, ''))
-                    temp.push(`${Math.round(pressureSiteReadingsData.air_temp_set_1[i])}&deg;`)
-                    alti.push(pressureSiteReadingsData.altimeter_set_1[i].toFixed(2))
+            // Show wind gust speed (hidden if missing)
+            var readingGust = 0
+            if (siteReadingsData.wind_gust_set_1) {
+                readingGust = siteReadingsData.wind_gust_set_1[i]
+                if (Math.round(readingGust) >= 1) { 
+                    readingGust = Math.round(readingGust)
+                    var siteGustColor = windColor(readingGust, detailSiteData.SiteType)
+                    document.getElementById(`site-details-history-gust-${i}`).innerText = `g` + readingGust
+                    document.getElementById(`site-details-history-gust-${i}`).style.color = siteGustColor
+                    var readingGustDiff = (readingGust - readingWind)
+                    document.getElementById(`site-details-history-gbar-${i}`).style.height = `${readingGustDiff * 3}px`
+                    document.getElementById(`site-details-history-gbar-${i}`).style.backgroundColor = siteGustColor
+                    document.getElementById(`site-details-history-gust-${i}`).style.display = 'block'
+                    document.getElementById(`site-details-history-gbar-${i}`).style.display = 'block'
+                }
+                else { 
+                    document.getElementById(`site-details-history-gust-${i}`).style.display = 'none' 
+                    document.getElementById(`site-details-history-gbar-${i}`).style.height = `0px`
+                    document.getElementById(`site-details-history-gbar-${i}`).style.display = 'none' 
                 }
             }
 
-            // Limit to last 6 entries in arrays
-            time = time.slice(-6)
-            temp = temp.slice(-6)
-            alti = alti.slice(-6)
-
-            // Find height for bar chart
-            const min = Math.min(...alti)
-            const max = Math.max(...alti)
-            const barHeight = alti.map(d => `${(((d-min)*80)/(max-min))+10}px`)
-
-            for (let i=0; i<6; i++) {
-                var zDigit = calculateZone( parseFloat(alti[i]), parseInt(temp[i]) )
-                document.getElementById(`site-details-alti-${i}`).innerHTML = alti[i]
-                document.getElementById(`site-details-altibar-${i}`).style.height = barHeight[i]
-                document.getElementById(`site-details-temp-${i}`).innerHTML = temp[i]
-                document.getElementById(`site-details-zone-${i}`).style.color = getZoneColor(zDigit)
-                zDigit = zDigit===0 ? '&#9471;' : (zDigit==='LoP') ? 'LoP' : `&#1010${zDigit+1}`
-                document.getElementById(`site-details-zone-${i}`).innerHTML = zDigit
-                document.getElementById(`site-details-alti-time-${i}`).innerHTML = time[i]
+            // Show wind direction
+            if (siteReadingsData.wind_direction_set_1) {
+                var readingWindDir = siteReadingsData.wind_direction_set_1[i]
+                var readingWindImage = '&nbsp;'
+                var readingWindDirRotation = 0
+                if (readingWindDir >= 0) { 
+                    readingWindDirRotation = readingWindDir + 90
+                    readingWindImage = '&#10148;' 
+                }
+                // Only display wind direction if there is wind or gust; otherwise display space (null causes incorrect spacing on page)
+                document.getElementById(`site-details-history-wdir-${i}`).innerHTML = `&nbsp;`
+                if ( Math.round(readingWind) >= 1 || Math.round(readingGust) >= 1 ) {
+                    document.getElementById(`site-details-history-wdir-${i}`).innerHTML = readingWindImage
+                    document.getElementById(`site-details-history-wdir-${i}`).style.transform = `rotate(${readingWindDirRotation}deg)`
+                }
             }
+
         }
-    } else {
-        document.getElementById(`site-details-pressure-title`).style.display = 'none'
-        document.getElementById(`site-details-pressure-block`).style.display = 'none'
-        document.getElementById(`site-details-pressure-info`).style.display = 'none'
+
+        // Hide remaining history DIVs if fewer than 10 readings
+        for (let i=siteReadingsData.date_time.length; i<10; i++) {
+            document.getElementById(`site-details-history-reading-${i}`).style.display = 'none'
+        }
+
+        // Show pressure zone for airport sites only
+        if ( detailSiteData.SiteType === `Airport` ) {
+            // Show pressure history DIV
+            document.getElementById(`site-details-pressure-title`).style.display = 'block'
+            document.getElementById(`site-details-pressure-block`).style.display = 'block'
+            document.getElementById(`site-details-pressure-info`).style.display = 'block'
+
+            // Update link to full history URL
+            document.getElementById(`site-details-pressure-href`).href = 
+            `https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=${detailSiteData.ReadingsStation}&table=1&banner=off`
+        
+
+            // Find site pressure observations in pressureReadingsData array for the selected site
+            var pressureSiteReadingsData = {}
+            for (let i=0; i<pressureReadingsData.length; i++) {
+                if ( pressureReadingsData[i].stid === detailSiteData.ReadingsStation ) { 
+                    pressureSiteReadingsData = pressureReadingsData[i] 
+                }
+            }
+
+            if (pressureSiteReadingsData.altimeter_set_1) {
+                // Create arrays to store hourly pressure readings to be displayed (hourly; not every pressure reading is displayed)
+                var time=[], alti=[], temp=[]
+
+                // Read each pressure reading and add pressure readings hourly to the array based on the minutes specified in the site info
+                for (let i=0; i<pressureSiteReadingsData.date_time.length; i++) {
+                    if ( parseInt(pressureSiteReadingsData.date_time[i].slice(-5,-3),10) === parseInt(detailSiteData.PressureZoneReadingTime, 10) )
+                    {
+                        time.push(pressureSiteReadingsData.date_time[i].toLowerCase().replace(/:\d{2}/g, ''))
+                        temp.push(`${Math.round(pressureSiteReadingsData.air_temp_set_1[i])}&deg;`)
+                        alti.push(pressureSiteReadingsData.altimeter_set_1[i].toFixed(2))
+                    }
+                }
+
+                // Limit to last 6 entries in arrays
+                time = time.slice(-6)
+                temp = temp.slice(-6)
+                alti = alti.slice(-6)
+
+                // Find height for bar chart
+                const min = Math.min(...alti)
+                const max = Math.max(...alti)
+                const barHeight = alti.map(d => `${(((d-min)*80)/(max-min))+10}px`)
+
+                for (let i=0; i<6; i++) {
+                    var zDigit = calculateZone( parseFloat(alti[i]), parseInt(temp[i]) )
+                    document.getElementById(`site-details-alti-${i}`).innerHTML = alti[i]
+                    document.getElementById(`site-details-altibar-${i}`).style.height = barHeight[i]
+                    document.getElementById(`site-details-temp-${i}`).innerHTML = temp[i]
+                    document.getElementById(`site-details-zone-${i}`).style.color = getZoneColor(zDigit)
+                    zDigit = zDigit===0 ? '&#9471;' : (zDigit==='LoP') ? 'LoP' : `&#1010${zDigit+1}`
+                    document.getElementById(`site-details-zone-${i}`).innerHTML = zDigit
+                    document.getElementById(`site-details-alti-time-${i}`).innerHTML = time[i]
+                }
+            }
+        } else {
+            document.getElementById(`site-details-pressure-title`).style.display = 'none'
+            document.getElementById(`site-details-pressure-block`).style.display = 'none'
+            document.getElementById(`site-details-pressure-info`).style.display = 'none'
+        }
     }
 
     // Build site forecast

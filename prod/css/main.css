@@ -42,7 +42,6 @@ a:active {
 hr.dash { border: 3px dashed white !important; }
 .mb-div-end { margin-bottom: 8rem !important; }
 .wwborder { border-radius: 1rem !important; }
-
 /* D3 */
 .gridticks {
   color: lightgray;
@@ -97,16 +96,28 @@ hr.dash { border: 3px dashed white !important; }
   fill: white;
   font-size: 200%;
 }
-/* Make sure no divs open in front (e.g., of menu drop down) */
+/* Make sure no divs open in front (e.g., help info, menu drop down) */
 .bring-to-front-1 {
   z-index: 2;
 }
 .bring-to-front-2 {
   z-index: 3;
 }
+.bring-to-front-3 {
+  z-index: 4;
+}
 /* Don't zoom in when pressing buttons mulitple times quickly */
 .disable-dbl-tap-zoom {
   touch-action: manipulation;
+}
+/* Container for help info pop up */
+.help-info {
+  position: fixed;
+  background-color: black;
+  color: white;
+  padding-left: 20px;
+  padding-right: 20px;
+  z-index: 2;
 }
 /* Container for site map view */
 .map-container {
