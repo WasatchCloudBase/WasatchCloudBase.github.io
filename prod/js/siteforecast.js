@@ -6,63 +6,58 @@ const tableRows         = tableID.getElementsByTagName(`tr`)
 const rowDate           = tableRows[0]
 const rowTime           = tableRows[1]
 const rowWeatherCode    = tableRows[2]
-const rowTemp2m         = tableRows[3]
-const rowCloudCover     = tableRows[4]
-const rowCloudCoverLow  = tableRows[5]
-const rowCloudCoverMid  = tableRows[6]
-const rowCloudCoverHigh = tableRows[7]
-const rowCAPE           = tableRows[8]
-const rowLI             = tableRows[9]
-const rowKI             = tableRows[10]
-const rowDateThermal    = tableRows[11]
-const rowTimeThermal    = tableRows[12]
-const rowVVel500        = tableRows[13]
-const rowVVel550        = tableRows[14]
-const rowVVel600        = tableRows[15]
-const rowVVel650        = tableRows[16]
-const rowVVel700        = tableRows[17]
-const rowVVel750        = tableRows[18]
-const rowVVel800        = tableRows[19]
-const rowVVel850        = tableRows[20]
-const rowVVel900        = tableRows[21]
-const rowPressureZone   = tableRows[22]
-const rowDateWind       = tableRows[23]
-const rowTimeWind       = tableRows[24]
-const rowWind500        = tableRows[25]
-const rowWind550        = tableRows[26]
-const rowWind600        = tableRows[27]
-const rowWind650        = tableRows[28]
-const rowWind700        = tableRows[29]
-const rowWind750        = tableRows[30]
-const rowWind800        = tableRows[31]
-const rowWind850        = tableRows[32]
-const rowWind900        = tableRows[33]
-const rowWind80m        = tableRows[34]
-const rowWind10m        = tableRows[35]
+const rowPrecipProb     = tableRows[3]
+const rowTemp2m         = tableRows[4]
+const rowCloudCover     = tableRows[5]
+const rowCloudCoverLow  = tableRows[6]
+const rowCloudCoverMid  = tableRows[7]
+const rowCloudCoverHigh = tableRows[8]
+const rowCAPE           = tableRows[9]
+const rowLI             = tableRows[10]
+const rowKI             = tableRows[11]
+const rowDateWind       = tableRows[12]
+const rowTimeWind       = tableRows[13]
+const rowWind500        = tableRows[14]
+const rowWind550        = tableRows[15]
+const rowWind600        = tableRows[16]
+const rowWind650        = tableRows[17]
+const rowWind700        = tableRows[18]
+const rowWind750        = tableRows[19]
+const rowWind800        = tableRows[20]
+const rowWind850        = tableRows[21]
+const rowWind900        = tableRows[22]
+const rowWind950        = tableRows[23]
+const rowWind80m        = tableRows[24]
+const rowWind10m        = tableRows[25]
+const rowDateThermal    = tableRows[26]
+const rowTimeThermal    = tableRows[27]
+const rowVVel500        = tableRows[28]
+const rowVVel550        = tableRows[29]
+const rowVVel600        = tableRows[30]
+const rowVVel650        = tableRows[31]
+const rowVVel700        = tableRows[32]
+const rowVVel750        = tableRows[33]
+const rowVVel800        = tableRows[34]
+const rowVVel850        = tableRows[35]
+const rowVVel900        = tableRows[36]
+const rowVVel950        = tableRows[37]
+const rowPressureZone   = tableRows[38]
 var forecastTableBuilt = false  /* Only build the table data cells the first time the function is called */
 
 // Get forecast data for site
 async function siteForecast(site) {
 
     // Un-hide all wind and vvel rows in case a previous forecast hid those below surface + 10m
-    rowWind900.style.display = `table-row`
-    rowWind850.style.display = `table-row`
-    rowWind800.style.display = `table-row`
-    rowWind750.style.display = `table-row`
-    rowWind700.style.display = `table-row`
-    rowWind650.style.display = `table-row`
-    rowWind600.style.display = `table-row`
-    rowWind550.style.display = `table-row`
-    rowWind500.style.display = `table-row`
-    rowVVel900.style.display = `table-row`
-    rowVVel850.style.display = `table-row`
-    rowVVel800.style.display = `table-row`
-    rowVVel750.style.display = `table-row`
-    rowVVel700.style.display = `table-row`
-    rowVVel650.style.display = `table-row`
-    rowVVel600.style.display = `table-row`
-    rowVVel550.style.display = `table-row`
-    rowVVel500.style.display = `table-row` 
+    rowWind950.style.display = rowVVel950.style.display = `table-row`
+    rowWind900.style.display = rowVVel900.style.display = `table-row`
+    rowWind850.style.display = rowVVel850.style.display = `table-row`
+    rowWind800.style.display = rowVVel800.style.display = `table-row`
+    rowWind750.style.display = rowVVel750.style.display = `table-row`
+    rowWind700.style.display = rowVVel700.style.display = `table-row`
+    rowWind650.style.display = rowVVel650.style.display = `table-row`
+    rowWind600.style.display = rowVVel600.style.display = `table-row`
+    rowWind550.style.display = rowVVel550.style.display = `table-row`
+    rowWind500.style.display = rowVVel500.style.display = `table-row`
 
     // If there was a previous site forecast, delete all of the previous cells except for column 0 (prototype cells).
     // This approach is taken to prevent any issues if different forecasts have a different number of hourly forecasts
@@ -98,14 +93,15 @@ async function siteForecast(site) {
     "&hourly=temperature_2m,relativehumidity_2m,pressure_msl,surface_pressure," +
     "precipitation,precipitation_probability,weathercode,cloudcover,cloudcover_low,cloudcover_mid,cloudcover_high,cape,lifted_index," +
     "windspeed_10m,windspeed_80m,winddirection_10m,winddirection_80m,windgusts_10m," +
-    "temperature_900hPa,temperature_850hPa,temperature_800hPa,temperature_750hPa,temperature_700hPa,temperature_650hPa,temperature_600hPa,temperature_550hPa,temperature_500hPa," +
-    "dewpoint_900hPa,dewpoint_850hPa,dewpoint_800hPa,dewpoint_750hPa,dewpoint_700hPa,dewpoint_650hPa,dewpoint_600hPa,dewpoint_550hPa,dewpoint_500hPa," +
-    "windspeed_900hPa,windspeed_850hPa,windspeed_800hPa,windspeed_750hPa,windspeed_700hPa,windspeed_650hPa,windspeed_600hPa,windspeed_550hPa,windspeed_500hPa," +
-    "winddirection_900hPa,winddirection_850hPa,winddirection_800hPa,winddirection_750hPa,winddirection_700hPa,winddirection_650hPa,winddirection_600hPa,winddirection_550hPa,winddirection_500hPa," +
-    "vertical_velocity_900hPa,vertical_velocity_850hPa,vertical_velocity_800hPa,vertical_velocity_750hPa,vertical_velocity_700hPa,vertical_velocity_650hPa,vertical_velocity_600hPa,vertical_velocity_550hPa,vertical_velocity_500hPa," +
-    "geopotential_height_900hPa,geopotential_height_850hPa,geopotential_height_800hPa,geopotential_height_750hPa,geopotential_height_700hPa,geopotential_height_650hPa,geopotential_height_600hPa,geopotential_height_550hPa,geopotential_height_500hPa" +
+    "temperature_950hPa,temperature_900hPa,temperature_850hPa,temperature_800hPa,temperature_750hPa,temperature_700hPa,temperature_650hPa,temperature_600hPa,temperature_550hPa,temperature_500hPa," +
+    "dewpoint_950hPa,dewpoint_900hPa,dewpoint_850hPa,dewpoint_800hPa,dewpoint_750hPa,dewpoint_700hPa,dewpoint_650hPa,dewpoint_600hPa,dewpoint_550hPa,dewpoint_500hPa," +
+    "windspeed_950hPa,windspeed_900hPa,windspeed_850hPa,windspeed_800hPa,windspeed_750hPa,windspeed_700hPa,windspeed_650hPa,windspeed_600hPa,windspeed_550hPa,windspeed_500hPa," +
+    "winddirection_950hPa,winddirection_900hPa,winddirection_850hPa,winddirection_800hPa,winddirection_750hPa,winddirection_700hPa,winddirection_650hPa,winddirection_600hPa,winddirection_550hPa,winddirection_500hPa," +
+    "vertical_velocity_950hPa,vertical_velocity_900hPa,vertical_velocity_850hPa,vertical_velocity_800hPa,vertical_velocity_750hPa,vertical_velocity_700hPa,vertical_velocity_650hPa,vertical_velocity_600hPa,vertical_velocity_550hPa,vertical_velocity_500hPa," +
+    "geopotential_height_950hPa,geopotential_height_900hPa,geopotential_height_850hPa,geopotential_height_800hPa,geopotential_height_750hPa,geopotential_height_700hPa,geopotential_height_650hPa,geopotential_height_600hPa,geopotential_height_550hPa,geopotential_height_500hPa" +
     "&current_weather=true&temperature_unit=fahrenheit&windspeed_unit=mph&precipitation_unit=inch&timezone=America%2FDenver"
 
+    var height_950_sum = 0
     var height_900_sum = 0
     var height_850_sum = 0
     var height_800_sum = 0
@@ -191,33 +187,26 @@ async function siteForecast(site) {
                         rowKI.childNodes[forecastCount].style.color = getKIndexColor(KIvalue)
 
                         // Set color and display vertical velocity at each pressure level
-                        // 500 hPa
                         rowVVel500.childNodes[forecastCount].innerText = forecastData.hourly.vertical_velocity_500hPa[i]
                         rowVVel500.childNodes[forecastCount].style.color = getVVelColor(forecastData.hourly.vertical_velocity_500hPa[i])
-                        // 550 hPa
                         rowVVel550.childNodes[forecastCount].innerText = forecastData.hourly.vertical_velocity_550hPa[i]
                         rowVVel550.childNodes[forecastCount].style.color = getVVelColor(forecastData.hourly.vertical_velocity_550hPa[i])
-                        // 600 hPa
                         rowVVel600.childNodes[forecastCount].innerText = forecastData.hourly.vertical_velocity_600hPa[i]
                         rowVVel600.childNodes[forecastCount].style.color = getVVelColor(forecastData.hourly.vertical_velocity_600hPa[i])
-                        // 650 hPa
                         rowVVel650.childNodes[forecastCount].innerText = forecastData.hourly.vertical_velocity_650hPa[i]
                         rowVVel650.childNodes[forecastCount].style.color = getVVelColor(forecastData.hourly.vertical_velocity_650hPa[i])
-                        // 700 hPa
                         rowVVel700.childNodes[forecastCount].innerText = forecastData.hourly.vertical_velocity_700hPa[i]
                         rowVVel700.childNodes[forecastCount].style.color = getVVelColor(forecastData.hourly.vertical_velocity_700hPa[i])
-                        // 750 hPa
                         rowVVel750.childNodes[forecastCount].innerText = forecastData.hourly.vertical_velocity_750hPa[i]
                         rowVVel750.childNodes[forecastCount].style.color = getVVelColor(forecastData.hourly.vertical_velocity_750hPa[i])
-                        // 800 hPa
                         rowVVel800.childNodes[forecastCount].innerText = forecastData.hourly.vertical_velocity_800hPa[i]
                         rowVVel800.childNodes[forecastCount].style.color = getVVelColor(forecastData.hourly.vertical_velocity_800hPa[i])
-                        // 850 hPa
                         rowVVel850.childNodes[forecastCount].innerText = forecastData.hourly.vertical_velocity_850hPa[i]
                         rowVVel850.childNodes[forecastCount].style.color = getVVelColor(forecastData.hourly.vertical_velocity_850hPa[i])
-                        // 900 hPa
                         rowVVel900.childNodes[forecastCount].innerText = forecastData.hourly.vertical_velocity_900hPa[i]
                         rowVVel900.childNodes[forecastCount].style.color = getVVelColor(forecastData.hourly.vertical_velocity_900hPa[i])
+                        rowVVel950.childNodes[forecastCount].innerText = forecastData.hourly.vertical_velocity_950hPa[i]
+                        rowVVel950.childNodes[forecastCount].style.color = getVVelColor(forecastData.hourly.vertical_velocity_950hPa[i])
 
                         // Convert pressure from hPa to inHg and find pressure zone
                         const forecastAlti = parseFloat(forecastData.hourly.pressure_msl[i]).toFixed(2) / 33.863886666667
@@ -229,56 +218,52 @@ async function siteForecast(site) {
                         rowPressureZone.childNodes[forecastCount].style.fontWeight = "bold";
                         rowPressureZone.childNodes[forecastCount].style.color = forecastZoneColor
 
-                        // Populate cells with hourly forecast (display '-' if clouds are 0%)
+                        // Display cloud cover (display '-' if clouds are 0%)
                         rowCloudCover       .childNodes[forecastCount].innerText = (forecastData.hourly.cloudcover[i]>0) ? forecastData.hourly.cloudcover[i] : '-'
                         rowCloudCoverLow    .childNodes[forecastCount].innerText = (forecastData.hourly.cloudcover_low[i]>0) ? forecastData.hourly.cloudcover_low[i] : '-'
                         rowCloudCoverMid    .childNodes[forecastCount].innerText = (forecastData.hourly.cloudcover_mid[i]>0) ? forecastData.hourly.cloudcover_mid[i] : '-'
                         rowCloudCoverHigh   .childNodes[forecastCount].innerText = (forecastData.hourly.cloudcover_high[i]>0) ? forecastData.hourly.cloudcover_high[i] : '-'
-                        rowTemp2m           .childNodes[forecastCount].innerText = Math.round(forecastData.hourly.temperature_2m[i]) + `\u00B0`
 
-                        // Build and populate wind forecast values at each pressure level (and surface levels)
+                        // Display surface temp and precip probability %
+                        rowTemp2m           .childNodes[forecastCount].innerText = Math.round(forecastData.hourly.temperature_2m[i]) + `\u00B0`
+                        rowPrecipProb       .childNodes[forecastCount].innerText = (forecastData.hourly.precipitation_probability[i]>0) ? forecastData.hourly.precipitation_probability[i] : '-'
+                        rowPrecipProb       .childNodes[forecastCount].style.color = getPrecipProbColor(forecastData.hourly.precipitation_probability[i])
+
+                        // Build and display wind forecast values at each pressure level (and surface levels)
                         var fullWindDisplay = ''
-                        // 500 hPa
                         fullWindDisplay = buildWindDisplay(forecastData.hourly.windspeed_500hPa[i], forecastData.hourly.winddirection_500hPa[i], 0, detailSiteData.SiteType)
                         rowWind500      .childNodes[forecastCount].innerHTML = fullWindDisplay.windDisplay
                         rowWind500      .childNodes[forecastCount].getElementsByClassName("rotatedWindDir")[0].style.transform = fullWindDisplay.windDirTransform
-                        // 550 hPa
                         fullWindDisplay = buildWindDisplay(forecastData.hourly.windspeed_550hPa[i], forecastData.hourly.winddirection_550hPa[i], 0, detailSiteData.SiteType)
                         rowWind550      .childNodes[forecastCount].innerHTML = fullWindDisplay.windDisplay
                         rowWind550      .childNodes[forecastCount].getElementsByClassName("rotatedWindDir")[0].style.transform = fullWindDisplay.windDirTransform
-                        // 600 hPa
                         fullWindDisplay = buildWindDisplay(forecastData.hourly.windspeed_600hPa[i], forecastData.hourly.winddirection_600hPa[i], 0, detailSiteData.SiteType)
                         rowWind600      .childNodes[forecastCount].innerHTML = fullWindDisplay.windDisplay
                         rowWind600      .childNodes[forecastCount].getElementsByClassName("rotatedWindDir")[0].style.transform = fullWindDisplay.windDirTransform
-                        // 650 hPa
                         fullWindDisplay = buildWindDisplay(forecastData.hourly.windspeed_650hPa[i], forecastData.hourly.winddirection_650hPa[i], 0, detailSiteData.SiteType)
                         rowWind650      .childNodes[forecastCount].innerHTML = fullWindDisplay.windDisplay
                         rowWind650      .childNodes[forecastCount].getElementsByClassName("rotatedWindDir")[0].style.transform = fullWindDisplay.windDirTransform
-                        // 700 hPa
                         fullWindDisplay = buildWindDisplay(forecastData.hourly.windspeed_700hPa[i], forecastData.hourly.winddirection_700hPa[i], 0, detailSiteData.SiteType)
                         rowWind700      .childNodes[forecastCount].innerHTML = fullWindDisplay.windDisplay
                         rowWind700      .childNodes[forecastCount].getElementsByClassName("rotatedWindDir")[0].style.transform = fullWindDisplay.windDirTransform
-                        // 750 hPa
                         fullWindDisplay = buildWindDisplay(forecastData.hourly.windspeed_750hPa[i], forecastData.hourly.winddirection_750hPa[i], 0, detailSiteData.SiteType)
                         rowWind750      .childNodes[forecastCount].innerHTML = fullWindDisplay.windDisplay
                         rowWind750      .childNodes[forecastCount].getElementsByClassName("rotatedWindDir")[0].style.transform = fullWindDisplay.windDirTransform
-                        // 800 hPa
                         fullWindDisplay = buildWindDisplay(forecastData.hourly.windspeed_800hPa[i], forecastData.hourly.winddirection_800hPa[i], 0, detailSiteData.SiteType)
                         rowWind800      .childNodes[forecastCount].innerHTML = fullWindDisplay.windDisplay
                         rowWind800      .childNodes[forecastCount].getElementsByClassName("rotatedWindDir")[0].style.transform = fullWindDisplay.windDirTransform
-                        // 850 hPa
                         fullWindDisplay = buildWindDisplay(forecastData.hourly.windspeed_850hPa[i], forecastData.hourly.winddirection_850hPa[i], 0, detailSiteData.SiteType)
                         rowWind850      .childNodes[forecastCount].innerHTML = fullWindDisplay.windDisplay
                         rowWind850      .childNodes[forecastCount].getElementsByClassName("rotatedWindDir")[0].style.transform = fullWindDisplay.windDirTransform
-                        // 900 hPa
                         fullWindDisplay = buildWindDisplay(forecastData.hourly.windspeed_900hPa[i], forecastData.hourly.winddirection_900hPa[i], 0, detailSiteData.SiteType)
                         rowWind900      .childNodes[forecastCount].innerHTML = fullWindDisplay.windDisplay
                         rowWind900      .childNodes[forecastCount].getElementsByClassName("rotatedWindDir")[0].style.transform = fullWindDisplay.windDirTransform
-                        // 80m above surface
+                        fullWindDisplay = buildWindDisplay(forecastData.hourly.windspeed_950hPa[i], forecastData.hourly.winddirection_950hPa[i], 0, detailSiteData.SiteType)
+                        rowWind950      .childNodes[forecastCount].innerHTML = fullWindDisplay.windDisplay
+                        rowWind950      .childNodes[forecastCount].getElementsByClassName("rotatedWindDir")[0].style.transform = fullWindDisplay.windDirTransform                        
                         fullWindDisplay = buildWindDisplay(forecastData.hourly.windspeed_80m[i], forecastData.hourly.winddirection_80m[i], 0, detailSiteData.SiteType)
                         rowWind80m      .childNodes[forecastCount].innerHTML = fullWindDisplay.windDisplay
                         rowWind80m      .childNodes[forecastCount].getElementsByClassName("rotatedWindDir")[0].style.transform = fullWindDisplay.windDirTransform
-                        // 10m above surface
                         fullWindDisplay = buildWindDisplay(forecastData.hourly.windspeed_10m[i], forecastData.hourly.winddirection_10m[i], 0, detailSiteData.SiteType)
                         rowWind10m      .childNodes[forecastCount].innerHTML = fullWindDisplay.windDisplay
                         rowWind10m      .childNodes[forecastCount].getElementsByClassName("rotatedWindDir")[0].style.transform = fullWindDisplay.windDirTransform
@@ -310,6 +295,7 @@ async function siteForecast(site) {
                         }
 
                         // Add up the geopotential height for each pressure (will be used to calculate an average below)
+                        height_950_sum = height_950_sum + Number(forecastData.hourly.geopotential_height_950hPa[i])
                         height_900_sum = height_900_sum + Number(forecastData.hourly.geopotential_height_900hPa[i])
                         height_850_sum = height_850_sum + Number(forecastData.hourly.geopotential_height_850hPa[i])
                         height_800_sum = height_800_sum + Number(forecastData.hourly.geopotential_height_800hPa[i])
@@ -325,30 +311,33 @@ async function siteForecast(site) {
                 }
             }
 
-            // Calculate average geopotential heights rounded to the nearest 100 ft
-            var wind500Alt = Math.round((height_500_sum / forecastCount)/100)*100
-            var wind550Alt = Math.round((height_550_sum / forecastCount)/100)*100
-            var wind600Alt = Math.round((height_600_sum / forecastCount)/100)*100
-            var wind650Alt = Math.round((height_650_sum / forecastCount)/100)*100
-            var wind700Alt = Math.round((height_700_sum / forecastCount)/100)*100
-            var wind750Alt = Math.round((height_750_sum / forecastCount)/100)*100
-            var wind800Alt = Math.round((height_800_sum / forecastCount)/100)*100
-            var wind850Alt = Math.round((height_850_sum / forecastCount)/100)*100
-            var wind900Alt = Math.round((height_900_sum / forecastCount)/100)*100
+            // Calculate average geopotential heights
+            var wind500Alt = height_500_sum / forecastCount
+            var wind550Alt = height_550_sum / forecastCount
+            var wind600Alt = height_600_sum / forecastCount
+            var wind650Alt = height_650_sum / forecastCount
+            var wind700Alt = height_700_sum / forecastCount
+            var wind750Alt = height_750_sum / forecastCount
+            var wind800Alt = height_800_sum / forecastCount
+            var wind850Alt = height_850_sum / forecastCount
+            var wind900Alt = height_900_sum / forecastCount
+            var wind950Alt = height_950_sum / forecastCount
           
             // Display average geopotential heights as row headers for wind and vvel (and displayed with commas)
-            rowWind500.childNodes[0].innerText = rowVVel500.childNodes[0].innerText = wind500Alt.toLocaleString()
-            rowWind550.childNodes[0].innerText = rowVVel550.childNodes[0].innerText = wind550Alt.toLocaleString()
-            rowWind600.childNodes[0].innerText = rowVVel600.childNodes[0].innerText = wind600Alt.toLocaleString()
-            rowWind650.childNodes[0].innerText = rowVVel650.childNodes[0].innerText = wind650Alt.toLocaleString()
-            rowWind700.childNodes[0].innerText = rowVVel700.childNodes[0].innerText = wind700Alt.toLocaleString()
-            rowWind750.childNodes[0].innerText = rowVVel750.childNodes[0].innerText = wind750Alt.toLocaleString()
-            rowWind800.childNodes[0].innerText = rowVVel800.childNodes[0].innerText = wind800Alt.toLocaleString()
-            rowWind850.childNodes[0].innerText = rowVVel850.childNodes[0].innerText = wind850Alt.toLocaleString()
-            rowWind900.childNodes[0].innerText = rowVVel900.childNodes[0].innerText = wind900Alt.toLocaleString()
+            rowWind500.childNodes[0].innerText = rowVVel500.childNodes[0].innerText = Math.round(wind500Alt/1000) + 'k ft'
+            rowWind550.childNodes[0].innerText = rowVVel550.childNodes[0].innerText = Math.round(wind550Alt/1000) + 'k ft'
+            rowWind600.childNodes[0].innerText = rowVVel600.childNodes[0].innerText = Math.round(wind600Alt/1000) + 'k ft'
+            rowWind650.childNodes[0].innerText = rowVVel650.childNodes[0].innerText = Math.round(wind650Alt/1000) + 'k ft'
+            rowWind700.childNodes[0].innerText = rowVVel700.childNodes[0].innerText = Math.round(wind700Alt/1000) + 'k ft'
+            rowWind750.childNodes[0].innerText = rowVVel750.childNodes[0].innerText = Math.round(wind750Alt/1000) + 'k ft'
+            rowWind800.childNodes[0].innerText = rowVVel800.childNodes[0].innerText = Math.round(wind800Alt/1000) + 'k ft'
+            rowWind850.childNodes[0].innerText = rowVVel850.childNodes[0].innerText = Math.round(wind850Alt/1000) + 'k ft'
+            rowWind900.childNodes[0].innerText = rowVVel900.childNodes[0].innerText = Math.round(wind900Alt/1000) + 'k ft'
+            rowWind950.childNodes[0].innerText = rowVVel950.childNodes[0].innerText = Math.round(wind950Alt/1000) + 'k ft'
 
             // Hide wind and vvel reading rows where the altitude is less than surface + 10m
             var surfaceAlt10m =  (forecastData.elevation + 10) * 3.28084  // converts meters to feet
+            if ( wind950Alt <= surfaceAlt10m ) { rowWind950.style.display = rowVVel950.style.display = `none` }
             if ( wind900Alt <= surfaceAlt10m ) { rowWind900.style.display = rowVVel900.style.display = `none` }
             if ( wind850Alt <= surfaceAlt10m ) { rowWind850.style.display = rowVVel850.style.display = `none` }
             if ( wind800Alt <= surfaceAlt10m ) { rowWind800.style.display = rowVVel800.style.display = `none` }
@@ -371,6 +360,13 @@ function getVVelColor ( vvel ) {
     else if (vvel < 4 ) {return wwYlw}
     else if (vvel < 6 ) {return wwOrg}
     else if (vvel >= 6 ) {return wwRed}
+}
+
+function getPrecipProbColor ( precipProb ) {
+    if (precipProb < 10) {return wwGrn}
+    else if (precipProb < 30 ) {return wwYlw}
+    else if (precipProb < 50 ) {return wwOrg}
+    else if (precipProb >= 50 ) {return wwRed}
 }
 
 function getCAPEColor ( CAPEvalue ) {
