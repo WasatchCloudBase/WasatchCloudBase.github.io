@@ -90,7 +90,7 @@ async function siteForecast(site) {
     var forecast_url = "https://api.open-meteo.com/v1/gfs?" + 
     "latitude=" + detailSiteData.ForecastLat +
     "&longitude=" + detailSiteData.ForecastLon + 
-    "&hourly=temperature_2m,relativehumidity_2m,pressure_msl,surface_pressure," +
+    "&hourly=temperature_2m,relativehumidity_2m,dewpoint_2m,pressure_msl,surface_pressure," +
     "precipitation,precipitation_probability,weathercode,cloudcover,cloudcover_low,cloudcover_mid,cloudcover_high,cape,lifted_index," +
     "windspeed_10m,windspeed_80m,winddirection_10m,winddirection_80m,windgusts_10m," +
     "temperature_950hPa,temperature_900hPa,temperature_850hPa,temperature_800hPa,temperature_750hPa,temperature_700hPa,temperature_650hPa,temperature_600hPa,temperature_550hPa,temperature_500hPa," +
@@ -99,7 +99,7 @@ async function siteForecast(site) {
     "winddirection_950hPa,winddirection_900hPa,winddirection_850hPa,winddirection_800hPa,winddirection_750hPa,winddirection_700hPa,winddirection_650hPa,winddirection_600hPa,winddirection_550hPa,winddirection_500hPa," +
     "vertical_velocity_950hPa,vertical_velocity_900hPa,vertical_velocity_850hPa,vertical_velocity_800hPa,vertical_velocity_750hPa,vertical_velocity_700hPa,vertical_velocity_650hPa,vertical_velocity_600hPa,vertical_velocity_550hPa,vertical_velocity_500hPa," +
     "geopotential_height_950hPa,geopotential_height_900hPa,geopotential_height_850hPa,geopotential_height_800hPa,geopotential_height_750hPa,geopotential_height_700hPa,geopotential_height_650hPa,geopotential_height_600hPa,geopotential_height_550hPa,geopotential_height_500hPa" +
-    "&current_weather=true&temperature_unit=fahrenheit&windspeed_unit=mph&precipitation_unit=inch&timezone=America%2FDenver"
+    "&current_weather=true&windspeed_unit=mph&precipitation_unit=inch&timezone=America%2FDenver"
 
     var height_950_sum = 0
     var height_900_sum = 0
@@ -115,14 +115,16 @@ async function siteForecast(site) {
     var previousDate = ``
     var previousDateStart = ``
     var surfaceAlt = ``
+    var surfaceAlt10m = ``
 
     var response = await fetch(forecast_url)
     var forecastData = await response.json()
     if (forecastData) {
         try {
 
-            // Add elevation being returned by forecast to check against requested site altitude
-            surfaceAlt = Math.round(forecastData.elevation * 3.28084) // converts meters to feet
+            // Calculate forecast altitude (to display) and altitude + 10m to filter winds/lift aloft
+            surfaceAlt = Math.round( mToFt(forecastData.elevation) )
+            surfaceAlt10m = Math.round( mToFt(forecastData.elevation + 10) )
             document.getElementById(`site-details-forecast-alt`).innerHTML = surfaceAlt.toLocaleString() + `&nbsp;ft`
 
             // Process each hourly forecast
@@ -160,14 +162,7 @@ async function siteForecast(site) {
                         rowTimeWind.childNodes[forecastCount].innerText = DisplayHour
 
                         // Determine weather code based on value and, if it shows as cloudy, then based on cloud coverage %
-                        var weatherCodeValue = forecastData.hourly.weathercode[i]
-                        if (    forecastData.hourly.weathercode[i] === 1 || 
-                                forecastData.hourly.weathercode[i] === 2 || 
-                                forecastData.hourly.weathercode[i] === 3 ) {
-                            if ( forecastData.hourly.cloudcover[i] < 25 ) { weatherCodeValue = 0 }      // Sunny
-                            else if ( forecastData.hourly.cloudcover[i] > 75 ) { weatherCodeValue = 2 } // Cloudy
-                            else { weatherCodeValue = 1 }                                               // Partly cloudy
-                        }
+                        var weatherCodeValue = updateWeatherCode (forecastData.hourly.weathercode[i], forecastData.hourly.cloudcover[i], forecastData.hourly.precipitation_probability[i], forecastData.hourly.temperature_2m[i])
                         rowWeatherCode.childNodes[forecastCount].innerHTML = `<img src="prod/images/weather/` + weatherCodes[weatherCodeValue][1].Image + `.png" width="80">`
 
                         // Set value and color for CAPE
@@ -186,32 +181,10 @@ async function siteForecast(site) {
                         rowKI.childNodes[forecastCount].innerText = Math.round(KIvalue)
                         rowKI.childNodes[forecastCount].style.color = getKIndexColor(KIvalue)
 
-                        // Set color and display vertical velocity at each pressure level
-                        rowVVel500.childNodes[forecastCount].innerText = forecastData.hourly.vertical_velocity_500hPa[i]
-                        rowVVel500.childNodes[forecastCount].style.color = getVVelColor(forecastData.hourly.vertical_velocity_500hPa[i])
-                        rowVVel550.childNodes[forecastCount].innerText = forecastData.hourly.vertical_velocity_550hPa[i]
-                        rowVVel550.childNodes[forecastCount].style.color = getVVelColor(forecastData.hourly.vertical_velocity_550hPa[i])
-                        rowVVel600.childNodes[forecastCount].innerText = forecastData.hourly.vertical_velocity_600hPa[i]
-                        rowVVel600.childNodes[forecastCount].style.color = getVVelColor(forecastData.hourly.vertical_velocity_600hPa[i])
-                        rowVVel650.childNodes[forecastCount].innerText = forecastData.hourly.vertical_velocity_650hPa[i]
-                        rowVVel650.childNodes[forecastCount].style.color = getVVelColor(forecastData.hourly.vertical_velocity_650hPa[i])
-                        rowVVel700.childNodes[forecastCount].innerText = forecastData.hourly.vertical_velocity_700hPa[i]
-                        rowVVel700.childNodes[forecastCount].style.color = getVVelColor(forecastData.hourly.vertical_velocity_700hPa[i])
-                        rowVVel750.childNodes[forecastCount].innerText = forecastData.hourly.vertical_velocity_750hPa[i]
-                        rowVVel750.childNodes[forecastCount].style.color = getVVelColor(forecastData.hourly.vertical_velocity_750hPa[i])
-                        rowVVel800.childNodes[forecastCount].innerText = forecastData.hourly.vertical_velocity_800hPa[i]
-                        rowVVel800.childNodes[forecastCount].style.color = getVVelColor(forecastData.hourly.vertical_velocity_800hPa[i])
-                        rowVVel850.childNodes[forecastCount].innerText = forecastData.hourly.vertical_velocity_850hPa[i]
-                        rowVVel850.childNodes[forecastCount].style.color = getVVelColor(forecastData.hourly.vertical_velocity_850hPa[i])
-                        rowVVel900.childNodes[forecastCount].innerText = forecastData.hourly.vertical_velocity_900hPa[i]
-                        rowVVel900.childNodes[forecastCount].style.color = getVVelColor(forecastData.hourly.vertical_velocity_900hPa[i])
-                        rowVVel950.childNodes[forecastCount].innerText = forecastData.hourly.vertical_velocity_950hPa[i]
-                        rowVVel950.childNodes[forecastCount].style.color = getVVelColor(forecastData.hourly.vertical_velocity_950hPa[i])
-
                         // Convert pressure from hPa to inHg and find pressure zone
                         const forecastAlti = parseFloat(forecastData.hourly.pressure_msl[i]).toFixed(2) / 33.863886666667
                         const forecastTemp = Math.round(forecastData.hourly.temperature_2m[i])
-                        var forecastZone = calculateZone(forecastAlti, forecastTemp)
+                        var forecastZone = calculateZone(forecastAlti, tempCtoF(forecastTemp))  // forecastZone based on temp in F; API returns temp in C
                         const forecastZoneColor = getZoneColor(forecastZone)
                         forecastZone = forecastZone===0 ? '&#9471;' : (forecastZone==='LoP') ? 'LoP' : `&#1010${forecastZone+1}`
                         rowPressureZone.childNodes[forecastCount].innerHTML = forecastZone
@@ -225,7 +198,7 @@ async function siteForecast(site) {
                         rowCloudCoverHigh   .childNodes[forecastCount].innerText = (forecastData.hourly.cloudcover_high[i]>0) ? forecastData.hourly.cloudcover_high[i] : '-'
 
                         // Display surface temp and precip probability %
-                        rowTemp2m           .childNodes[forecastCount].innerText = Math.round(forecastData.hourly.temperature_2m[i]) + `\u00B0`
+                        rowTemp2m           .childNodes[forecastCount].innerText = Math.round(tempCtoF(forecastData.hourly.temperature_2m[i])) + `\u00B0`
                         rowPrecipProb       .childNodes[forecastCount].innerText = (forecastData.hourly.precipitation_probability[i]>0) ? forecastData.hourly.precipitation_probability[i] : '-'
                         rowPrecipProb       .childNodes[forecastCount].style.color = getPrecipProbColor(forecastData.hourly.precipitation_probability[i])
 
@@ -264,10 +237,87 @@ async function siteForecast(site) {
                         fullWindDisplay = buildWindDisplay(forecastData.hourly.windspeed_80m[i], forecastData.hourly.winddirection_80m[i], 0, detailSiteData.SiteType)
                         rowWind80m      .childNodes[forecastCount].innerHTML = fullWindDisplay.windDisplay
                         rowWind80m      .childNodes[forecastCount].getElementsByClassName("rotatedWindDir")[0].style.transform = fullWindDisplay.windDirTransform
-                        fullWindDisplay = buildWindDisplay(forecastData.hourly.windspeed_10m[i], forecastData.hourly.winddirection_10m[i], 0, detailSiteData.SiteType)
+                        fullWindDisplay = buildWindDisplay(forecastData.hourly.windspeed_10m[i], forecastData.hourly.winddirection_10m[i], forecastData.hourly.windgusts_10m[i], detailSiteData.SiteType)
                         rowWind10m      .childNodes[forecastCount].innerHTML = fullWindDisplay.windDisplay
                         rowWind10m      .childNodes[forecastCount].getElementsByClassName("rotatedWindDir")[0].style.transform = fullWindDisplay.windDirTransform
 
+                        // Determine lift (only for altitudes above surface + 10m)
+                        var thermalObject = {}
+                        var priorThermalDPTemp = forecastData.hourly.temperature_2m[i]
+                        var priorAlt = surfaceAlt10m
+                        // Determine lift for 950 hPa level
+                        thermalObject = getThermalInfo ( forecastData.hourly.temperature_950hPa[i], forecastData.hourly.dewpoint_950hPa[i], 
+                                forecastData.hourly.geopotential_height_950hPa[i], priorThermalDPTemp, priorAlt, surfaceAlt10m)
+                        rowVVel950.childNodes[forecastCount].innerText = thermalObject.thermalVelocity
+                        rowVVel950.childNodes[forecastCount].style.color = getVVelColor(thermalObject.thermalVelocity)
+                        priorThermalDPTemp = thermalObject.thermalDPTemp
+                        priorAlt = forecastData.hourly.geopotential_height_950hPa[i]
+                        // Determine lift for 900 hPa level
+                        thermalObject = getThermalInfo ( forecastData.hourly.temperature_900hPa[i], forecastData.hourly.dewpoint_900hPa[i], 
+                                forecastData.hourly.geopotential_height_900hPa[i], priorThermalDPTemp, priorAlt, surfaceAlt10m)
+                        rowVVel900.childNodes[forecastCount].innerText = thermalObject.thermalVelocity
+                        rowVVel900.childNodes[forecastCount].style.color = getVVelColor(thermalObject.thermalVelocity)
+                        priorThermalDPTemp = thermalObject.thermalDPTemp
+                        priorAlt = forecastData.hourly.geopotential_height_900hPa[i]
+                        // Determine lift for 850 hPa level
+                        thermalObject = getThermalInfo ( forecastData.hourly.temperature_850hPa[i], forecastData.hourly.dewpoint_850hPa[i], 
+                                forecastData.hourly.geopotential_height_850hPa[i], priorThermalDPTemp, priorAlt, surfaceAlt10m)
+                        rowVVel850.childNodes[forecastCount].innerText = thermalObject.thermalVelocity
+                        rowVVel850.childNodes[forecastCount].style.color = getVVelColor(thermalObject.thermalVelocity)
+                        priorThermalDPTemp = thermalObject.thermalDPTemp
+                        priorAlt = forecastData.hourly.geopotential_height_850hPa[i]
+                        // Determine lift for 800 hPa level
+                        thermalObject = getThermalInfo ( forecastData.hourly.temperature_800hPa[i], forecastData.hourly.dewpoint_800hPa[i], 
+                                forecastData.hourly.geopotential_height_800hPa[i], priorThermalDPTemp, priorAlt, surfaceAlt10m)
+                        rowVVel800.childNodes[forecastCount].innerText = thermalObject.thermalVelocity
+                        rowVVel800.childNodes[forecastCount].style.color = getVVelColor(thermalObject.thermalVelocity)
+                        priorThermalDPTemp = thermalObject.thermalDPTemp
+                        priorAlt = forecastData.hourly.geopotential_height_800hPa[i]
+                        // Determine lift for 750 hPa level
+                        thermalObject = getThermalInfo ( forecastData.hourly.temperature_750hPa[i], forecastData.hourly.dewpoint_750hPa[i], 
+                                forecastData.hourly.geopotential_height_750hPa[i], priorThermalDPTemp, priorAlt, surfaceAlt10m)
+                        rowVVel750.childNodes[forecastCount].innerText = thermalObject.thermalVelocity
+                        rowVVel750.childNodes[forecastCount].style.color = getVVelColor(thermalObject.thermalVelocity)
+                        priorThermalDPTemp = thermalObject.thermalDPTemp
+                        priorAlt = forecastData.hourly.geopotential_height_750hPa[i]
+                        // Determine lift for 700 hPa level
+                        thermalObject = getThermalInfo ( forecastData.hourly.temperature_700hPa[i], forecastData.hourly.dewpoint_700hPa[i], 
+                                forecastData.hourly.geopotential_height_700hPa[i], priorThermalDPTemp, priorAlt, surfaceAlt10m)
+                        rowVVel700.childNodes[forecastCount].innerText = thermalObject.thermalVelocity
+                        rowVVel700.childNodes[forecastCount].style.color = getVVelColor(thermalObject.thermalVelocity)
+                        priorThermalDPTemp = thermalObject.thermalDPTemp
+                        priorAlt = forecastData.hourly.geopotential_height_700hPa[i]
+                        // Determine lift for 650 hPa level
+                        thermalObject = getThermalInfo ( forecastData.hourly.temperature_650hPa[i], forecastData.hourly.dewpoint_650hPa[i], 
+                                forecastData.hourly.geopotential_height_650hPa[i], priorThermalDPTemp, priorAlt, surfaceAlt10m)
+                        rowVVel650.childNodes[forecastCount].innerText = thermalObject.thermalVelocity
+                        rowVVel650.childNodes[forecastCount].style.color = getVVelColor(thermalObject.thermalVelocity)
+                        priorThermalDPTemp = thermalObject.thermalDPTemp
+                        priorAlt = forecastData.hourly.geopotential_height_650hPa[i]
+                        // Determine lift for 600 hPa level
+                        thermalObject = getThermalInfo ( forecastData.hourly.temperature_600hPa[i], forecastData.hourly.dewpoint_600hPa[i], 
+                                forecastData.hourly.geopotential_height_600hPa[i], priorThermalDPTemp, priorAlt, surfaceAlt10m)
+                        rowVVel600.childNodes[forecastCount].innerText = thermalObject.thermalVelocity
+                        rowVVel600.childNodes[forecastCount].style.color = getVVelColor(thermalObject.thermalVelocity)
+                        priorThermalDPTemp = thermalObject.thermalDPTemp
+                        priorAlt = forecastData.hourly.geopotential_height_600hPa[i]
+                        // Determine lift for 550 hPa level
+                        thermalObject = getThermalInfo ( forecastData.hourly.temperature_550hPa[i], forecastData.hourly.dewpoint_550hPa[i], 
+                                forecastData.hourly.geopotential_height_550hPa[i], priorThermalDPTemp, priorAlt, surfaceAlt10m)
+                        rowVVel550.childNodes[forecastCount].innerText = thermalObject.thermalVelocity
+                        rowVVel550.childNodes[forecastCount].style.color = getVVelColor(thermalObject.thermalVelocity)
+                        priorThermalDPTemp = thermalObject.thermalDPTemp
+                        priorAlt = forecastData.hourly.geopotential_height_550hPa[i]
+                        // Determine lift for 500 hPa level
+                        thermalObject = getThermalInfo ( forecastData.hourly.temperature_500hPa[i], forecastData.hourly.dewpoint_500hPa[i], 
+                                forecastData.hourly.geopotential_height_500hPa[i], priorThermalDPTemp, priorAlt, surfaceAlt10m)
+                        rowVVel500.childNodes[forecastCount].innerText = thermalObject.thermalVelocity
+                        rowVVel500.childNodes[forecastCount].style.color = getVVelColor(thermalObject.thermalVelocity)
+                        priorThermalDPTemp = thermalObject.thermalDPTemp
+                        priorAlt = forecastData.hourly.geopotential_height_500hPa[i]
+
+/* NEED TO DISPLAY: thermalCloudBaseAlt topOfLift  */
+                        
                         // If date is the same as the prior column, merge the cells
                         if ( formattedDate === previousDate ) {
                             rowDate.childNodes[previousDateStart].colSpan = rowDate.childNodes[previousDateStart].colSpan + 1
@@ -336,7 +386,6 @@ async function siteForecast(site) {
             rowWind950.childNodes[0].innerText = rowVVel950.childNodes[0].innerText = Math.round(wind950Alt/1000) + 'k ft'
 
             // Hide wind and vvel reading rows where the altitude is less than surface + 10m
-            var surfaceAlt10m =  (forecastData.elevation + 10) * 3.28084  // converts meters to feet
             if ( wind950Alt <= surfaceAlt10m ) { rowWind950.style.display = rowVVel950.style.display = `none` }
             if ( wind900Alt <= surfaceAlt10m ) { rowWind900.style.display = rowVVel900.style.display = `none` }
             if ( wind850Alt <= surfaceAlt10m ) { rowWind850.style.display = rowVVel850.style.display = `none` }
@@ -352,6 +401,39 @@ async function siteForecast(site) {
             console.log('Error processing forecastData: ' + error )
         }
     }
+}
+
+// Determine weather code based on value and, if it shows as cloudy, then based on cloud coverage %
+function updateWeatherCode (originalWeatherCode, cloudCover, precipProbability, temperature) {
+    var updatedWeatherCode = originalWeatherCode
+
+    // Update the weather code based on the cloud %
+    if (    originalWeatherCode === 0 ||                                // Sunny
+            originalWeatherCode === 1 ||                                // Clouds dissolving
+            originalWeatherCode === 2 ||                                // Skies unchanged
+            originalWeatherCode === 3 ) {                               // Clouds forming
+        if ( cloudCover < 25 ) { updatedWeatherCode = 0 }               // Change to sunny
+        else if ( cloudCover < 75 ) { updatedWeatherCode = 1 }          // Change to display as partly cloudy
+        else if ( cloudCover >= 75 ) { updatedWeatherCode = 3 }         // Change to display as cloudy
+    }
+
+    // Update the weather code based on the precip % and rain vs. snow based on temp
+    if (    originalWeatherCode === 0 ||                                // Sunny
+            originalWeatherCode === 1 ||                                // Clouds dissolving
+            originalWeatherCode === 2 ||                                // Skies unchanged
+            originalWeatherCode === 3 ) {                               // Clouds forming
+        if ( precipProbability < 30 ) {  }                              // No change
+        else if ( precipProbability < 70 ) { 
+            if ( temperature <= 0 ) { updatedWeatherCode = 85 }        // Change to display as light snow (note that forecast temp is in C)
+            else { updatedWeatherCode = 60 }                            // Change to display as light rain
+        }
+        else if ( precipProbability >= 70 ) {
+            if ( temperature <= 0 ) { updatedWeatherCode = 73 }        // Change to display as snow (note that forecast temp is in C)
+            else { updatedWeatherCode = 62 }                            // Change to display as rain
+        }
+    }
+
+    return updatedWeatherCode
 }
 
 function getVVelColor ( vvel ) {
@@ -406,7 +488,7 @@ function getKIndex ( temp850, temp700, temp500, td850, td700 ) {
     T = temp (C) at pressure level
     Td = dew point temp (C) at pressure level
 */
-    return ( (tempFtoC(temp850)-tempFtoC(temp500)) + tempFtoC(td850) - (tempFtoC(temp700)-tempFtoC(td700)) )
+    return ( (temp850-temp500) + tempFtoC(td850) - (temp700-td700) )
 }
 
 function getKIndexColor ( KIndex ) {
@@ -429,6 +511,18 @@ function tempFtoC ( tempF ) {
     return ( tempF - 32 ) / 1.8
 }
 
+function tempCtoF ( tempC ) {
+    return ( tempC * 1.8 ) + 32
+}
+
+function mToFt ( distance ) {
+    return ( distance * 3.28084 )
+}
+
+function FtToM ( distance ) {
+    return ( distance / 3.28084 )
+}
+
 function buildWindDisplay ( windSpeed, windDir, windGust, siteType )
 // Returns an object: { windDisplay (format # g#), windDirDisplay (image), windDirTransform (string to send to style.transform for span displaySpanID) }
 {
@@ -446,7 +540,7 @@ function buildWindDisplay ( windSpeed, windDir, windGust, siteType )
     if (windSpeed) {
         var windColorDisplay = windColor(windSpeed, siteType)
         if (Math.round(windSpeed) >= 1) { 
-            windDisplay = windDisplay + '<span style="color: ' + windColorDisplay + ';">' + Math.round(windSpeed) + '</span>'
+            windDisplay = windDisplay + '&nbsp;<span style="color: ' + windColorDisplay + ';">' + Math.round(windSpeed) + '</span>'
         } else { 
             windDisplay = windDisplay + '<span class="fs-3 fw-normal">Calm</span>'
         }
@@ -456,8 +550,76 @@ function buildWindDisplay ( windSpeed, windDir, windGust, siteType )
     if (windGust) {
         var gustColorDisplay = windColor(windGust, siteType)
         if (Math.round(windGust) >= 1) { 
-            windDisplay = windDisplay + '&nbsp;<span id="${displaySpanID}" style="color: ' + gustColorDisplay + ';">g' + Math.round(windGust) + '</span>'
+            windDisplay = windDisplay + /* &nbsp; */ '<span id="${displaySpanID}" style="color: ' + gustColorDisplay + ';">g' + Math.round(windGust) + '</span>'
         }
     }
     return { windDisplay, windDirTransform }
+}
+
+function getThermalInfo ( ambTemp, ambDPTemp, alt, priorThermalDPTemp, priorAlt, surfaceAlt10m ) { // All temps in C, altitudes in feet
+/* Returns an object: { thermalVelocity (m/s), 
+                        thermalDPTemp (deg C), 
+                        thermalCloudBaseAlt (ft, if reached in this altitude range), 
+                        topOfLift (ft, if reached in this range) }                               */
+
+    // Set variables to be returned
+    var thermalVelocity = ``
+    var thermalDPTemp = priorThermalDPTemp // set to previous in case this altitude isn't processed
+    var thermalCloudBaseAlt = ``
+    var topOfLift = ``
+
+    // Only process if pressure level is above the surface
+    if (Number(alt) > Number(surfaceAlt10m) ) {
+
+        // Use prior alt unless it was less than surface
+        var effectivePriorAlt = priorAlt
+        if ( surfaceAlt10m >= priorAlt) { 
+            effectivePriorAlt = surfaceAlt10m
+        }
+
+        // Only calculate thermal strength if the prior thermal dew point is above the amb dew point (or thermal would have already stopped)
+        if ( priorThermalDPTemp > ambDPTemp ) {
+
+            // Calculate the thermal dew point temp (Td)
+            // Td = T - (DALR * altChange)
+            // DALR is 9.8 degrees C per 1,000 meters
+            // Note:  changed to use a higher lapse rate to reduce thermal height and better match other models (eg., XCSkies)
+            thermalDPTemp = priorThermalDPTemp - ( 11.8 * FtToM(alt - effectivePriorAlt) / 1000 )
+
+            // Check if the thermal is no longer rising (thermal dew point doesn't exceed the ambient dew point)
+            if ( thermalDPTemp - ambDPTemp - 1 <= 0 ) {
+                thermalVelocity = 0
+            } else 
+            // Check if cloudbase is reached and DALR can't be used to predict thermal strength (ambient temp doesn't exceed the ambient dew point temp)
+            if ( ambTemp - ambDPTemp -1 <= 0 ) {
+                thermalVelocity = 0
+            } else {
+                // Calculate the thermal velocity (w)
+                // w = 5.6 * sqrt [ ((1.1)^(thermalDPTemp - ambDPTemp) - 1) / ((1.1)^(ambTemp - ambDPTemp)-1) ]
+                // Which is a ratio between the thermal-DP-temp-to-ambient-DP-temp spread to the ambient-temp-to-ambient-DP-temp spread, with adjusting factors.
+                // In other words, the thermal velocity will increase if the thermal temp and/or dryness is higher, but the increase is reduced in proportion how dry the ambient air already is.
+                // Note:  changed to use a lower velocity to better match other models (e.g., XCSkies)
+                thermalVelocity = 4.2 * Math.sqrt( ((1.1)**(thermalDPTemp-ambDPTemp)-1) / ((1.1)**(ambTemp-ambDPTemp)-1) )
+
+                // Reduce thermal velocity by 1.2 m/s to adjust for glider sink rate
+                thermalVelocity = thermalVelocity - 1.2
+
+                // Round thermal velocity to nearest tenth of m/s
+                thermalVelocity = Math.round ( thermalVelocity * 10 ) / 10
+
+                // Determine cloud base altitude if cloud base reached (e.g., dew point temp is reached)
+
+                // Determine top of lift altitude if top of lift is reached
+
+                // Determine top of usable lift (reduce lift by 1.2 m/s) if top of usable lift is reached
+            }
+        }
+
+    }
+
+    // Set thermal velocity to '-' if not present or if zero
+    if ( thermalVelocity > 0 ) {}
+    else { thermalVelocity = '-' } 
+
+    return { thermalVelocity, thermalDPTemp, thermalCloudBaseAlt, topOfLift }
 }
