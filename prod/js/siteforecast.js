@@ -1,9 +1,11 @@
 'use strict';
 
-// Thermal lift forecast constants; allows changes for glider sink rate and to better match other models (e.g., XCSkies)
-const thermalLapseRate          = 9.8   // Standard thermal lapse rate (DALR) is 9.8 degrees C/1k m; higher lapse rate results in lower top of lift and lower thermal speed at higher altitudes
-const thermalVelocityConstant   = 5.6  // Theoretical standard is 5.6; lower constant results in lower thermal speeds at all altitutdes
-const thermalTriggerTempDiff    = 6    // Adjusts surface temp to trigger thermals; higher number results in weaker starting conditions for thermals 
+// Thermal lift forecast constants; allows changes for glider sink rate, surface disorganization, etc., to better match other models (e.g., XCSkies)
+const thermalLapseRate          = 10.9  // Standard thermal lapse rate (DALR) is 9.8 degrees C/1k m; higher lapse rate results in lower top of lift and lower thermal speed at higher altitudes
+const thermalVelocityConstant   = 5.7   // Theoretical standard is 5.6; lower constant results in lower thermal speeds at all altitutdes
+const thermalTriggerTempDiff    = 7     // Difference in air (2m) and ground temp to trigger thermals; higher number results in weaker starting conditions for thermals
+const thermalRampDistance       = 500   // Height (in m) from the surface below which thermals are weaker because they are not yet organized
+const thermalRampStartPct       = 50    // Initial reduction (in %) of forecasted thermal strength near the surface due to disorganized thermals
 
 // Forecast table keys
 const tableID           = document.getElementById("forecastTable")
@@ -211,8 +213,12 @@ async function siteForecast(site) {
                         rowCloudCoverMid    .childNodes[forecastCount].innerText = (forecastData.hourly.cloudcover_mid[i]>0) ? forecastData.hourly.cloudcover_mid[i] : ''
                         rowCloudCoverHigh   .childNodes[forecastCount].innerText = (forecastData.hourly.cloudcover_high[i]>0) ? forecastData.hourly.cloudcover_high[i] : ''
 
-                        // Display surface temp and precip probability %
-                        rowTemp2m           .childNodes[forecastCount].innerText = Math.round(tempCtoF(forecastData.hourly.temperature_2m[i])) + `\u00B0`
+                        // Display surface temp and set text color
+                        const TempF = Math.round(tempCtoF(forecastData.hourly.temperature_2m[i]))
+                        rowTemp2m           .childNodes[forecastCount].innerText = TempF + `\u00B0`
+                        rowTemp2m           .childNodes[forecastCount].style.color = getTempColor (TempF)
+
+                        // Display precip probability % and set text color
                         rowPrecipProb       .childNodes[forecastCount].innerText = (forecastData.hourly.precipitation_probability[i]>0) ? forecastData.hourly.precipitation_probability[i] : ''
                         rowPrecipProb       .childNodes[forecastCount].style.color = getPrecipProbColor(forecastData.hourly.precipitation_probability[i])
 
@@ -264,6 +270,13 @@ async function siteForecast(site) {
                         rowVVel950.childNodes[forecastCount].innerText = thermalObject.thermalVelocity
                         rowVVel950.childNodes[forecastCount].style.color = getVVelColor(thermalObject.thermalVelocity)
                         priorThermalDPTemp = thermalObject.thermalDPTemp
+                        if ( topOfLiftAlt >= priorAlt && topOfLiftAlt <= forecastData.hourly.geopotential_height_950hPa[i] ) {
+                            rowVVel950.childNodes[forecastCount].style.borderBottom = "2px solid teal"
+                            rowWind950.childNodes[forecastCount].style.borderBottom = "2px solid teal" }
+                        if ( topOfLiftAlt ) { 
+                            rowVVel950.childNodes[forecastCount].style.backgroundColor = "black"
+                            rowWind950.childNodes[forecastCount].style.backgroundColor = "black"
+                         }
                         priorAlt = forecastData.hourly.geopotential_height_950hPa[i]
                         // Determine lift for 900 hPa level
                         thermalObject = getThermalInfo ( forecastData.hourly.temperature_900hPa[i], forecastData.hourly.dewpoint_900hPa[i], 
@@ -271,6 +284,13 @@ async function siteForecast(site) {
                         rowVVel900.childNodes[forecastCount].innerText = thermalObject.thermalVelocity
                         rowVVel900.childNodes[forecastCount].style.color = getVVelColor(thermalObject.thermalVelocity)
                         priorThermalDPTemp = thermalObject.thermalDPTemp
+                        if ( topOfLiftAlt >= priorAlt && topOfLiftAlt <= forecastData.hourly.geopotential_height_900hPa[i] ) {
+                            rowVVel900.childNodes[forecastCount].style.borderBottom = "2px solid teal" 
+                            rowWind900.childNodes[forecastCount].style.borderBottom = "2px solid teal" }
+                        if ( topOfLiftAlt ) { 
+                            rowVVel900.childNodes[forecastCount].style.backgroundColor = "black"
+                            rowWind900.childNodes[forecastCount].style.backgroundColor = "black"
+                        }
                         priorAlt = forecastData.hourly.geopotential_height_900hPa[i]
                         // Determine lift for 850 hPa level
                         thermalObject = getThermalInfo ( forecastData.hourly.temperature_850hPa[i], forecastData.hourly.dewpoint_850hPa[i], 
@@ -278,6 +298,13 @@ async function siteForecast(site) {
                         rowVVel850.childNodes[forecastCount].innerText = thermalObject.thermalVelocity
                         rowVVel850.childNodes[forecastCount].style.color = getVVelColor(thermalObject.thermalVelocity)
                         priorThermalDPTemp = thermalObject.thermalDPTemp
+                        if ( topOfLiftAlt >= priorAlt && topOfLiftAlt <= forecastData.hourly.geopotential_height_850hPa[i] ) {
+                            rowVVel850.childNodes[forecastCount].style.borderBottom = "2px solid teal"
+                            rowWind850.childNodes[forecastCount].style.borderBottom = "2px solid teal" }
+                        if ( topOfLiftAlt ) { 
+                            rowVVel850.childNodes[forecastCount].style.backgroundColor = "black"
+                            rowWind850.childNodes[forecastCount].style.backgroundColor = "black"
+                        }
                         priorAlt = forecastData.hourly.geopotential_height_850hPa[i]
                         // Determine lift for 800 hPa level
                         thermalObject = getThermalInfo ( forecastData.hourly.temperature_800hPa[i], forecastData.hourly.dewpoint_800hPa[i], 
@@ -285,6 +312,13 @@ async function siteForecast(site) {
                         rowVVel800.childNodes[forecastCount].innerText = thermalObject.thermalVelocity
                         rowVVel800.childNodes[forecastCount].style.color = getVVelColor(thermalObject.thermalVelocity)
                         priorThermalDPTemp = thermalObject.thermalDPTemp
+                        if ( topOfLiftAlt >= priorAlt && topOfLiftAlt <= forecastData.hourly.geopotential_height_800hPa[i] ) {
+                            rowVVel800.childNodes[forecastCount].style.borderBottom = "2px solid teal"
+                            rowWind800.childNodes[forecastCount].style.borderBottom = "2px solid teal" }
+                        if ( topOfLiftAlt ) { 
+                            rowVVel800.childNodes[forecastCount].style.backgroundColor = "black"
+                            rowWind800.childNodes[forecastCount].style.backgroundColor = "black"
+                        }
                         priorAlt = forecastData.hourly.geopotential_height_800hPa[i]
                         // Determine lift for 750 hPa level
                         thermalObject = getThermalInfo ( forecastData.hourly.temperature_750hPa[i], forecastData.hourly.dewpoint_750hPa[i], 
@@ -292,6 +326,13 @@ async function siteForecast(site) {
                         rowVVel750.childNodes[forecastCount].innerText = thermalObject.thermalVelocity
                         rowVVel750.childNodes[forecastCount].style.color = getVVelColor(thermalObject.thermalVelocity)
                         priorThermalDPTemp = thermalObject.thermalDPTemp
+                        if ( topOfLiftAlt >= priorAlt && topOfLiftAlt <= forecastData.hourly.geopotential_height_750hPa[i] ) {
+                            rowVVel750.childNodes[forecastCount].style.borderBottom = "2px solid teal"
+                            rowWind750.childNodes[forecastCount].style.borderBottom = "2px solid teal" }
+                        if ( topOfLiftAlt ) { 
+                            rowVVel750.childNodes[forecastCount].style.backgroundColor = "black"
+                            rowWind750.childNodes[forecastCount].style.backgroundColor = "black"
+                        }
                         priorAlt = forecastData.hourly.geopotential_height_750hPa[i]
                         // Determine lift for 700 hPa level
                         thermalObject = getThermalInfo ( forecastData.hourly.temperature_700hPa[i], forecastData.hourly.dewpoint_700hPa[i], 
@@ -299,6 +340,13 @@ async function siteForecast(site) {
                         rowVVel700.childNodes[forecastCount].innerText = thermalObject.thermalVelocity
                         rowVVel700.childNodes[forecastCount].style.color = getVVelColor(thermalObject.thermalVelocity)
                         priorThermalDPTemp = thermalObject.thermalDPTemp
+                        if ( topOfLiftAlt >= priorAlt && topOfLiftAlt <= forecastData.hourly.geopotential_height_700hPa[i] ) {
+                            rowVVel700.childNodes[forecastCount].style.borderBottom = "2px solid teal"
+                            rowWind700.childNodes[forecastCount].style.borderBottom = "2px solid teal" }
+                        if ( topOfLiftAlt ) { 
+                            rowVVel700.childNodes[forecastCount].style.backgroundColor = "black"
+                            rowWind700.childNodes[forecastCount].style.backgroundColor = "black"
+                        }
                         priorAlt = forecastData.hourly.geopotential_height_700hPa[i]
                         // Determine lift for 650 hPa level
                         thermalObject = getThermalInfo ( forecastData.hourly.temperature_650hPa[i], forecastData.hourly.dewpoint_650hPa[i], 
@@ -306,6 +354,13 @@ async function siteForecast(site) {
                         rowVVel650.childNodes[forecastCount].innerText = thermalObject.thermalVelocity
                         rowVVel650.childNodes[forecastCount].style.color = getVVelColor(thermalObject.thermalVelocity)
                         priorThermalDPTemp = thermalObject.thermalDPTemp
+                        if ( topOfLiftAlt >= priorAlt && topOfLiftAlt <= forecastData.hourly.geopotential_height_650hPa[i] ) {
+                            rowVVel650.childNodes[forecastCount].style.borderBottom = "2px solid teal"
+                            rowWind650.childNodes[forecastCount].style.borderBottom = "2px solid teal" }
+                        if ( topOfLiftAlt ) { 
+                            rowVVel650.childNodes[forecastCount].style.backgroundColor = "black"
+                            rowWind650.childNodes[forecastCount].style.backgroundColor = "black"
+                        }
                         priorAlt = forecastData.hourly.geopotential_height_650hPa[i]
                         // Determine lift for 600 hPa level
                         thermalObject = getThermalInfo ( forecastData.hourly.temperature_600hPa[i], forecastData.hourly.dewpoint_600hPa[i], 
@@ -313,6 +368,13 @@ async function siteForecast(site) {
                         rowVVel600.childNodes[forecastCount].innerText = thermalObject.thermalVelocity
                         rowVVel600.childNodes[forecastCount].style.color = getVVelColor(thermalObject.thermalVelocity)
                         priorThermalDPTemp = thermalObject.thermalDPTemp
+                        if ( topOfLiftAlt >= priorAlt && topOfLiftAlt <= forecastData.hourly.geopotential_height_600hPa[i] ) {
+                            rowVVel600.childNodes[forecastCount].style.borderBottom = "2px solid teal"
+                            rowWind600.childNodes[forecastCount].style.borderBottom = "2px solid teal" }
+                        if ( topOfLiftAlt ) { 
+                            rowVVel600.childNodes[forecastCount].style.backgroundColor = "black"
+                            rowWind600.childNodes[forecastCount].style.backgroundColor = "black"
+                        }
                         priorAlt = forecastData.hourly.geopotential_height_600hPa[i]
                         // Determine lift for 550 hPa level
                         thermalObject = getThermalInfo ( forecastData.hourly.temperature_550hPa[i], forecastData.hourly.dewpoint_550hPa[i], 
@@ -320,6 +382,13 @@ async function siteForecast(site) {
                         rowVVel550.childNodes[forecastCount].innerText = thermalObject.thermalVelocity
                         rowVVel550.childNodes[forecastCount].style.color = getVVelColor(thermalObject.thermalVelocity)
                         priorThermalDPTemp = thermalObject.thermalDPTemp
+                        if ( topOfLiftAlt >= priorAlt && topOfLiftAlt <= forecastData.hourly.geopotential_height_550hPa[i] ) {
+                            rowVVel550.childNodes[forecastCount].style.borderBottom = "2px solid teal"
+                            rowWind550.childNodes[forecastCount].style.borderBottom = "2px solid teal" }
+                        if ( topOfLiftAlt ) { 
+                            rowVVel550.childNodes[forecastCount].style.backgroundColor = "black"
+                            rowWind550.childNodes[forecastCount].style.backgroundColor = "black"
+                        }
                         priorAlt = forecastData.hourly.geopotential_height_550hPa[i]
                         // Determine lift for 500 hPa level
                         thermalObject = getThermalInfo ( forecastData.hourly.temperature_500hPa[i], forecastData.hourly.dewpoint_500hPa[i], 
@@ -327,10 +396,19 @@ async function siteForecast(site) {
                         rowVVel500.childNodes[forecastCount].innerText = thermalObject.thermalVelocity
                         rowVVel500.childNodes[forecastCount].style.color = getVVelColor(thermalObject.thermalVelocity)
                         priorThermalDPTemp = thermalObject.thermalDPTemp
+                        if ( topOfLiftAlt >= priorAlt && topOfLiftAlt <= forecastData.hourly.geopotential_height_500hPa[i] ) {
+                            rowVVel500.childNodes[forecastCount].style.borderBottom = "2px solid teal"
+                            rowWind500.childNodes[forecastCount].style.borderBottom = "2px solid teal" }
+                        if ( topOfLiftAlt ) { 
+                            rowVVel500.childNodes[forecastCount].style.backgroundColor = "black"
+                            rowWind500.childNodes[forecastCount].style.backgroundColor = "black"
+                        }
                         priorAlt = forecastData.hourly.geopotential_height_500hPa[i]
 
-                        // Display top of lift and cloud base
-                        if (topOfLiftAlt>0) {topOfLift.childNodes[forecastCount].innerText = topOfLiftAlt/1000 + 'k ft'}
+                        // Display top of lift (rounded to nearest 100 feet) and cloud base
+                        if (topOfLiftAlt>0) {topOfLift.childNodes[forecastCount].innerText = Math.round(topOfLiftAlt/100)*100/1000 + 'k ft'}
+                        // Check if there was still lift at the top of the forecast range, and display a rocket ship
+                        else if (thermalObject.thermalVelocity > 0 ) {topOfLift.childNodes[forecastCount].innerHTML = `<img src="prod/images/rocket-3432.png" width="60">`}
                         cloudBase.childNodes[forecastCount].innerText = cloudBaseAlt
                         
                         // If date is the same as the prior column, merge the cells
@@ -466,6 +544,15 @@ function getPrecipProbColor ( precipProb ) {
     else if (precipProb >= 50 ) {return wwRed}
 }
 
+function getTempColor ( temp ) {
+    if (temp <= 32)         {return wwBlue }
+    else if (temp < 60 )    {return wwCyan}
+    else if (temp < 80 )    {return wwGrn}
+    else if (temp < 90 )    {return wwYlw}
+    else if (temp < 100 )   {return wwOrg}
+    else if (temp >= 100 )  {return wwRed}
+}
+
 function getCAPEColor ( CAPEvalue ) {
 /* NEED TO VALIDATE VALUES; XCSkies is very different.
     CAPE below 0: Stable.
@@ -593,6 +680,16 @@ function getThermalInfo ( ambTemp, ambDPTemp, alt, priorThermalDPTemp, priorAlt,
             effectivePriorAlt = surfaceAlt10m
         }
 
+        // Check if cloudbase is reached and DALR can't be used to predict thermal strength (ambient temp doesn't exceed the ambient dew point temp)
+        if ( ambTemp - ambDPTemp <= 0 ) {
+            // Estimate cloudbase based on the ratio of the ambTemp between the prior and current ambDPTemp (very rough estimate and rounded to 100 feet)
+            var altRange = alt - priorAlt
+            var CurrAmbTDiff = priorAmbDPTemp - ambTemp
+            var totalAmbDPDiff = priorAmbDPTemp - ambDPTemp
+            thermalCloudBaseAlt = Math.round((priorAlt + (altRange * CurrAmbTDiff / totalAmbDPDiff))/100)*100
+console.log ('Reached cloudbase between:' + priorAlt + ' and ' + alt)
+        } else
+
         // Only calculate thermal strength if the prior thermal dew point is above the amb dew point (or thermal would have already stopped)
         if ( priorThermalDPTemp > ambDPTemp ) {
             // Calculate the thermal dew point temp (Td)
@@ -601,34 +698,38 @@ function getThermalInfo ( ambTemp, ambDPTemp, alt, priorThermalDPTemp, priorAlt,
 
             // Check if the thermal is no longer rising (thermal dew point doesn't exceed the ambient dew point)
             if ( thermalDPTemp - ambDPTemp <= 0 ) {
-
-                // Estimate top of lift based on the alt where the thermalDPTemp intersected prior to current ambient air DP (very rough estimate and rounded to 100 feet)
+                // Estimate top of lift based on the alt where the thermalDPTemp intersected prior to current ambient air DP (very rough estimate and round to 100 feet)
                 var altRange = alt - priorAlt
-                var thermalDPDiff = priorAmbDPTemp - thermalDPTemp
-                var totalAmbDiff = priorAmbDPTemp - ambDPTemp
-                topOfLiftAlt = Math.round((priorAlt + (altRange * totalAmbDiff / thermalDPDiff))/100)*100
-
+                var thermalDPDiff = Math.max((priorAmbDPTemp - thermalDPTemp), 0)   // There shouldn't be an inversion in a thermal lapse rate, but just in case
+                var totalAmbDiff = Math.max((priorAmbDPTemp - ambDPTemp), 0)        // If there is an inversion in the ambient air, set difference to 0
+                if ( thermalDPDiff === 0 ) { topOfLiftAlt = priorAlt }
+                else { topOfLiftAlt = priorAlt + (altRange * totalAmbDiff / thermalDPDiff) }
             } else 
-            // Check if cloudbase is reached and DALR can't be used to predict thermal strength (ambient temp doesn't exceed the ambient dew point temp)
-            if ( ambTemp - ambDPTemp <= 0 ) {
-
-                // Estimate cloudbase based on the ratio of the ambTemp between the prior and current ambDPTemp (very rough estimate and rounded to 100 feet)
-                var altRange = alt - priorAlt
-                var CurrAmbTDiff = priorAmbDPTemp - ambTemp
-                var totalAmbDPDiff = priorAmbDPTemp - ambDPTemp
-                thermalCloudBaseAlt = Math.round((priorAlt + (altRange * CurrAmbTDiff / totalAmbDPDiff))/100)*100
-
-            } else {
-                // Calculate the thermal velocity (w)
-                // w = thermalVelocityConstant * sqrt [ ((1.1)^(thermalDPTemp - ambDPTemp) - 1) / ((1.1)^(ambTemp - ambDPTemp)-1) ]
-                // Which is a ratio between the thermal-DP-temp-to-ambient-DP-temp spread to the ambient-temp-to-ambient-DP-temp spread, with adjusting factors.
-                // In other words, the thermal velocity will increase if the thermal temp and/or dryness is higher, but the increase is reduced in proportion how dry the ambient air already is.
+            // Calculate the thermal velocity (w)
+            // w = thermalVelocityConstant * sqrt [ ((1.1)^(thermalDPTemp - ambDPTemp) - 1) / ((1.1)^(ambTemp - ambDPTemp)-1) ]
+            // Which is a ratio between the thermal-DP-temp-to-ambient-DP-temp spread to the ambient-temp-to-ambient-DP-temp spread, with adjusting factors.
+            // In other words, the thermal velocity will increase if the thermal temp and/or dryness is higher, but the increase is reduced in proportion how dry the ambient air already is.
+            {
                 thermalVelocity = thermalVelocityConstant * Math.sqrt( ((1.1)**(thermalDPTemp-ambDPTemp)-1) / ((1.1)**(ambTemp-ambDPTemp)-1) )
+
+                // Reduce thermal strength near the surface (thermals not yet organized)
+                const thermalRampTop = surfaceAlt10m + thermalRampDistance
+                if ( thermalRampTop >= effectivePriorAlt ) {
+                    // Determine portion of top of thermal ramp factor impacting the altitude range being predicted
+                    const pctOfRampInRange = ( thermalRampTop - effectivePriorAlt ) / thermalRampDistance
+                    // Determine how much of the altitude range being predicted is affected by the ramp
+                    const pctOfRangeImpacted = ( thermalRampTop - effectivePriorAlt ) / ( alt - effectivePriorAlt )
+                    // Determine reduction of average thermal strength in this range
+                    const thermalReductionFactor = ( thermalRampStartPct / 100 ) * pctOfRampInRange * pctOfRangeImpacted
+                    // Apply to thermal velocity
+                    thermalVelocity = thermalVelocity * ( 1 - thermalReductionFactor )
+                }
 
                 // Round thermal velocity to nearest tenth of m/s
                 thermalVelocity = Math.round ( thermalVelocity * 10 ) / 10
             }
         }
+
         // Set thermal velocity to '-' if not present or if zero
         // and set thermalDPTemp to 0 to prevent higher altitude thermal calculations
         if ( thermalVelocity > 0 ) {}

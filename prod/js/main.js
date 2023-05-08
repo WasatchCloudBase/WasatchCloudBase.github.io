@@ -4,10 +4,12 @@ const now = new Date()
 const date = new Intl.DateTimeFormat('en-US', {month: '2-digit', day: '2-digit', year: 'numeric'}).format(now)
 const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-const wwGrn = '#20c997' // Bootstrap teal
-const wwYlw = '#ffc107' // Bootstrap yellow (warning)
-const wwOrg = '#fd7e14' // Bootstrap orange
-const wwRed = '#dc3545' // Bootstrap red (danger)
+const wwGrn = '#20c997'     // Bootstrap teal
+const wwYlw = '#ffc107'     // Bootstrap yellow (warning)
+const wwOrg = '#fd7e14'     // Bootstrap orange
+const wwRed = '#dc3545'     // Bootstrap red (danger)
+const wwBlue = '#0d6efd'    // Bootstrap blue (primary)
+const wwCyan = '#0dcaf0'    // Bootstrap cyan (info)
 
 // Set initial defaults
 let currentDiv = 'Site List'
