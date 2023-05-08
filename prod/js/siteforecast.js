@@ -273,10 +273,9 @@ async function siteForecast(site) {
                         if ( topOfLiftAlt >= priorAlt && topOfLiftAlt <= forecastData.hourly.geopotential_height_950hPa[i] ) {
                             rowVVel950.childNodes[forecastCount].style.borderBottom = "2px solid teal"
                             rowWind950.childNodes[forecastCount].style.borderBottom = "2px solid teal" }
-                        if ( topOfLiftAlt ) { 
+                        if ( topOfLiftAlt || thermalObject.thermalVelocity === 0 || !thermalObject.thermalVelocity ) { 
                             rowVVel950.childNodes[forecastCount].style.backgroundColor = "black"
-                            rowWind950.childNodes[forecastCount].style.backgroundColor = "black"
-                         }
+                            rowWind950.childNodes[forecastCount].style.backgroundColor = "black" }
                         priorAlt = forecastData.hourly.geopotential_height_950hPa[i]
                         // Determine lift for 900 hPa level
                         thermalObject = getThermalInfo ( forecastData.hourly.temperature_900hPa[i], forecastData.hourly.dewpoint_900hPa[i], 
@@ -287,10 +286,9 @@ async function siteForecast(site) {
                         if ( topOfLiftAlt >= priorAlt && topOfLiftAlt <= forecastData.hourly.geopotential_height_900hPa[i] ) {
                             rowVVel900.childNodes[forecastCount].style.borderBottom = "2px solid teal" 
                             rowWind900.childNodes[forecastCount].style.borderBottom = "2px solid teal" }
-                        if ( topOfLiftAlt ) { 
+                        if ( topOfLiftAlt || thermalObject.thermalVelocity === 0 || !thermalObject.thermalVelocity ) { 
                             rowVVel900.childNodes[forecastCount].style.backgroundColor = "black"
-                            rowWind900.childNodes[forecastCount].style.backgroundColor = "black"
-                        }
+                            rowWind900.childNodes[forecastCount].style.backgroundColor = "black" }
                         priorAlt = forecastData.hourly.geopotential_height_900hPa[i]
                         // Determine lift for 850 hPa level
                         thermalObject = getThermalInfo ( forecastData.hourly.temperature_850hPa[i], forecastData.hourly.dewpoint_850hPa[i], 
@@ -301,10 +299,9 @@ async function siteForecast(site) {
                         if ( topOfLiftAlt >= priorAlt && topOfLiftAlt <= forecastData.hourly.geopotential_height_850hPa[i] ) {
                             rowVVel850.childNodes[forecastCount].style.borderBottom = "2px solid teal"
                             rowWind850.childNodes[forecastCount].style.borderBottom = "2px solid teal" }
-                        if ( topOfLiftAlt ) { 
+                        if ( topOfLiftAlt || thermalObject.thermalVelocity === 0 || !thermalObject.thermalVelocity ) { 
                             rowVVel850.childNodes[forecastCount].style.backgroundColor = "black"
-                            rowWind850.childNodes[forecastCount].style.backgroundColor = "black"
-                        }
+                            rowWind850.childNodes[forecastCount].style.backgroundColor = "black" }
                         priorAlt = forecastData.hourly.geopotential_height_850hPa[i]
                         // Determine lift for 800 hPa level
                         thermalObject = getThermalInfo ( forecastData.hourly.temperature_800hPa[i], forecastData.hourly.dewpoint_800hPa[i], 
@@ -315,10 +312,9 @@ async function siteForecast(site) {
                         if ( topOfLiftAlt >= priorAlt && topOfLiftAlt <= forecastData.hourly.geopotential_height_800hPa[i] ) {
                             rowVVel800.childNodes[forecastCount].style.borderBottom = "2px solid teal"
                             rowWind800.childNodes[forecastCount].style.borderBottom = "2px solid teal" }
-                        if ( topOfLiftAlt ) { 
+                        if ( topOfLiftAlt || thermalObject.thermalVelocity === 0 || !thermalObject.thermalVelocity ) { 
                             rowVVel800.childNodes[forecastCount].style.backgroundColor = "black"
-                            rowWind800.childNodes[forecastCount].style.backgroundColor = "black"
-                        }
+                            rowWind800.childNodes[forecastCount].style.backgroundColor = "black" }
                         priorAlt = forecastData.hourly.geopotential_height_800hPa[i]
                         // Determine lift for 750 hPa level
                         thermalObject = getThermalInfo ( forecastData.hourly.temperature_750hPa[i], forecastData.hourly.dewpoint_750hPa[i], 
@@ -329,10 +325,9 @@ async function siteForecast(site) {
                         if ( topOfLiftAlt >= priorAlt && topOfLiftAlt <= forecastData.hourly.geopotential_height_750hPa[i] ) {
                             rowVVel750.childNodes[forecastCount].style.borderBottom = "2px solid teal"
                             rowWind750.childNodes[forecastCount].style.borderBottom = "2px solid teal" }
-                        if ( topOfLiftAlt ) { 
+                        if ( topOfLiftAlt || thermalObject.thermalVelocity === 0 || !thermalObject.thermalVelocity ) { 
                             rowVVel750.childNodes[forecastCount].style.backgroundColor = "black"
-                            rowWind750.childNodes[forecastCount].style.backgroundColor = "black"
-                        }
+                            rowWind750.childNodes[forecastCount].style.backgroundColor = "black" }
                         priorAlt = forecastData.hourly.geopotential_height_750hPa[i]
                         // Determine lift for 700 hPa level
                         thermalObject = getThermalInfo ( forecastData.hourly.temperature_700hPa[i], forecastData.hourly.dewpoint_700hPa[i], 
@@ -343,10 +338,9 @@ async function siteForecast(site) {
                         if ( topOfLiftAlt >= priorAlt && topOfLiftAlt <= forecastData.hourly.geopotential_height_700hPa[i] ) {
                             rowVVel700.childNodes[forecastCount].style.borderBottom = "2px solid teal"
                             rowWind700.childNodes[forecastCount].style.borderBottom = "2px solid teal" }
-                        if ( topOfLiftAlt ) { 
+                        if ( topOfLiftAlt || thermalObject.thermalVelocity === 0 || !thermalObject.thermalVelocity ) { 
                             rowVVel700.childNodes[forecastCount].style.backgroundColor = "black"
-                            rowWind700.childNodes[forecastCount].style.backgroundColor = "black"
-                        }
+                            rowWind700.childNodes[forecastCount].style.backgroundColor = "black" }
                         priorAlt = forecastData.hourly.geopotential_height_700hPa[i]
                         // Determine lift for 650 hPa level
                         thermalObject = getThermalInfo ( forecastData.hourly.temperature_650hPa[i], forecastData.hourly.dewpoint_650hPa[i], 
@@ -357,10 +351,9 @@ async function siteForecast(site) {
                         if ( topOfLiftAlt >= priorAlt && topOfLiftAlt <= forecastData.hourly.geopotential_height_650hPa[i] ) {
                             rowVVel650.childNodes[forecastCount].style.borderBottom = "2px solid teal"
                             rowWind650.childNodes[forecastCount].style.borderBottom = "2px solid teal" }
-                        if ( topOfLiftAlt ) { 
+                        if ( topOfLiftAlt || thermalObject.thermalVelocity === 0 || !thermalObject.thermalVelocity ) { 
                             rowVVel650.childNodes[forecastCount].style.backgroundColor = "black"
-                            rowWind650.childNodes[forecastCount].style.backgroundColor = "black"
-                        }
+                            rowWind650.childNodes[forecastCount].style.backgroundColor = "black" }
                         priorAlt = forecastData.hourly.geopotential_height_650hPa[i]
                         // Determine lift for 600 hPa level
                         thermalObject = getThermalInfo ( forecastData.hourly.temperature_600hPa[i], forecastData.hourly.dewpoint_600hPa[i], 
@@ -371,10 +364,9 @@ async function siteForecast(site) {
                         if ( topOfLiftAlt >= priorAlt && topOfLiftAlt <= forecastData.hourly.geopotential_height_600hPa[i] ) {
                             rowVVel600.childNodes[forecastCount].style.borderBottom = "2px solid teal"
                             rowWind600.childNodes[forecastCount].style.borderBottom = "2px solid teal" }
-                        if ( topOfLiftAlt ) { 
+                        if ( topOfLiftAlt || thermalObject.thermalVelocity === 0 || !thermalObject.thermalVelocity ) { 
                             rowVVel600.childNodes[forecastCount].style.backgroundColor = "black"
-                            rowWind600.childNodes[forecastCount].style.backgroundColor = "black"
-                        }
+                            rowWind600.childNodes[forecastCount].style.backgroundColor = "black" }
                         priorAlt = forecastData.hourly.geopotential_height_600hPa[i]
                         // Determine lift for 550 hPa level
                         thermalObject = getThermalInfo ( forecastData.hourly.temperature_550hPa[i], forecastData.hourly.dewpoint_550hPa[i], 
@@ -385,10 +377,9 @@ async function siteForecast(site) {
                         if ( topOfLiftAlt >= priorAlt && topOfLiftAlt <= forecastData.hourly.geopotential_height_550hPa[i] ) {
                             rowVVel550.childNodes[forecastCount].style.borderBottom = "2px solid teal"
                             rowWind550.childNodes[forecastCount].style.borderBottom = "2px solid teal" }
-                        if ( topOfLiftAlt ) { 
+                        if ( topOfLiftAlt || thermalObject.thermalVelocity === 0 || !thermalObject.thermalVelocity ) { 
                             rowVVel550.childNodes[forecastCount].style.backgroundColor = "black"
-                            rowWind550.childNodes[forecastCount].style.backgroundColor = "black"
-                        }
+                            rowWind550.childNodes[forecastCount].style.backgroundColor = "black" }
                         priorAlt = forecastData.hourly.geopotential_height_550hPa[i]
                         // Determine lift for 500 hPa level
                         thermalObject = getThermalInfo ( forecastData.hourly.temperature_500hPa[i], forecastData.hourly.dewpoint_500hPa[i], 
@@ -399,10 +390,9 @@ async function siteForecast(site) {
                         if ( topOfLiftAlt >= priorAlt && topOfLiftAlt <= forecastData.hourly.geopotential_height_500hPa[i] ) {
                             rowVVel500.childNodes[forecastCount].style.borderBottom = "2px solid teal"
                             rowWind500.childNodes[forecastCount].style.borderBottom = "2px solid teal" }
-                        if ( topOfLiftAlt ) { 
+                        if ( topOfLiftAlt || thermalObject.thermalVelocity === 0 || !thermalObject.thermalVelocity ) { 
                             rowVVel500.childNodes[forecastCount].style.backgroundColor = "black"
-                            rowWind500.childNodes[forecastCount].style.backgroundColor = "black"
-                        }
+                            rowWind500.childNodes[forecastCount].style.backgroundColor = "black" }
                         priorAlt = forecastData.hourly.geopotential_height_500hPa[i]
 
                         // Display top of lift (rounded to nearest 100 feet) and cloud base
