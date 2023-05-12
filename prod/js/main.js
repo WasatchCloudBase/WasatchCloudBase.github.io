@@ -1,4 +1,5 @@
 'use strict';
+
 // Globals
 const now = new Date()
 const date = new Intl.DateTimeFormat('en-US', {month: '2-digit', day: '2-digit', year: 'numeric'}).format(now)
@@ -33,18 +34,14 @@ let sunset_hour = ''
 let weatherCodes = ''
 let helpTopics = ''
 
-// Make CORS requests to external sites via proxy server
-function doCORSRequest(options, result) {
-    var cors_api_url = 'https://wasatchcloudbase.herokuapp.com/'
-    var ServerRequest = new XMLHttpRequest()
-    ServerRequest.open(options.method, cors_api_url + options.url)
-    ServerRequest.onload = ServerRequest.onerror = function() {
-        result(ServerRequest.responseText)
-        // Can add to result for debugging:  options.method + ' ' + options.url + '\n' + ServerRequest.status + ' ' + ServerRequest.statusText + '\n\n' +
-    }
-    ServerRequest.send(options.data);
-}
-
+// Forecast thermal lift parameters (the default values below are overridden with values from Google sheet)
+// These allow changes for glider sink rate, surface disorganization, etc., to better match other models (e.g., XCSkies)
+let thermalLapseRate          = 9.8     // Standard thermal lapse rate (DALR) is 9.8 degrees C/1k m; higher lapse rate results in lower top of lift and lower thermal speed at higher altitudes
+let thermalVelocityConstant   = 5.6     // Theoretical standard is 5.6; lower constant results in lower thermal speeds at all altitutdes
+let thermalTriggerTempDiff    = 3       // Difference in air (2m) and ground temp to trigger thermals; higher number results in weaker starting conditions for thermals
+let thermalRampDistance       = 500     // Height (in m) from the surface below which thermals are weaker because they are not yet organized
+let thermalRampStartPct       = 50      // Initial reduction (in %) of forecasted thermal strength near the surface due to disorganized thermals
+;
 // GET SUNRISE AND SUNSET FOR SLC AIRPORT
 (async () => {
 
@@ -76,6 +73,27 @@ function doCORSRequest(options, result) {
     }
 })();
 
+// Populate lift parameter constants for forecast
+(async () => {
+    // Retrieve lift parameters from Google sheets API
+    // Maintain lift parameters here:  https://docs.google.com/spreadsheets/d/1nBEJuTCWkUidSFKQjBjcJgKeteC_oy8LqL2P7uhGyLQ/edit#gid=2126129603
+    var lift_parameters_url = "https://sheets.googleapis.com/v4/spreadsheets/1nBEJuTCWkUidSFKQjBjcJgKeteC_oy8LqL2P7uhGyLQ/values/LiftParameters/?alt=json" +
+        "&key=AIzaSyDSro1lDdAQsNEZq06IxwjOlQQP1tip-fs"
+    var response = await fetch(lift_parameters_url)
+    var LiftParametersRawJSON = await response.json()
+    if (LiftParametersRawJSON) {
+        // Convert first row (headers) to JSON keys
+        var liftParameters = setJSONKeys(LiftParametersRawJSON.values)
+
+        // Update values for lift parameters
+        thermalLapseRate        = Number(liftParameters[0].Value)
+        thermalVelocityConstant = Number(liftParameters[1].Value)
+        thermalTriggerTempDiff  = Number(liftParameters[2].Value)
+        thermalRampDistance     = Number(liftParameters[3].Value)
+        thermalRampStartPct     = Number(liftParameters[4].Value)
+    }
+})();
+
 // Build array of weather codes and images for forecast
 (async () => {
     // Retrieve weathercode table and image names in JSON format from Google sheets API
@@ -92,6 +110,18 @@ function doCORSRequest(options, result) {
         weatherCodes = Object.entries(weatherCodeData)
     }
 })();
+
+// Process CORS requests to external sites via proxy server
+function doCORSRequest(options, result) {
+    var cors_api_url = 'https://wasatchcloudbase.herokuapp.com/'
+    var ServerRequest = new XMLHttpRequest()
+    ServerRequest.open(options.method, cors_api_url + options.url)
+    ServerRequest.onload = ServerRequest.onerror = function() {
+        result(ServerRequest.responseText)
+        // Can add to result for debugging:  options.method + ' ' + options.url + '\n' + ServerRequest.status + ' ' + ServerRequest.statusText + '\n\n' +
+    }
+    ServerRequest.send(options.data);
+}
 
 // Load prior navigation from local storage (if exists due to hitting reload button)
 if ( window.localStorage.getItem('currentDiv') ) { 
@@ -124,7 +154,7 @@ window.onfocus = function() {
     var checkDateTime = new Date()
     var ElapsedTime = ( checkDateTime - now ) / ( 1000  * 60 )  //convert milliseconds to minutes
     if ( ElapsedTime >= 5 ) { location.reload() }
-  };
+}
 
 // Store current navigation in local storage for use after reload
 function storeNavSettings() {
@@ -155,12 +185,8 @@ function toggleDiv(newDiv) {
     document.getElementById(currentDiv).style.display = 'block'
 
     // Hide or display site region drop down based on selected DIV
-    if ( newDiv === 'Map View' || newDiv === 'Site List' ) {
-        document.getElementById('Site Map Select').style.display = 'block'
-    } 
-    else { 
-        document.getElementById('Site Map Select').style.display = 'none' 
-    }
+    if ( newDiv === 'Map View' || newDiv === 'Site List' ) { document.getElementById('Site Map Select').style.display = 'block' } 
+    else { document.getElementById('Site Map Select').style.display = 'none' }
 
     // Hide or display return-to-prior-page and site guide buttons based on selected DIV
     if ( newDiv === 'Site Details' ) {
@@ -179,7 +205,7 @@ function toggleDiv(newDiv) {
 function siteDetail(site) {
     toggleDiv('Site Details')
     siteDetailContent(site)
-};
+}
 
 function returnFromSiteDetail() {
     // Hide the help pop up (in case it was visible)
@@ -187,7 +213,7 @@ function returnFromSiteDetail() {
 
     // Navigate back
     toggleDiv(returnToPage)
-};
+}
 
 // Handle drop down lists
 window.onclick = function(event) {
@@ -204,6 +230,7 @@ window.onclick = function(event) {
         if (MapMenu.classList.contains('show')) MapMenu.classList.remove('show')
     }
 }
+
 function menu() { document.getElementById('menu').classList.toggle('show') }
 function LocMenu() { document.getElementById('LocMenu').classList.toggle('show') }
 function MapMenu() { document.getElementById('MapMenu').classList.toggle('show') }

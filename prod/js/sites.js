@@ -134,9 +134,8 @@
 
                 // Clone site list prototype DIV to add site to site list page
                 let cloned_site_list_site = document.getElementById(siteMap + `-prototype-site-list-site`).cloneNode(true)
-                //Rename parent and children IDs from prototype clone to new site on site list page
 
-//                cloned_site_list_site.id = siteID + `-site-list`
+                //Rename parent and children IDs from prototype clone to new site on site list page
                 cloned_site_list_site.id = siteID + `-site-list`
                 cloned_site_list_site.children[0].id = siteID + `-site-list-left-block`
                 cloned_site_list_site.children[0].children[0].id = siteID + `-site-list-name`
