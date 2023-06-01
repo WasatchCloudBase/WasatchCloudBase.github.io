@@ -403,7 +403,7 @@ async function siteForecast(site) {
                         }
                         if ( aboveTop ) { rowVVel500.childNodes[forecastCount].style.backgroundColor = rowWind500.childNodes[forecastCount].style.backgroundColor = "black" } 
 
-                        // Display top of lift (rounded to nearest 100 feet) and cloud base
+                        // Display top of lift (rounded to nearest 100 feet)
                         if ( topOfLiftAlt > surfaceAlt10m ) {topOfLift.childNodes[forecastCount].innerText = Math.round(topOfLiftAlt/100)*100/1000 + 'k ft'}
                         // Check if there was still lift at the top of the forecast range, and display a rocket ship
                         else if (thermalObject.thermalVelocity > 0 ) {topOfLift.childNodes[forecastCount].innerHTML = `<img src="prod/images/rocket-3432.png" width="60">`}
@@ -411,8 +411,18 @@ async function siteForecast(site) {
                         else {  topOfLift.childNodes[forecastCount].innerHTML = `<img src="prod/images/sledride.png" width="80">`
                                 topOfLift.childNodes[forecastCount].style.backgroundColor = "black"
                         }
-                        cloudBase.childNodes[forecastCount].innerText = cloudBaseAlt
+
                         
+                        // If cloudbase not reached during thermal strength calcs at each pressure level, then calculate forecasted cloudbase
+                        // based on surface temperature and dew point gap and standard lapse rate
+                        if (!(cloudBaseAlt > 0)) {
+                            cloudBaseAlt = mToFt( ( ( forecastData.hourly.temperature_2m[i] - forecastData.hourly.dewpoint_2m[i] ) * cloudbaseLapseRatesDiff ) + ftToM(surfaceAlt) )
+                        }
+                        // Display cloudbase (if present)
+                        if (cloudBaseAlt > 0) {
+                            cloudBase.childNodes[forecastCount].innerText = Math.round(cloudBaseAlt/100)*100/1000 + 'k ft'
+                        }
+
                         // If date is the same as the prior column, merge the cells
                         if ( formattedDate === previousDate ) {
                             rowDate.childNodes[previousDateStart].colSpan = rowDate.childNodes[previousDateStart].colSpan + 1
@@ -617,7 +627,7 @@ function mToFt ( distance ) {
     return ( distance * 3.28084 )
 }
 
-function FtToM ( distance ) {
+function ftToM ( distance ) {
     return ( distance / 3.28084 )
 }
 
@@ -686,7 +696,7 @@ function getThermalInfo ( ambTemp, ambDPTemp, alt, priorThermalDPTemp, priorAlt,
 
         // Calculate the thermal dew point temp (Td)
         // Td = T - (DALR * altChange) where DALR is the thermalLapseRate
-        thermalDPTemp = priorThermalDPTemp - ( thermalLapseRate * FtToM(alt - effectivePriorAlt) / 1000 )
+        thermalDPTemp = priorThermalDPTemp - ( thermalLapseRate * ftToM(alt - effectivePriorAlt) / 1000 )
 
         // Check if the thermal is no longer rising (thermal dew point doesn't exceed the ambient dew point)
         if ( thermalDPTemp - ambDPTemp <= 0 ) {

@@ -41,6 +41,7 @@ let thermalVelocityConstant   = 5.6     // Theoretical standard is 5.6; lower co
 let thermalTriggerTempDiff    = 3       // Difference in air (2m) and ground temp to trigger thermals; higher number results in weaker starting conditions for thermals
 let thermalRampDistance       = 500     // Height (in m) from the surface below which thermals are weaker because they are not yet organized
 let thermalRampStartPct       = 50      // Initial reduction (in %) of forecasted thermal strength near the surface due to disorganized thermals
+let cloudbaseLapseRatesDiff   = 125     // Difference in DALR and dew point lapse rates (in m / degrees C) used to calculate cloudbase
 ;
 
 // GET SUNRISE AND SUNSET FOR SLC AIRPORT
@@ -92,6 +93,7 @@ let thermalRampStartPct       = 50      // Initial reduction (in %) of forecaste
         thermalTriggerTempDiff  = Number(liftParameters[2].Value)
         thermalRampDistance     = Number(liftParameters[3].Value)
         thermalRampStartPct     = Number(liftParameters[4].Value)
+        cloudbaseLapseRatesDiff = Number(liftParameters[5].Value)
     }
 })();
 
