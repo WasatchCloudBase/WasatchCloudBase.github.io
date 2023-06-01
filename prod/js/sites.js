@@ -229,6 +229,9 @@
     // If reload occurred and current page is site details, then load the details
     if ( currentDiv === 'Site Details' ) {
         siteDetailContent(currentSite)
+    // Otherwise, hide 'loading' image
+    } else {
+        document.getElementById('Loading Image').style.display = 'none' 
     }
 
 })();

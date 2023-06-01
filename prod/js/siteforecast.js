@@ -52,6 +52,9 @@ var cloudBaseAlt = ``
 // Get forecast data for site
 async function siteForecast(site) {
 
+    // Show 'loading' image
+    document.getElementById('Loading Image').style.display = 'block' 
+
     // Un-hide all wind and vvel rows in case a previous forecast hid those below surface + 10m
     rowWind950.style.display = rowVVel950.style.display = `table-row`
     rowWind900.style.display = rowVVel900.style.display = `table-row`
@@ -480,6 +483,10 @@ async function siteForecast(site) {
             console.log('Error processing forecastData: ' + error )
         }
     }
+
+    // Hide 'loading' image
+    document.getElementById('Loading Image').style.display = 'none' 
+
 }
 
 // Determine weather code based on value and, if it shows as cloudy, then based on cloud coverage %

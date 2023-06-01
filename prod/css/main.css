@@ -178,6 +178,23 @@ td:first-child {
   display: inline-block;
   transform: rotate(0deg);
 }
+/* Properties for image displayed while page is loading */
+.loadingBackground {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9998;
+  background-color: black;
+}
+.loadingImage {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+}
 
 /* Flight log CSS */
 /* Adjusting zoom for input elements since the zoom used for the rest of the page makes these unreadably small */

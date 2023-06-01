@@ -42,6 +42,7 @@ let thermalTriggerTempDiff    = 3       // Difference in air (2m) and ground tem
 let thermalRampDistance       = 500     // Height (in m) from the surface below which thermals are weaker because they are not yet organized
 let thermalRampStartPct       = 50      // Initial reduction (in %) of forecasted thermal strength near the surface due to disorganized thermals
 ;
+
 // GET SUNRISE AND SUNSET FOR SLC AIRPORT
 (async () => {
 
