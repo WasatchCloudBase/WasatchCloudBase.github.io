@@ -159,6 +159,8 @@
                 var alt_units = ``
                 if ( siteData[i].ReadingsAlt === 'See details' ) {
                     document.getElementById(siteHeader + `-time`).innerText = 'See details'
+                } else if ( siteData[i].ReadingsAlt === 'Stn down' ) {
+                    document.getElementById(siteHeader + `-time`).innerText = 'Stn down'    
                 } else { alt_units = ` ft` }
                 // Update altitude
                 document.getElementById(siteID + `-site-list-alt`).innerText = siteData[i].ReadingsAlt + alt_units
@@ -548,8 +550,9 @@ function calculateZone(alti, temp, currentZones = []) {
     const zoneIntercept = [29.91, 30.01, 30.11, 30.27, 30.43, 30.53, 30.65, 100]
     for (let i=0; i<zoneSlope.length; i++) currentZones.push(Math.round((zoneSlope[i]/-110*temp+zoneIntercept[i])*100)/100)
     const zone = currentZones.findIndex(d => d >= alti)
-    // Original Wasatch Wind returned 'LoP' if alti===currentZones[3]; not sure why this was, so removed
-    return zone
+    // Only return numeric zones between 0 and 7
+    if ( zone >= 0 && zone <= 7 ) { return zone }
+    else { return null }
 }
 
 // Set wind speed font and bar colors

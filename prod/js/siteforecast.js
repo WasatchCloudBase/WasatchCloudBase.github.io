@@ -494,6 +494,9 @@ async function siteForecast(site) {
         }
     }
 
+    // Hide pressure zone forecast row, as forecast isn't very accurate
+    rowPressureZone.style.display = 'none'
+
     // Hide 'loading' image
     document.getElementById('Loading Image').style.display = 'none' 
 
