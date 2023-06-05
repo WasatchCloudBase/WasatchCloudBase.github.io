@@ -197,11 +197,14 @@ async function siteForecast(site) {
                             (1-((.0065*forecastData.elevation)/(forecastData.hourly.temperature_2m[i] + (.0065*forecastData.elevation) + 273.15)))**(-5.257) / 33.863887
                         const forecastTempC = Math.round(forecastData.hourly.temperature_2m[i])
                         var forecastPressureZone = calculateZone(forecastAltiSetting, tempCtoF(forecastTempC))  // forecastZone uses temp in F; API provided temp is in C
-                        const forecastPressureZoneColor = getZoneColor(forecastPressureZone)
-                        forecastPressureZone = forecastPressureZone===0 ? '&#9471;' : (forecastPressureZone==='LoP') ? 'LoP' : `&#1010${forecastPressureZone+1}`
-                        rowPressureZone.childNodes[forecastCount].innerHTML = forecastPressureZone
-                        rowPressureZone.childNodes[forecastCount].style.fontWeight = "bold";
-                        rowPressureZone.childNodes[forecastCount].style.color = forecastPressureZoneColor
+                        // Display pressue zone if present (including zone 0)
+                        if ( forecastPressureZone || forecastPressureZone === 0 ) {
+                            const forecastPressureZoneColor = getZoneColor(forecastPressureZone)
+                            forecastPressureZone = forecastPressureZone===0 ? '&#9471;' : (forecastPressureZone==='LoP') ? 'LoP' : `&#1010${forecastPressureZone+1}`
+                            rowPressureZone.childNodes[forecastCount].innerHTML = forecastPressureZone
+                            rowPressureZone.childNodes[forecastCount].style.fontWeight = "bold";
+                            rowPressureZone.childNodes[forecastCount].style.color = forecastPressureZoneColor
+                        }
 
                         // Display cloud cover (display '-' if clouds are 0%)
                         rowCloudCover       .childNodes[forecastCount].innerText = (forecastData.hourly.cloudcover[i]>0) ? forecastData.hourly.cloudcover[i] : ''
