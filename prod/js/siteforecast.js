@@ -733,6 +733,9 @@ function getThermalInfo ( ambTemp, ambDPTemp, alt, priorThermalDPTemp, priorAlt,
                 // Apply to thermal velocity
                 thermalVelocity = thermalVelocity * ( 1 - thermalReductionFactor )
             }
+
+            // Reduce thermal strength to adjust for glider sink rate
+            // thermalVelocity = thermalVelocity - thermalGliderSinkRate
         }
     }   
 

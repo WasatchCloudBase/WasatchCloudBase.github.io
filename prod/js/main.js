@@ -25,6 +25,7 @@ let mapData = ''                // Populated from Google docs in sites.js
 let currentMap = ''             // Set in sites.js
 let siteData = []               // Populated from Google docs in sites.js
 let siteReadingsURL = `https://api.mesowest.net/v2/station/timeseries?` // The rest of the URL is built in sites.js
+let CUASASiteReadingsURL = `https://XXXXXXXXXXXXXX` // The rest of the URL is built in sites.js
 let readingsData = []           // Populated using API call in sites.js
 let pressureReadingsData = []   // Populated using API call in sites.js
 let returnToPage = currentDiv   // Sets page to return to from site detail
@@ -42,6 +43,7 @@ let thermalTriggerTempDiff    = 3       // Difference in air (2m) and ground tem
 let thermalRampDistance       = 500     // Height (in m) from the surface below which thermals are weaker because they are not yet organized
 let thermalRampStartPct       = 50      // Initial reduction (in %) of forecasted thermal strength near the surface due to disorganized thermals
 let cloudbaseLapseRatesDiff   = 125     // Difference in DALR and dew point lapse rates (in m / degrees C) used to calculate cloudbase
+let thermalGliderSinkRate     = 1.5     // Glider sink rate to reduce thermal velocity and top of lift
 ;
 
 // GET SUNRISE AND SUNSET FOR SLC AIRPORT
@@ -94,6 +96,7 @@ let cloudbaseLapseRatesDiff   = 125     // Difference in DALR and dew point laps
         thermalRampDistance     = Number(liftParameters[3].Value)
         thermalRampStartPct     = Number(liftParameters[4].Value)
         cloudbaseLapseRatesDiff = Number(liftParameters[5].Value)
+        thermalGliderSinkRate   = Number(liftParameters[6].Value)
     }
 })();
 
@@ -128,27 +131,26 @@ function doCORSRequest(options, result) {
 
 // Load prior navigation from local storage (if exists due to hitting reload button)
 if ( window.localStorage.getItem('currentDiv') ) { 
+
+    // Load prior returnToPage and site if reload occurred on site detail page
+    if ( window.localStorage.getItem('currentDiv') === 'Site Details' ) {
+        if ( window.localStorage.getItem('returnToPage') ) { 
+            returnToPage = window.localStorage.getItem('returnToPage') 
+        }
+        if ( window.localStorage.getItem('currentSite') ) { 
+            currentSite = window.localStorage.getItem('currentSite')
+        }
+        // Note that siteDetail(currentSite) function is called at the end of the sites.js async function to repopulate page
+    }
     toggleDiv( window.localStorage.getItem('currentDiv') ) 
+} else { 
+    // If local storage didn't exist, display default page
+    toggleDiv(currentDiv)
 }
-// If local storage didn't exist, display default page
-else { toggleDiv(currentDiv) }
 
 // Load prior map from local storage (if exists due to hitting reload button)
 if ( window.localStorage.getItem('currentMap') ) { 
-    currentMap = window.localStorage.getItem('currentMap')
-    // Sites.js will display the correct map after the map Divs are created
-}
-
-// Load prior returnToPage and site if reload occurred on site detail page
-if ( currentDiv === 'Site Details' ) {
-    if ( window.localStorage.getItem('returnToPage') ) { 
-        returnToPage = window.localStorage.getItem('returnToPage') 
-    }
-    if ( window.localStorage.getItem('currentSite') ) { 
-        currentSite = window.localStorage.getItem('currentSite')
-    }
-    // Note that siteDetail(currentSite) function is called at the end of the sites.js async function to repopulate page
-
+    currentMap = window.localStorage.getItem('currentMap')  // Sites.js will display the correct map after the map Divs are created
 }
 
 // Reload the page when switching back to the browser
@@ -168,13 +170,13 @@ function storeNavSettings() {
 }
 
 // Handle reload button in browser
-window.onbeforeunload = function() {
-    storeNavSettings()
-}
+//window.onbeforeunload = function() {
+//    storeNavSettings()
+//}
 
 // Handle refresh button in page
 function reload() {
-    storeNavSettings()
+//    storeNavSettings()
     history.scrollRestoration = 'manual'
     location.reload()
 }
@@ -203,6 +205,9 @@ function toggleDiv(newDiv) {
 
     // Hide the help pop up (in case it was visible)
     document.getElementById(`Forecast Help Info`).style.display = 'none'
+
+    // Store navigation settings after navigating to a new page
+    storeNavSettings()
 }
 
 function siteDetail(site) {
@@ -250,6 +255,9 @@ function toggleMap(newMap) {
     document.getElementById(currentMap + `-site-list`).style.display = 'none'
     document.getElementById(newMap + `-site-list`).style.display = 'block'
     currentMap = newMap
+
+        // Store navigation settings after navigating to a new map
+        storeNavSettings()
 }
 
 // Load forecast help info
