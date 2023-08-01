@@ -2,6 +2,7 @@
 
 // Globals
 const now = new Date()
+const nowTimeStamp = Date.now()
 const date = new Intl.DateTimeFormat('en-US', {month: '2-digit', day: '2-digit', year: 'numeric'}).format(now)
 const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -25,7 +26,7 @@ let mapData = ''                // Populated from Google docs in sites.js
 let currentMap = ''             // Set in sites.js
 let siteData = []               // Populated from Google docs in sites.js
 let siteReadingsURL = `https://api.mesowest.net/v2/station/timeseries?` // The rest of the URL is built in sites.js
-let CUASASiteReadingsURL = `https://XXXXXXXXXXXXXX` // The rest of the URL is built in sites.js
+let CUASASites = []             // Populated in sites.js
 let readingsData = []           // Populated using API call in sites.js
 let pressureReadingsData = []   // Populated using API call in sites.js
 let returnToPage = currentDiv   // Sets page to return to from site detail

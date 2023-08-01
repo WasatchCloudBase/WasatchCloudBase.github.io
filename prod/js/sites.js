@@ -168,50 +168,13 @@
                     siteReadingsURL = siteReadingsURL + `&stid=` + siteData[i].ReadingsStation 
                 }
 
-                // Get station readings for CUASA stations (API requires one call per station)
+                // Build listing of CUASA stations to query below by station (API requires one call per station)
                 if ( siteData[i].ReadingsSource === 'CUASA' && siteData[i].ReadingsStation ) {
-                    console.log('CUASA: ' + siteData[i].ReadingsStation )
-                }
-//-----------------------------------
-/*        // Get CUASA station readings using Sierra Gliding CUASA station API
-        var response = await fetch(CUASASiteReadingsURL)
-        var rawReadingsData = await response.json()
-        if (rawReadingsData) {
-            try {
-                // Extract all of the stations readings from the raw file and show the current reading for each station
-                for (let i=0; i<rawReadingsData.STATION.length; i++) {
-                    try {
-                        //Objects below use JSON.parse(JSON.stringify()) to fully (deep) copy the data
-                        //Otherwise, a shallow copy causes the slice on observations to reduce the original data set,
-                        //which doesn't leave enough readings for hourly pressure history
-    
-                        // Create object of observations for each station and update on  (used for pressure history)
-                        pressureReadingsData[i] = JSON.parse(JSON.stringify(rawReadingsData.STATION[i].OBSERVATIONS))
-                        pressureReadingsData[i].stid = JSON.parse(JSON.stringify(rawReadingsData.STATION[i].STID))
-    
-                        // Create object of last 10 observations for each station and update on site map (used for current wind readings and wind history)
-                        readingsData[i] = JSON.parse(JSON.stringify(rawReadingsData.STATION[i].OBSERVATIONS))
-                        readingsData[i].stid = JSON.parse(JSON.stringify(rawReadingsData.STATION[i].STID))
-                        var readingsCount = 10
-                        for (let key in readingsData[i]) {
-                            readingsData[i][key] = readingsData[i][key].slice(-readingsCount)
-                        }
-    
-                        // Populate current readings
-                        showCurrentReadings(readingsData[i])
-                    } catch (error) { 
-                        console.log('Station reading error: ' + error + ' for station: ' + rawReadingsData.STATION[i].STID)
+                    // Add site to array if it doesn't already exist in the array
+                    if (!CUASASites.includes(siteData[i].ReadingsStation)) {
+                        CUASASites.push(siteData[i].ReadingsStation)
                     }
                 }
-            } catch (error) { 
-                console.log('Readings Data error: ' + error + ' for length of: ' + JSON.stringify(rawReadingsData.STATION))
-                console.log('URL used for request:')
-                console.log(siteReadingsURL)
-            }
-        }
-*/
-///----------------------------------
-
 
             } catch (error) { 
                 console.log('Site forecast reading error: ' + error + ' for site: ' + siteData[i].SiteID)
@@ -248,7 +211,7 @@
                     //Otherwise, a shallow copy causes the slice on observations to reduce the original data set,
                     //which doesn't leave enough readings for hourly pressure history
 
-                    // Create object of observations for each station and update on  (used for pressure history)
+                    // Create object of pressure history observations for each station
                     pressureReadingsData[i] = JSON.parse(JSON.stringify(rawReadingsData.STATION[i].OBSERVATIONS))
                     pressureReadingsData[i].stid = JSON.parse(JSON.stringify(rawReadingsData.STATION[i].STID))
 
@@ -262,6 +225,7 @@
 
                     // Populate current readings
                     showCurrentReadings(readingsData[i])
+
                 } catch (error) { 
                     console.log('Station reading error: ' + error + ' for station: ' + rawReadingsData.STATION[i].STID)
                 }
@@ -270,6 +234,69 @@
             console.log('Readings Data error: ' + error + ' for length of: ' + JSON.stringify(rawReadingsData.STATION))
             console.log('URL used for request:')
             console.log(siteReadingsURL)
+        }
+    }
+
+    // Get station readings for each CUASA site using Sierra Gliding CUASA station API (one call per station)
+    for (let i = 0; i < CUASASites.length; i++) {
+
+        // Construct CUASA API reading call
+        // Call format:   https://sierragliding.us/api/station/<station_id>/data?start=<start_timestamp>&end=<end_timestamp>&sample=<interval_seconds>
+        // Example call:  https://sierragliding.us/api/station/1069/data?start=1686012560.231&end=1686012620.231&sample=1
+        let readingEnd = nowTimeStamp / 1000                        // API call expects timestamp in seconds (milliseconds after the decimal point)
+        let readingInterval = 5 * 60                                // Setting a 5 minute interval for history readings
+        let readingStart = readingEnd - ( readingInterval * 10 )    // Offset readingStart to be 10 readings earlier than readingEnd
+        let CUASASiteReadingsURL = `https://sierragliding.us/api/station/` + CUASASites[i] + `/data?start=` + readingStart + `&end=` + readingEnd + `&sample=` + readingInterval
+
+        // Make CORS call to get CUASA API data and process results
+        try {
+            doCORSRequest({method: 'GET', url: CUASASiteReadingsURL, data: ""}, function processResponse(result) {
+                let rawCUASAReadingsData = JSON.parse(result)
+
+                // Create a JSON object in Mesonet format
+                let MesoNetReadings = {
+                    "air_temp_set_1": [],
+                    "altimeter_set_1": [],
+                    "date_time": [],
+                    "stid": CUASASites[i],
+                    "wind_direction_set_1": [],
+                    "wind_gust_set_1": [],
+                    "wind_speed_set_1": [] 
+                }
+
+                // Read the CUASA readings, convert to Mesonet format, and display current readings
+                for (let j=0; j<rawCUASAReadingsData.length; j++) {
+                    try {
+                        // Convert date to "9:00 AM" format
+                        // Multipying by 1000 since the UNIX timestamp is in seconds and Javascript timestamp uses milliseconds
+                        const rawDate = new Date(rawCUASAReadingsData[j].timestamp * 1000)
+                        const hour = rawDate.getHours()
+                        const minutes = String(rawDate.getMinutes()).padStart(2, "0")
+                        let formattedTime = `${hour}:${minutes}`
+                        if (hour < 12) { formattedTime += " AM" } 
+                        else { formattedTime += " PM" }
+
+                        // Add CUASA readings data to Mesonet object
+                        MesoNetReadings.date_time[j] = formattedTime
+                        MesoNetReadings.wind_direction_set_1[j] = rawCUASAReadingsData[j].wind_direction_avg
+                        MesoNetReadings.wind_gust_set_1[j] = rawCUASAReadingsData[j].windspeed_max
+                        MesoNetReadings.wind_speed_set_1[j] = rawCUASAReadingsData[j].windspeed_avg
+
+                    } catch (error) { 
+                        console.log('CUASA API station processing error: ' + error + ' for station: ' + rawCUASAReadingsData[j].ID)
+                    }
+                }
+
+                // Create new station in readings object and display current readings
+                if (rawCUASAReadingsData.length > 0) {
+                    let newReadingsIndex = readingsData.length // Values start at 0, so this is the next unused index value
+                    readingsData[newReadingsIndex] = MesoNetReadings
+                    showCurrentReadings(readingsData[newReadingsIndex])
+                }
+
+            })
+        } catch (error) { 
+            console.log('CUASA API station reading error: ' + error + ' for station: ' + CUASASites[i])
         }
     }
 
@@ -407,15 +434,11 @@ function siteDetailContent(site) {
         document.getElementById(`site-details-readings-note`).innerHTML = null
         if ( detailSiteData.ReadingsNote ) { document.getElementById(`site-details-readings-note`).innerHTML = ' (station at ' + detailSiteData.ReadingsNote + ')' }
         
-        // Set full history URL for CUASA sites
+        // Set full history URL link
         if ( detailSiteData.ReadingsSource === 'CUASA' ) {
-            document.getElementById(`site-details-readings-alt`).innerHTML = null
             document.getElementById(`site-details-history-href`).href = 
                 `http://sierragliding.us/cuasa/#station=${detailSiteData.ReadingsStation}`
-            document.getElementById(`site-details-readings-note`).innerHTML = `Click here for wind readings` // Add this to show URL: (${detailSiteData.ReadingsNote})`
-            document.getElementById(`site-details-readings-note`).style.fontWeight = "bold"
         } else if ( detailSiteData.ReadingsSource === 'Mesonet' ) {
-            // Set full history URL for MesoNet sites
             document.getElementById(`site-details-history-href`).href = 
                 `https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=${detailSiteData.ReadingsStation}&table=1&banner=off`
         }
