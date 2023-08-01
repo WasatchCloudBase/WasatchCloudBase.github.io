@@ -130,9 +130,13 @@ function doCORSRequest(options, result) {
     ServerRequest.send(options.data);
 }
 
+// Load prior map from local storage (if exists due to hitting reload button)
+if ( window.localStorage.getItem('currentMap') ) { 
+    currentMap = window.localStorage.getItem('currentMap')  // Sites.js will display the correct map after the map Divs are created
+}
+
 // Load prior navigation from local storage (if exists due to hitting reload button)
 if ( window.localStorage.getItem('currentDiv') ) { 
-
     // Load prior returnToPage and site if reload occurred on site detail page
     if ( window.localStorage.getItem('currentDiv') === 'Site Details' ) {
         if ( window.localStorage.getItem('returnToPage') ) { 
@@ -147,11 +151,6 @@ if ( window.localStorage.getItem('currentDiv') ) {
 } else { 
     // If local storage didn't exist, display default page
     toggleDiv(currentDiv)
-}
-
-// Load prior map from local storage (if exists due to hitting reload button)
-if ( window.localStorage.getItem('currentMap') ) { 
-    currentMap = window.localStorage.getItem('currentMap')  // Sites.js will display the correct map after the map Divs are created
 }
 
 // Reload the page when switching back to the browser
@@ -171,13 +170,13 @@ function storeNavSettings() {
 }
 
 // Handle reload button in browser
-//window.onbeforeunload = function() {
-//    storeNavSettings()
-//}
+window.onbeforeunload = function() {
+    storeNavSettings()
+}
 
 // Handle refresh button in page
 function reload() {
-//    storeNavSettings()
+    storeNavSettings()
     history.scrollRestoration = 'manual'
     location.reload()
 }
@@ -256,9 +255,8 @@ function toggleMap(newMap) {
     document.getElementById(currentMap + `-site-list`).style.display = 'none'
     document.getElementById(newMap + `-site-list`).style.display = 'block'
     currentMap = newMap
-
-        // Store navigation settings after navigating to a new map
-        storeNavSettings()
+    // Store navigation settings after navigating to a new map
+    storeNavSettings()
 }
 
 // Load forecast help info
