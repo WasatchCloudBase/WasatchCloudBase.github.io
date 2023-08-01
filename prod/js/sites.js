@@ -264,23 +264,26 @@
                     "wind_speed_set_1": [] 
                 }
 
-                // Read the CUASA readings, convert to Mesonet format, and display current readings
-                for (let j=0; j<rawCUASAReadingsData.length; j++) {
+                // Read the 10 most recent CUASA readings (sometimes 11 are returned from the API call)
+                var MesoNetIndex = 0
+                for (let j=(rawCUASAReadingsData.length-10); j<rawCUASAReadingsData.length; j++) {
                     try {
                         // Convert date to "9:00 AM" format
                         // Multipying by 1000 since the UNIX timestamp is in seconds and Javascript timestamp uses milliseconds
                         const rawDate = new Date(rawCUASAReadingsData[j].timestamp * 1000)
-                        const hour = rawDate.getHours()
-                        const minutes = String(rawDate.getMinutes()).padStart(2, "0")
-                        let formattedTime = `${hour}:${minutes}`
-                        if (hour < 12) { formattedTime += " AM" } 
-                        else { formattedTime += " PM" }
+                        let hour = rawDate.getHours()
+                        let minutes = String(rawDate.getMinutes()).padStart(2, "0")
+                        let ampm = ` AM`
+                        if (hour >= 12) { ampm = ` PM` }
+                        if (hour > 12) { hour = hour - 12 }
+                        let formattedTime = `${hour}:${minutes}${ampm}`
 
                         // Add CUASA readings data to Mesonet object
-                        MesoNetReadings.date_time[j] = formattedTime
-                        MesoNetReadings.wind_direction_set_1[j] = rawCUASAReadingsData[j].wind_direction_avg
-                        MesoNetReadings.wind_gust_set_1[j] = rawCUASAReadingsData[j].windspeed_max
-                        MesoNetReadings.wind_speed_set_1[j] = rawCUASAReadingsData[j].windspeed_avg
+                        MesoNetReadings.date_time[MesoNetIndex] = formattedTime
+                        MesoNetReadings.wind_direction_set_1[MesoNetIndex] = rawCUASAReadingsData[j].wind_direction_avg
+                        MesoNetReadings.wind_gust_set_1[MesoNetIndex] = rawCUASAReadingsData[j].windspeed_max
+                        MesoNetReadings.wind_speed_set_1[MesoNetIndex] = rawCUASAReadingsData[j].windspeed_avg
+                        MesoNetIndex = MesoNetIndex + 1
 
                     } catch (error) { 
                         console.log('CUASA API station processing error: ' + error + ' for station: ' + rawCUASAReadingsData[j].ID)
@@ -460,7 +463,6 @@ function siteDetailContent(site) {
                 siteReadingsData = readingsData[i] 
             }
         }
-
         // Populate history wind readings
         if ( siteReadingsData.date_time ) {
             for (let i=0; i<siteReadingsData.date_time.length; i++) {
@@ -543,7 +545,6 @@ function siteDetailContent(site) {
                 // Update link to full history URL
                 document.getElementById(`site-details-pressure-href`).href = 
                 `https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=${detailSiteData.ReadingsStation}&table=1&banner=off`
-            
 
                 // Find site pressure observations in pressureReadingsData array for the selected site
                 var pressureSiteReadingsData = {}
