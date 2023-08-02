@@ -281,10 +281,11 @@
                         let formattedTime = `${hour}:${minutes}${ampm}`
 
                         // Add CUASA readings data to Mesonet object
+                        // Also convert CUASA speed readings from km/hr to mph
                         MesoNetReadings.date_time[MesoNetIndex] = formattedTime
                         MesoNetReadings.wind_direction_set_1[MesoNetIndex] = rawCUASAReadingsData[j].wind_direction_avg
-                        MesoNetReadings.wind_gust_set_1[MesoNetIndex] = rawCUASAReadingsData[j].windspeed_max
-                        MesoNetReadings.wind_speed_set_1[MesoNetIndex] = rawCUASAReadingsData[j].windspeed_avg
+                        MesoNetReadings.wind_gust_set_1[MesoNetIndex] = rawCUASAReadingsData[j].windspeed_max * 0.621371
+                        MesoNetReadings.wind_speed_set_1[MesoNetIndex] = rawCUASAReadingsData[j].windspeed_avg * 0.621371
                         MesoNetIndex = MesoNetIndex + 1
 
                     } catch (error) { 

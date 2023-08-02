@@ -91,8 +91,10 @@ function toggleDiv(newDiv) {
     storeNavSettings()
 
     // Call functions to populate new page
-    if ( newDiv === 'Soaring Forecast')       { populateSoaringForecast() } 
-    else if ( newDiv === 'Weather Forecast')  { populateWeatherForecast() }
+    if ( newDiv === 'Soaring Forecast' )      { populateSoaringForecast() } 
+    else if ( newDiv === 'Weather Forecast' ) { populateWeatherForecast() }
+    else if ( newDiv === 'Weather Maps' )     { populateWeatherMaps()     }
+    else if ( newDiv === 'Weather Cams' )     { populateWeatherCams()     }
 }
 
 function siteDetail(site) {

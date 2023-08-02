@@ -3,7 +3,6 @@
 
 // Build link DIVs and populate link data
 (async () => {
-
     // Retrieve link data in JSON format from Google sheets API
     // Maintain link data here:  https://docs.google.com/spreadsheets/d/1nBEJuTCWkUidSFKQjBjcJgKeteC_oy8LqL2P7uhGyLQ/edit#gid=0
     var link_data_url = "https://sheets.googleapis.com/v4/spreadsheets/1nBEJuTCWkUidSFKQjBjcJgKeteC_oy8LqL2P7uhGyLQ/values/Links/?alt=json" +

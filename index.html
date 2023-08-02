@@ -365,12 +365,13 @@
     <!-- WEATHER MAPS DIV ##################################################################################################################################################### -->
     <div class="collapse mb-div-end" id="Weather Maps">
 
+        <!-- Note that the source image links are populated in weathermaps.js to reduce bandwidth (prevent loading maps until maps page is accessed)  -->
+
         <!-- CLOUDS & PRECIP GIF -->
         <div class="container-fluid p-0">
             <a href="https://www.accuweather.com/en/us/utah/weather-radar-rs?play=1" target="_blank">
                 <div class="display-3 py-4">Clouds & Precipitation (past hour)</div>
-                <img class="border wwborder border-2" 
-                    src="https://sirocco.accuweather.com/sat_mosaic_640x480_public/rs/isarUT_.gif" width="100%">
+                <img id="cloudandprecipmap" class="border wwborder border-2" src="" width="100%">
             </a>
         </div>
 
@@ -378,8 +379,7 @@
         <div class="container-fluid p-0">
             <a href="https://www.star.nesdis.noaa.gov/goes/sector.php?sat=G17&sector=psw" target="_blank">
                 <div class="display-3 py-4">Satellite (past 4 hours)</div>
-                <img class="border wwborder border-2" 
-                    src="https://cdn.star.nesdis.noaa.gov/GOES17/ABI/SECTOR/psw/GEOCOLOR/GOES17-PSW-GEOCOLOR-600x600.gif" width="100%">
+                <img id="satellitemap" class="border wwborder border-2" src="" width="100%">
             </a>
         </div>
 
@@ -387,8 +387,7 @@
         <div class="container-fluid p-0">
             <a href="https://www.wunderground.com/maps/wind/jet-stream" target="_blank">
                 <div class="display-3 py-4">Jetstream (past 18 hours)</div>
-                    <img class="border wwborder border-2" 
-                        src="https://s.w-x.co/staticmaps/wu/wu/jetstream1200_cur/conus/animate.png" width="100%">
+                <img id="jetstreammap" class="border wwborder border-2" src="" width="100%">
             </a>
         </div>
 
@@ -685,6 +684,8 @@
     <!-- CAMS & TRACKERS DIV ################################################################################################################################################## -->
     <div class="collapse mb-div-end" id="Weather Cams">
 
+    <!-- Note that the source image links are populated in weathercams.js to reduce bandwidth (prevent loading maps until cams page is accessed)  -->
+
         <!-- Salt Lake Valley - one per row -->
         <div class="container-fluid display-3 mt-5 mb-3">Salt Lake Valley</div>
         <div class="container-fluid p-0 display-5 pt-4 mb-5 pb-2 rounded-4 bg-dark">
@@ -692,81 +693,72 @@
             U of U looking West
             <div class="mt-3 mb-5">
                 <a href="https://meso1.chpc.utah.edu/station_cameras/wbbw_cam/wbbw_cam_hour.mp4" target="_blank">
-                    <img class="rounded-4 border border-4 img-fluid bg-dark" 
-                        src="https://meso1.chpc.utah.edu/station_cameras/wbbw_cam/wbbw_cam_current.jpg" width="1000" height="800" alt="Click to access">
+                    <img class="rounded-4 border border-4 img-fluid bg-dark" id="UofUWest"
+                        src="" width="1000" height="800" alt="Click to access">
                 </a>
             </div>
 
             U of U looking South (towards POTM)
             <div class="mt-3 mb-5">
                 <a href="https://meso1.chpc.utah.edu/station_cameras/wbbs_cam/wbbs_cam_hour.mp4" target="_blank">
-                    <img class="rounded-4 border border-4 img-fluid bg-dark" 
-                        src="https://meso1.chpc.utah.edu/station_cameras/wbbs_cam/wbbs_cam_current.jpg" width="1000" height="800" alt="Click to access">
+                    <img class="rounded-4 border border-4 img-fluid bg-dark" id="UofUSouth"
+                        src="" width="1000" height="800" alt="Click to access">
                 </a>
             </div>
 
             South Salt Lake looking East (towards Grandeur)
             <div class="mt-3 mb-5">
                 <a href="http://wwc.instacam.com/instacamimg/STHSL/STHSL_l.jpg" id="SouthSaltLakeEastCam" target="_blank">
-                    <img class="rounded-4 border border-4 img-fluid bg-dark" 
-                        src="http://wwc.instacam.com/instacamimg/STHSL/STHSL_l.jpg" width="1000" height="800" alt="Click to access">
+                    <img class="rounded-4 border border-4 img-fluid bg-dark" id="SSaltLakeEast"
+                        src="" width="1000" height="800" alt="Click to access">
                 </a>
             </div>
 
             Millcreek looking SE (towards Olympus)
             <div class="mt-3 mb-5">
                 <a href="http://wa7xhome.ddns.net:5895/Latest12.jpg" target="_blank">
-                    <img class="rounded-4 border border-4 img-fluid bg-dark" 
-                        src="http://wa7xhome.ddns.net:5895/Latest12.jpg" width="1000" height="800" alt="Click to access">
+                    <img class="rounded-4 border border-4 img-fluid bg-dark" id="MillcreekSE"
+                        src="" width="1000" height="800" alt="Click to access">
                 </a>
             </div>
 
-<!-- Commented out as the next web cam is similar location and higher quality
-            Olympus Cove looking West
-            <div class="mt-3 mb-5">
-                <a href="https://www.wrh.noaa.gov/images/slc/camera/latest/olympuscove.latest.jpg" target="_blank">
-                    <img class="rounded-4 border border-4 img-fluid bg-dark" 
-                        src="https://www.wrh.noaa.gov/images/slc/camera/latest/olympuscove.latest.jpg"  width="1000" height="800" alt="Click to access">
-                </a>
-            </div>
--->
             Cottonwood looking SW
             <div class="mt-3 mb-5">
                 <a href="http://wwc.instacam.com/instacamimg/SLTWK/SLTWK_l.jpg" target="_blank">
-                    <img class="rounded-4 border border-4 img-fluid bg-dark" 
-                        src="http://wwc.instacam.com/instacamimg/SLTWK/SLTWK_l.jpg" width="1000" height="800" alt="Click to access">
+                    <img class="rounded-4 border border-4 img-fluid bg-dark" id="CottonwoodSW"
+                        src="" width="1000" height="800" alt="Click to access">
                 </a>
             </div>
 
             West Valley looking East (towards Lone Peak)
             <div class="mt-3 mb-5">
                 <a href="https://meso1.chpc.utah.edu/station_cameras/armstrong_cam/armstrong_cam_hour.mp4" target="_blank">
-                    <img class="rounded-4 border border-4 img-fluid bg-dark" 
-                        src="https://meso1.chpc.utah.edu/station_cameras/armstrong_cam/armstrong_cam_current.jpg"  width="1000" height="800" alt="Click to access">
+                    <img class="rounded-4 border border-4 img-fluid bg-dark" id="WestValleyEast"
+                        src=""  width="1000" height="800" alt="Click to access">
                 </a>
             </div>
 
-<!-- Commented out Daybreak cams as they have been down for several days -->
             Daybreak looking West
             <div class="mt-3 mb-5">
                 <a href="https://www.wrh.noaa.gov/images/slc/camera/latest/darrenS.latest.jpg" target="_blank">
-                    <img class="rounded-4 border border-4 img-fluid bg-dark" 
-                        src="https://www.wrh.noaa.gov/images/slc/camera/latest/darrenS.latest.jpg"  width="1000" height="800" alt="Click to access">
+                    <img class="rounded-4 border border-4 img-fluid bg-dark" id="DaybreakWest"
+                        src=""  width="1000" height="800" alt="Click to access">
                 </a>
             </div>
+
             Daybreak looking East
             <div class="mt-3 mb-5">
                 <a href="https://www.wrh.noaa.gov/images/slc/camera/latest/darren2.latest.jpg" target="_blank">
-                    <img class="rounded-4 border border-4 img-fluid bg-dark" 
-                        src="https://www.wrh.noaa.gov/images/slc/camera/latest/darren2.latest.jpg"  width="1000" height="800" alt="Click to access">
+                    <img class="rounded-4 border border-4 img-fluid bg-dark" id="DaybreakEast"
+                        src=""  width="1000" height="800" alt="Click to access">
                 </a>
             </div>
 
             Draper looking West
             <div class="mt-3 mb-5">
                 <a href="http://wwc.instacam.com/instacamimg/DRPRJ/DRPRJ_l.jpg" target="_blank">
-                    <img class="rounded-4 border border-4 img-fluid bg-dark" 
-                        src="http://wwc.instacam.com/instacamimg/DRPRJ/DRPRJ_l.jpg"  width="1000" height="800" alt="Click to access">
+                    <img class="rounded-4 border border-4 img-fluid bg-dark" id="DraperWest"
+                        src=""  width="1000" height="800" alt="Click to access">
                 </a>
             </div>
         </div>
@@ -802,36 +794,18 @@
             BYU looking NE (Timp)
             <div class="mt-3 mb-5">
                 <a href="http://lswebcam.byu.edu/mjpg/LSB" target="_blank">
-                    <img class="rounded-4 border border-4 bg-dark img-fluid" 
-                        src="http://lswebcam.byu.edu/mjpg/LSB" width="1000" height="800" alt="Click to access">
+                    <img class="rounded-4 border border-4 bg-dark img-fluid" id="BYUNE"
+                        src="" width="1000" height="800" alt="Click to access">
                 </a>
             </div>
 
             Utah Lake SP (Provo) looking NW
             <div class="mt-3 mb-5">
                 <a href="https://video.nest.com/embedded/live/NAfKWt0IIe?autoplay=1" target="_blank">
-                    <img class="rounded-4 border border-4 bg-dark img-fluid" 
-                        src="https://video.nest.com/embedded/live/NAfKWt0IIe?autoplay=1" width="1000" height="800" alt="Click to access">
+                    <img class="rounded-4 border border-4 bg-dark img-fluid" id="UtahLakeNW"
+                        src="" width="1000" height="800" alt="Click to access">
                 </a>
             </div>
-
-<!-- Commented out Saratoga Springs cams as they have been down for several days
-            Saratoga Springs looking SE
-            <div class="mt-3 mb-5">
-                <a href="https://www.wrh.noaa.gov/images/slc/camera/latest/UtahLake_4.latest.jpg" target="_blank">
-                    <img class="rounded-4 border border-4 bg-dark img-fluid" 
-                        src="https://www.wrh.noaa.gov/images/slc/camera/latest/UtahLake_4.latest.jpg"  width="1000" height="800" alt="Click to access">
-                </a>
-            </div>
-
-            Saratoga Springs looking NE
-            <div class="mt-3 mb-5">
-                <a href="https://www.wrh.noaa.gov/images/slc/camera/latest/UtahLake_5.latest.jpg" target="_blank">
-                    <img class="rounded-4 border border-4 bg-dark img-fluid" 
-                        src="https://www.wrh.noaa.gov/images/slc/camera/latest/UtahLake_5.latest.jpg"  width="1000" height="800" alt="Click to access">
-                </a>
-            </div>
--->
 
         </div>
     </div>
@@ -904,10 +878,12 @@
     <!-- LOCAL SCRIPTS -->
     <script type="text/javascript" src="prod/js/main.js"></script>
     <script type="text/javascript" src="prod/js/sites.js"></script>
+    <script type="text/javascript" src="prod/js/d3.js"></script>
+    <script type="text/javascript" src="prod/js/siteforecast.js"></script>
+    <script type="text/javascript" src="prod/js/weathermaps.js"></script>
     <script type="text/javascript" src="prod/js/weather.js"></script>
     <script type="text/javascript" src="prod/js/soaring.js"></script>
-    <script type="text/javascript" src="prod/js/siteforecast.js"></script>
-    <script type="text/javascript" src="prod/js/d3.js"></script>
+    <script type="text/javascript" src="prod/js/weathercams.js"></script>
     <script type="text/javascript" src="prod/js/links.js"></script>
     <script type="text/javascript" src="prod/js/navigation.js"></script>
 </body>

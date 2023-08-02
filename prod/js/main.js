@@ -71,7 +71,7 @@ let thermalGliderSinkRate     = 1.5     // Glider sink rate to reduce thermal ve
     }
 })();
 
-// Populate lift parameter constants for forecast
+// Get lift parameter constants for forecast
 (async () => {
     // Retrieve lift parameters from Google sheets API
     // Maintain lift parameters here:  https://docs.google.com/spreadsheets/d/1nBEJuTCWkUidSFKQjBjcJgKeteC_oy8LqL2P7uhGyLQ/edit#gid=2126129603
@@ -125,7 +125,6 @@ function doCORSRequest(options, result) {
 
 // Load forecast help info
 (async () => {
-
     // Retrieve forecast help data in JSON format from Google sheets API
     // Maintain forecast help data here:  https://docs.google.com/spreadsheets/d/1nBEJuTCWkUidSFKQjBjcJgKeteC_oy8LqL2P7uhGyLQ/edit#gid=2058004785
     var help_data_url = "https://sheets.googleapis.com/v4/spreadsheets/1nBEJuTCWkUidSFKQjBjcJgKeteC_oy8LqL2P7uhGyLQ/values/HelpInfo/?alt=json" +
