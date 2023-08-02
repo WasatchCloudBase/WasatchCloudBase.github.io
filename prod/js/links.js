@@ -1,4 +1,5 @@
 'use strict';
+// External hyperlinks page
 
 // Build link DIVs and populate link data
 (async () => {

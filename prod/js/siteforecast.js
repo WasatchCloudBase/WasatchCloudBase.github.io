@@ -1,4 +1,5 @@
 'use strict';
+// Site details page - site forecast section
 
 // Forecast table keys
 const tableID           = document.getElementById("forecastTable")

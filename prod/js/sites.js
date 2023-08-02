@@ -1,4 +1,6 @@
 'use strict';
+// Site maps and site listing pages
+
 // Build site maps and site data
 (async () => {
     
@@ -463,6 +465,7 @@ function siteDetailContent(site) {
                 siteReadingsData = readingsData[i] 
             }
         }
+
         // Populate history wind readings
         if ( siteReadingsData.date_time ) {
             for (let i=0; i<siteReadingsData.date_time.length; i++) {

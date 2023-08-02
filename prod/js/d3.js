@@ -1,4 +1,6 @@
 'use strict';
+// Decoded skew-T chart for soaring forecast page
+
 // D3 Globals
 let dalrFlag = 0
 const surfaceAlt = 4.229
