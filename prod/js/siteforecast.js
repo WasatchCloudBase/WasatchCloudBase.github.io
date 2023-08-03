@@ -53,9 +53,6 @@ var cloudBaseAlt = ``
 // Get forecast data for site
 async function siteForecast(site) {
 
-    // Show 'loading' image
-    document.getElementById('Loading Image').style.display = 'block' 
-
     // Un-hide all wind and vvel rows in case a previous forecast hid those below surface + 10m
     rowWind950.style.display = rowVVel950.style.display = `table-row`
     rowWind900.style.display = rowVVel900.style.display = `table-row`

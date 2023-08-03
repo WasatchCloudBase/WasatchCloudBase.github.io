@@ -3,7 +3,7 @@
 
 // Build site maps and site data
 (async () => {
-    
+
     // Retrieve map data in JSON format from Google sheets API
     // Maintain map data here:  https://docs.google.com/spreadsheets/d/1nBEJuTCWkUidSFKQjBjcJgKeteC_oy8LqL2P7uhGyLQ/edit#gid=1983117904
     var map_data_url = "https://sheets.googleapis.com/v4/spreadsheets/1nBEJuTCWkUidSFKQjBjcJgKeteC_oy8LqL2P7uhGyLQ/values/Maps/?alt=json" +
@@ -210,14 +210,6 @@
             // Extract all of the stations readings from the raw file and show the current reading for each station
             for (let i=0; i<rawReadingsData.STATION.length; i++) {
                 try {
-                    //Objects below use JSON.parse(JSON.stringify()) to fully (deep) copy the data
-                    //Otherwise, a shallow copy causes the slice on observations to reduce the original data set,
-                    //which doesn't leave enough readings for hourly pressure history
-
-                    // Create object of pressure observations for each station
-                    pressureReadingsData[i] = JSON.parse(JSON.stringify(rawReadingsData.STATION[i].OBSERVATIONS))
-                    pressureReadingsData[i].stid = JSON.parse(JSON.stringify(rawReadingsData.STATION[i].STID))
-
                     // Create object of observations for each station and update on site map
                     readingsData[i] = JSON.parse(JSON.stringify(rawReadingsData.STATION[i].OBSERVATIONS))
                     readingsData[i].stid = JSON.parse(JSON.stringify(rawReadingsData.STATION[i].STID))
@@ -322,6 +314,9 @@
 function showCurrentReadings(data) {
     try {
 
+        // Show 'loading' image
+        document.getElementById('Loading Image').style.display = 'block' 
+
         // Find all sites that match the station being processed
         // (multiple sites can use the same station for actual readings)
         var matchingSites = siteData.filter(item => item.ReadingsStation === data.stid) 
@@ -406,6 +401,10 @@ function showCurrentReadings(data) {
                 document.getElementById(siteListHeading + `-pressure-zone`).style.color = latestZoneColor
             }
         }
+
+        // Hide 'loading' image
+        document.getElementById('Loading Image').style.display = 'none' 
+
     } catch (error) { 
         console.log('Error in showCurrentReadings: ' + error + ' for: ' + siteMapHeading)
         console.log('Data:')
@@ -415,6 +414,9 @@ function showCurrentReadings(data) {
 
 // Populate all details for selected site detail
 async function siteDetailContent(site) {
+
+    // Show 'loading' image
+    document.getElementById('Loading Image').style.display = 'block' 
 
     // Update global currentSite to use on reload
     currentSite = site
@@ -487,10 +489,6 @@ async function siteDetailContent(site) {
                             //Objects below use JSON.parse(JSON.stringify()) to fully (deep) copy the data
                             //Otherwise, a shallow copy causes the slice on observations to reduce the original data set,
                             //which doesn't leave enough readings for hourly pressure history
-
-                            // Create object of pressure history observations for station
-                            pressureReadingsData[i] = JSON.parse(JSON.stringify(rawHistoryReadingsData.STATION[i].OBSERVATIONS))
-                            pressureReadingsData[i].stid = JSON.parse(JSON.stringify(rawHistoryReadingsData.STATION[i].STID))
 
                             // Create object of last 10 observations for station
                             readingsData[i] = JSON.parse(JSON.stringify(rawHistoryReadingsData.STATION[i].OBSERVATIONS))
@@ -598,6 +596,10 @@ function populateSiteHistory (siteReadingsData, detailSiteData) {
         console.log('or history does not have a date time; date_time retrieved is: ' + siteReadingsData.date_time)
     } else {
 
+        // Create arrays to store hourly pressure readings to be displayed (hourly; not every pressure reading is displayed)
+        var time=[], alti=[], temp=[]
+
+        // Read through history readings and calculate how to display
         for (let i=0; i<siteReadingsData.date_time.length; i++) {
 
             // Remove trailing characters (am/pm) and show reading time
@@ -661,6 +663,20 @@ function populateSiteHistory (siteReadingsData, detailSiteData) {
                 }
             }
 
+            // Populate pressure zone history for airport sites only
+            if ( detailSiteData.SiteType === `Airport` && siteReadingsData.altimeter_set_1 ) {
+
+                // Read each pressure reading and add pressure readings hourly to the array based on the minutes specified in the site info
+                for (let i=0; i<siteReadingsData.date_time.length; i++) {
+                    if ( parseInt(siteReadingsData.date_time[i].slice(-5,-3),10) === parseInt(detailSiteData.PressureZoneReadingTime, 10) )
+                    {
+                        time.push(siteReadingsData.date_time[i].toLowerCase().replace(/:\d{2}/g, ''))
+                        temp.push(`${Math.round(siteReadingsData.air_temp_set_1[i])}&deg;`)
+                        alti.push(siteReadingsData.altimeter_set_1[i].toFixed(2))
+                    }
+                }
+            }
+
         }
 
         // Hide remaining history DIVs if fewer than 10 readings
@@ -679,48 +695,25 @@ function populateSiteHistory (siteReadingsData, detailSiteData) {
             document.getElementById(`site-details-pressure-href`).href = 
             `https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=${detailSiteData.ReadingsStation}&table=1&banner=off`
 
-            // Find site pressure observations in pressureReadingsData array for the selected site
-            var pressureSiteReadingsData = {}
-            for (let i=0; i<pressureReadingsData.length; i++) {
-                if ( pressureReadingsData[i].stid === detailSiteData.ReadingsStation ) { 
-                    pressureSiteReadingsData = pressureReadingsData[i] 
-                }
-            }
+            // Limit to last 6 entries in arrays
+            time = time.slice(-6)
+            temp = temp.slice(-6)
+            alti = alti.slice(-6)
 
-            if (pressureSiteReadingsData.altimeter_set_1) {
-                // Create arrays to store hourly pressure readings to be displayed (hourly; not every pressure reading is displayed)
-                var time=[], alti=[], temp=[]
+            // Find height for bar chart
+            const min = Math.min(...alti)
+            const max = Math.max(...alti)
+            const barHeight = alti.map(d => `${(((d-min)*80)/(max-min))+10}px`)
 
-                // Read each pressure reading and add pressure readings hourly to the array based on the minutes specified in the site info
-                for (let i=0; i<pressureSiteReadingsData.date_time.length; i++) {
-                    if ( parseInt(pressureSiteReadingsData.date_time[i].slice(-5,-3),10) === parseInt(detailSiteData.PressureZoneReadingTime, 10) )
-                    {
-                        time.push(pressureSiteReadingsData.date_time[i].toLowerCase().replace(/:\d{2}/g, ''))
-                        temp.push(`${Math.round(pressureSiteReadingsData.air_temp_set_1[i])}&deg;`)
-                        alti.push(pressureSiteReadingsData.altimeter_set_1[i].toFixed(2))
-                    }
-                }
-
-                // Limit to last 6 entries in arrays
-                time = time.slice(-6)
-                temp = temp.slice(-6)
-                alti = alti.slice(-6)
-
-                // Find height for bar chart
-                const min = Math.min(...alti)
-                const max = Math.max(...alti)
-                const barHeight = alti.map(d => `${(((d-min)*80)/(max-min))+10}px`)
-
-                for (let i=0; i<6; i++) {
-                    var zDigit = calculateZone( parseFloat(alti[i]), parseInt(temp[i]) )
-                    document.getElementById(`site-details-alti-${i}`).innerHTML = alti[i]
-                    document.getElementById(`site-details-altibar-${i}`).style.height = barHeight[i]
-                    document.getElementById(`site-details-temp-${i}`).innerHTML = temp[i]
-                    document.getElementById(`site-details-zone-${i}`).style.color = getZoneColor(zDigit)
-                    zDigit = zDigit===0 ? '&#9471;' : (zDigit==='LoP') ? 'LoP' : `&#1010${zDigit+1}`
-                    document.getElementById(`site-details-zone-${i}`).innerHTML = zDigit
-                    document.getElementById(`site-details-alti-time-${i}`).innerHTML = time[i]
-                }
+            for (let i=0; i<6; i++) {
+                var zDigit = calculateZone( parseFloat(alti[i]), parseInt(temp[i]) )
+                document.getElementById(`site-details-alti-${i}`).innerHTML = alti[i]
+                document.getElementById(`site-details-altibar-${i}`).style.height = barHeight[i]
+                document.getElementById(`site-details-temp-${i}`).innerHTML = temp[i]
+                document.getElementById(`site-details-zone-${i}`).style.color = getZoneColor(zDigit)
+                zDigit = zDigit===0 ? '&#9471;' : (zDigit==='LoP') ? 'LoP' : `&#1010${zDigit+1}`
+                document.getElementById(`site-details-zone-${i}`).innerHTML = zDigit
+                document.getElementById(`site-details-alti-time-${i}`).innerHTML = time[i]
             }
         } else {
             document.getElementById(`site-details-pressure-title`).style.display = 'none'
@@ -728,22 +721,6 @@ function populateSiteHistory (siteReadingsData, detailSiteData) {
             document.getElementById(`site-details-pressure-info`).style.display = 'none'
         }
     }
-}
-
-// Convert first row to JSON keys
-function setJSONKeys (arr) {
-    const keys = Object.keys(arr[0]).map(i => arr[0][i])
-    let result = arr.map(obj => {
-        var replacedObj = {}
-        const oriKeys = Object.keys(obj)
-        for (let i = 0; i < keys.length; i++) {
-            replacedObj[keys[i]] = obj[oriKeys[i]]
-        }
-        return replacedObj
-    })
-    // Remove row 0 (headers)
-    let removedHeaders = result.shift()
-    return result
 }
 
 function calculateZone(alti, temp, currentZones = []) {

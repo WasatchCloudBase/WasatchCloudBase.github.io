@@ -112,18 +112,6 @@ let thermalGliderSinkRate     = 1.5     // Glider sink rate to reduce thermal ve
     }
 })();
 
-// Process CORS requests to external sites via proxy server
-function doCORSRequest(options, result) {
-    var cors_api_url = 'https://wasatchcloudbase.herokuapp.com/'
-    var ServerRequest = new XMLHttpRequest()
-    ServerRequest.open(options.method, cors_api_url + options.url)
-    ServerRequest.onload = ServerRequest.onerror = function() {
-        result(ServerRequest.responseText)
-        // Can add to result for debugging:  options.method + ' ' + options.url + '\n' + ServerRequest.status + ' ' + ServerRequest.statusText + '\n\n' +
-    }
-    ServerRequest.send(options.data);
-}
-
 // Load forecast help info
 (async () => {
     // Retrieve forecast help data in JSON format from Google sheets API
@@ -148,3 +136,31 @@ function doCORSRequest(options, result) {
         }
     }
 })();
+
+// Process CORS requests to external sites via proxy server
+function doCORSRequest(options, result) {
+    var cors_api_url = 'https://wasatchcloudbase.herokuapp.com/'
+    var ServerRequest = new XMLHttpRequest()
+    ServerRequest.open(options.method, cors_api_url + options.url)
+    ServerRequest.onload = ServerRequest.onerror = function() {
+        result(ServerRequest.responseText)
+        // Can add to result for debugging:  options.method + ' ' + options.url + '\n' + ServerRequest.status + ' ' + ServerRequest.statusText + '\n\n' +
+    }
+    ServerRequest.send(options.data);
+}
+
+// Convert first row of fetched data to JSON keys
+function setJSONKeys (arr) {
+    const keys = Object.keys(arr[0]).map(i => arr[0][i])
+    let result = arr.map(obj => {
+        var replacedObj = {}
+        const oriKeys = Object.keys(obj)
+        for (let i = 0; i < keys.length; i++) {
+            replacedObj[keys[i]] = obj[oriKeys[i]]
+        }
+        return replacedObj
+    })
+    // Remove row 0 (headers)
+    let removedHeaders = result.shift()
+    return result
+}
