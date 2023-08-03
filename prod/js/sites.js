@@ -196,12 +196,13 @@
         }
     }
 
-    // Complete the URL for Mesonet API for readings
+    // Complete the URL for Mesonet API for latest readings
+    // Note that URL limits current readings to the past 2 hours to prevent outdated readings
     siteReadingsURL = siteReadingsURL +
-        `&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&obtimezone=local&timeformat=%-I:%M%20%p&` + 
+        `&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&within=120&obtimezone=local&timeformat=%-I:%M%20%p&` + 
         `token=ef3b9f4584b64e6da12d8688f19d9f4a`  //0030ed6480a4440eb29ec23ff37fe159`
 
-    // Get station readings using Mesonet API
+    // Get latest readings per station using Mesonet API
     var response = await fetch(siteReadingsURL)
     var rawReadingsData = await response.json()
     if (rawReadingsData) {
@@ -213,17 +214,13 @@
                     //Otherwise, a shallow copy causes the slice on observations to reduce the original data set,
                     //which doesn't leave enough readings for hourly pressure history
 
-                    // Create object of pressure history observations for each station
+                    // Create object of pressure observations for each station
                     pressureReadingsData[i] = JSON.parse(JSON.stringify(rawReadingsData.STATION[i].OBSERVATIONS))
                     pressureReadingsData[i].stid = JSON.parse(JSON.stringify(rawReadingsData.STATION[i].STID))
 
-                    // Create object of last 10 observations for each station and update on site map (used for current wind readings and wind history)
+                    // Create object of observations for each station and update on site map
                     readingsData[i] = JSON.parse(JSON.stringify(rawReadingsData.STATION[i].OBSERVATIONS))
                     readingsData[i].stid = JSON.parse(JSON.stringify(rawReadingsData.STATION[i].STID))
-                    var readingsCount = 10
-                    for (let key in readingsData[i]) {
-                        readingsData[i][key] = readingsData[i][key].slice(-readingsCount)
-                    }
 
                     // Populate current readings
                     showCurrentReadings(readingsData[i])
@@ -239,15 +236,16 @@
         }
     }
 
-    // Get station readings for each CUASA site using Sierra Gliding CUASA station API (one call per station)
+    // Get latest station reading for each CUASA site using Sierra Gliding CUASA station API (one call per station)
     for (let i = 0; i < CUASASites.length; i++) {
 
         // Construct CUASA API reading call
         // Call format:   https://sierragliding.us/api/station/<station_id>/data?start=<start_timestamp>&end=<end_timestamp>&sample=<interval_seconds>
         // Example call:  https://sierragliding.us/api/station/1069/data?start=1686012560.231&end=1686012620.231&sample=1
+        // Note that latest reading will differ from the most recent history reading because the history reading averages over the readingInterval
         let readingEnd = nowTimeStamp / 1000                        // API call expects timestamp in seconds (milliseconds after the decimal point)
-        let readingInterval = 5 * 60                                // Setting a 5 minute interval for history readings
-        let readingStart = readingEnd - ( readingInterval * 10 )    // Offset readingStart to be 10 readings earlier than readingEnd
+        let readingInterval = 5 * 60                                // Setting a 5 minute interval
+        let readingStart = readingEnd - 1                           // Set start to get only latest reading
         let CUASASiteReadingsURL = `https://sierragliding.us/api/station/` + CUASASites[i] + `/data?start=` + readingStart + `&end=` + readingEnd + `&sample=` + readingInterval
 
         // Make CORS call to get CUASA API data and process results
@@ -257,18 +255,21 @@
 
                 // Create a JSON object in Mesonet format
                 let MesoNetReadings = {
-                    "air_temp_set_1": [],
-                    "altimeter_set_1": [],
-                    "date_time": [],
+                    "air_temp_value_1": ``,
+                    "altimeter_value_1": ``,
+                    "date_time": ``,
                     "stid": CUASASites[i],
-                    "wind_direction_set_1": [],
-                    "wind_gust_set_1": [],
-                    "wind_speed_set_1": [] 
+                    "wind_direction_value_1": {
+                        "value": `` },
+                    "wind_gust_value_1": {
+                        "value": `` },
+                    "wind_speed_value_1": {
+                        "date_time": ``,
+                        "value": '' } 
                 }
 
-                // Read the 10 most recent CUASA readings (sometimes 11 are returned from the API call)
-                var MesoNetIndex = 0
-                for (let j=(rawCUASAReadingsData.length-10); j<rawCUASAReadingsData.length; j++) {
+                // Read the most recent CUASA reading (allowing for more than one to possibly be returned)
+                for (let j=(rawCUASAReadingsData.length-1); j<rawCUASAReadingsData.length; j++) {
                     try {
                         // Convert date to "9:00 AM" format
                         // Multipying by 1000 since the UNIX timestamp is in seconds and Javascript timestamp uses milliseconds
@@ -280,16 +281,17 @@
                         if (hour > 12) { hour = hour - 12 }
                         let formattedTime = `${hour}:${minutes}${ampm}`
 
-                        // Add CUASA readings data to Mesonet object
-                        // Also convert CUASA speed readings from km/hr to mph
-                        MesoNetReadings.date_time[MesoNetIndex] = formattedTime
-                        MesoNetReadings.wind_direction_set_1[MesoNetIndex] = rawCUASAReadingsData[j].wind_direction_avg
-                        MesoNetReadings.wind_gust_set_1[MesoNetIndex] = rawCUASAReadingsData[j].windspeed_max * 0.621371
-                        MesoNetReadings.wind_speed_set_1[MesoNetIndex] = rawCUASAReadingsData[j].windspeed_avg * 0.621371
-                        MesoNetIndex = MesoNetIndex + 1
+                        // Add latest CUASA reading data to Mesonet object
+                        // Also convert CUASA speed reading from km/hr to mph
+                        MesoNetReadings.date_time = formattedTime
+                        MesoNetReadings.wind_direction_value_1.value = rawCUASAReadingsData[j].wind_direction_avg
+                        MesoNetReadings.wind_gust_value_1.value = rawCUASAReadingsData[j].windspeed_max * 0.621371
+                        MesoNetReadings.wind_speed_value_1.value = rawCUASAReadingsData[j].windspeed_avg * 0.621371
+                        MesoNetReadings.wind_speed_value_1.date_time = formattedTime
 
                     } catch (error) { 
-                        console.log('CUASA API station processing error: ' + error + ' for station: ' + rawCUASAReadingsData[j].ID)
+                        console.log('CUASA API station processing error: ' + error + ' for data: ')
+                        console.log(rawCUASAReadingsData)
                     }
                 }
 
@@ -333,7 +335,7 @@ function showCurrentReadings(data) {
             var siteListHeading = currentSiteData.SiteID + '-site-list'
 
             // Show latest reading time
-            var siteTime = data.date_time[data.date_time.length-1].toLowerCase()
+            var siteTime = data.wind_speed_value_1.date_time.toLowerCase()
             if (siteTime) {
                 document.getElementById(siteMapHeading + `-time`).innerHTML = siteTime
                 document.getElementById(siteListHeading + `-time`).innerHTML = siteTime
@@ -341,8 +343,8 @@ function showCurrentReadings(data) {
 
             // Show latest wind speed (or calm) and set color based on speed and type of site
             var currentWind = 0
-            if (data.wind_speed_set_1) {
-                currentWind = data.wind_speed_set_1[data.wind_speed_set_1.length-1]
+            if (data.wind_speed_value_1) {
+                currentWind = data.wind_speed_value_1.value
                 if (Math.round(currentWind) >= 1) { currentWind = Math.round(currentWind) }
                 else { currentWind = '<span class="fs-3 fw-normal">Calm</span>'}
                 var siteWindColor = windColor(currentWind, currentSiteData.SiteType)
@@ -354,8 +356,8 @@ function showCurrentReadings(data) {
 
             // Show wind gust speed (hidden if missing)
             var currentGust = 0
-            if (data.wind_gust_set_1) {
-                currentGust = data.wind_gust_set_1[data.wind_gust_set_1.length-1]
+            if (data.wind_gust_value_1) {
+                currentGust = data.wind_gust_value_1.value
                 if (Math.round(currentGust) >= 1) { 
                     currentGust = Math.round(currentGust)
                     document.getElementById(siteMapHeading + `-gust`).innerText = `g` + currentGust
@@ -372,8 +374,8 @@ function showCurrentReadings(data) {
             }
             
             // Show wind direction
-            if (data.wind_direction_set_1) {
-                var currentWindDir = data.wind_direction_set_1[data.wind_direction_set_1.length-1]
+            if (data.wind_direction_value_1) {
+                var currentWindDir = data.wind_direction_value_1.value
                 var currentWindImage = '&nbsp;'
                 var currentWindDirRotation = 0
                 if (currentWindDir >= 0) { 
@@ -394,8 +396,8 @@ function showCurrentReadings(data) {
             // Show pressure zone for airport sites only
             document.getElementById(siteListHeading + `-pressure-zone`).innerHTML = ''
             if ( currentSiteData.SiteType === `Airport` ) {
-                const latestAlti = parseFloat(data.altimeter_set_1.slice(-1)).toFixed(2)
-                const latestTemp = Math.round(data.air_temp_set_1.slice(-1))
+                const latestAlti = parseFloat(data.altimeter_value_1.value).toFixed(2)
+                const latestTemp = Math.round(data.air_temp_value_1.value)
                 var latestZone = calculateZone(latestAlti, latestTemp)
                 const latestZoneColor = getZoneColor(latestZone)
                 latestZone = latestZone===0 ? '&#9471;' : (latestZone==='LoP') ? 'LoP' : `&#1010${latestZone+1}`
@@ -406,18 +408,19 @@ function showCurrentReadings(data) {
         }
     } catch (error) { 
         console.log('Error in showCurrentReadings: ' + error + ' for: ' + siteMapHeading)
+        console.log('Data:')
+        console.log(data)
     }
 }
 
 // Populate all details for selected site detail
-function siteDetailContent(site) {
+async function siteDetailContent(site) {
 
     // Update global currentSite to use on reload
     currentSite = site
 
     // Find site data for the selected site
     var detailSiteData = siteData.find(item => item.SiteID === site)
-
     try {
         // Override standard page heading
         document.getElementById(`current-div`).innerHTML = detailSiteData.SiteName
@@ -459,144 +462,120 @@ function siteDetailContent(site) {
             document.getElementById(`site-details-history-gbar-${i}`).style.height = `0px`
         }
 
-        // Find site observations in readingsData array for the selected site
-        var siteReadingsData = {}
-        for (let i=0; i<readingsData.length; i++) {
-            if ( readingsData[i].stid === detailSiteData.ReadingsStation ) { 
-                siteReadingsData = readingsData[i] 
-            }
-        }
+        // Clear prior site readings
+        var readingsData = []
+        var pressureReadingsData = []
 
-        // Populate history wind readings
-        if ( siteReadingsData.date_time ) {
-            for (let i=0; i<siteReadingsData.date_time.length; i++) {
+        // Fetch historical observations for selected site from Mesonet
+        if ( detailSiteData.ReadingsSource === 'Mesonet' ) {
 
-                // Remove trailing characters (am/pm) and show reading time
-                var siteTime = siteReadingsData.date_time[i].toLowerCase()
-                var site_time_space_position = siteTime.search(" ")
-                siteTime = siteTime.substring(0,site_time_space_position)
-                if (siteTime) { document.getElementById(`site-details-history-time-${i}`).innerHTML = siteTime }
+            // Complete the URL for Mesonet API for historical readings
+            let siteHistoryReadingsURL = siteHistoryReadingsURLStart + `&stid=` + detailSiteData.ReadingsStation + 
+                `&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&within=120&obtimezone=local&timeformat=%-I:%M%20%p&` + 
+                `token=ef3b9f4584b64e6da12d8688f19d9f4a`  //0030ed6480a4440eb29ec23ff37fe159`
 
-                // Show wind speed (or calm) and set color based on speed and type of site
-                var readingWind = 0
-                if (siteReadingsData.wind_speed_set_1) {
-                    readingWind = siteReadingsData.wind_speed_set_1[i]
-                    var readingWindDisplay = ''
-                    if (Math.round(readingWind) >= 1) { readingWindDisplay = Math.round(readingWind) }
-                    else { readingWindDisplay = '<span class="fs-3 fw-normal">Calm</span>'}
-                    var siteWindColor = windColor(readingWind, detailSiteData.SiteType)
-                    document.getElementById(`site-details-history-wind-${i}`).innerHTML = readingWindDisplay
-                    document.getElementById(`site-details-history-wind-${i}`).style.color = siteWindColor
-                    document.getElementById(`site-details-history-wbar-${i}`).style.height = `${readingWind * 3}px`
-                    document.getElementById(`site-details-history-wbar-${i}`).style.backgroundColor = siteWindColor
-                    document.getElementById(`site-details-history-break-${i}`).style.height = `5px`
-                    document.getElementById(`site-details-history-reading-${i}`).style.display = 'block'
-                }
+            // Get station historical readings using Mesonet API
+            var HistoryResponse = await fetch(siteHistoryReadingsURL)
+            var rawHistoryReadingsData = await HistoryResponse.json()
+            if (rawHistoryReadingsData) {
+                try {
 
-                // Show wind gust speed (hidden if missing)
-                var readingGust = 0
-                if (siteReadingsData.wind_gust_set_1) {
-                    readingGust = siteReadingsData.wind_gust_set_1[i]
-                    if (Math.round(readingGust) >= 1) { 
-                        readingGust = Math.round(readingGust)
-                        var siteGustColor = windColor(readingGust, detailSiteData.SiteType)
-                        document.getElementById(`site-details-history-gust-${i}`).innerText = `g` + readingGust
-                        document.getElementById(`site-details-history-gust-${i}`).style.color = siteGustColor
-                        var readingGustDiff = (readingGust - readingWind)
-                        document.getElementById(`site-details-history-gbar-${i}`).style.height = `${readingGustDiff * 3}px`
-                        document.getElementById(`site-details-history-gbar-${i}`).style.backgroundColor = siteGustColor
-                        document.getElementById(`site-details-history-gust-${i}`).style.display = 'block'
-                        document.getElementById(`site-details-history-gbar-${i}`).style.display = 'block'
-                    }
-                    else { 
-                        document.getElementById(`site-details-history-gust-${i}`).style.display = 'none' 
-                        document.getElementById(`site-details-history-gbar-${i}`).style.height = `0px`
-                        document.getElementById(`site-details-history-gbar-${i}`).style.display = 'none' 
-                    }
-                }
+                    // Extract all of the station readings from the raw file
+                    // API allows for multiple stations, so array is used, but should only be returning one station
+                    for (let i=0; i<rawHistoryReadingsData.STATION.length; i++) {
+                        try {
+                            //Objects below use JSON.parse(JSON.stringify()) to fully (deep) copy the data
+                            //Otherwise, a shallow copy causes the slice on observations to reduce the original data set,
+                            //which doesn't leave enough readings for hourly pressure history
 
-                // Show wind direction
-                if (siteReadingsData.wind_direction_set_1) {
-                    var readingWindDir = siteReadingsData.wind_direction_set_1[i]
-                    var readingWindImage = '&nbsp;'
-                    var readingWindDirRotation = 0
-                    if (readingWindDir >= 0) { 
-                        readingWindDirRotation = readingWindDir + 90
-                        readingWindImage = '&#10148;' 
-                    }
-                    // Only display wind direction if there is wind or gust; otherwise display space (null causes incorrect spacing on page)
-                    document.getElementById(`site-details-history-wdir-${i}`).innerHTML = `&nbsp;`
-                    if ( Math.round(readingWind) >= 1 || Math.round(readingGust) >= 1 ) {
-                        document.getElementById(`site-details-history-wdir-${i}`).innerHTML = readingWindImage
-                        document.getElementById(`site-details-history-wdir-${i}`).style.transform = `rotate(${readingWindDirRotation}deg)`
-                    }
-                }
+                            // Create object of pressure history observations for station
+                            pressureReadingsData[i] = JSON.parse(JSON.stringify(rawHistoryReadingsData.STATION[i].OBSERVATIONS))
+                            pressureReadingsData[i].stid = JSON.parse(JSON.stringify(rawHistoryReadingsData.STATION[i].STID))
 
-            }
+                            // Create object of last 10 observations for station
+                            readingsData[i] = JSON.parse(JSON.stringify(rawHistoryReadingsData.STATION[i].OBSERVATIONS))
+                            readingsData[i].stid = JSON.parse(JSON.stringify(rawHistoryReadingsData.STATION[i].STID))
+                            var readingsCount = 10
+                            for (let key in readingsData[i]) {
+                                readingsData[i][key] = readingsData[i][key].slice(-readingsCount)
+                            }
 
-            // Hide remaining history DIVs if fewer than 10 readings
-            for (let i=siteReadingsData.date_time.length; i<10; i++) {
-                document.getElementById(`site-details-history-reading-${i}`).style.display = 'none'
-            }
-
-            // Show pressure zone for airport sites only
-            if ( detailSiteData.SiteType === `Airport` ) {
-                // Show pressure history DIV
-                document.getElementById(`site-details-pressure-title`).style.display = 'block'
-                document.getElementById(`site-details-pressure-block`).style.display = 'block'
-                document.getElementById(`site-details-pressure-info`).style.display = 'block'
-
-                // Update link to full history URL
-                document.getElementById(`site-details-pressure-href`).href = 
-                `https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=${detailSiteData.ReadingsStation}&table=1&banner=off`
-
-                // Find site pressure observations in pressureReadingsData array for the selected site
-                var pressureSiteReadingsData = {}
-                for (let i=0; i<pressureReadingsData.length; i++) {
-                    if ( pressureReadingsData[i].stid === detailSiteData.ReadingsStation ) { 
-                        pressureSiteReadingsData = pressureReadingsData[i] 
-                    }
-                }
-
-                if (pressureSiteReadingsData.altimeter_set_1) {
-                    // Create arrays to store hourly pressure readings to be displayed (hourly; not every pressure reading is displayed)
-                    var time=[], alti=[], temp=[]
-
-                    // Read each pressure reading and add pressure readings hourly to the array based on the minutes specified in the site info
-                    for (let i=0; i<pressureSiteReadingsData.date_time.length; i++) {
-                        if ( parseInt(pressureSiteReadingsData.date_time[i].slice(-5,-3),10) === parseInt(detailSiteData.PressureZoneReadingTime, 10) )
-                        {
-                            time.push(pressureSiteReadingsData.date_time[i].toLowerCase().replace(/:\d{2}/g, ''))
-                            temp.push(`${Math.round(pressureSiteReadingsData.air_temp_set_1[i])}&deg;`)
-                            alti.push(pressureSiteReadingsData.altimeter_set_1[i].toFixed(2))
+                        } catch (error) { 
+                            console.log('Station history reading error: ' + error + ' for station: ' + rawHistoryReadingsData.STATION[i].STID)
                         }
                     }
 
-                    // Limit to last 6 entries in arrays
-                    time = time.slice(-6)
-                    temp = temp.slice(-6)
-                    alti = alti.slice(-6)
+                    // Set readings for history processing
+                    populateSiteHistory(readingsData[0], detailSiteData)
 
-                    // Find height for bar chart
-                    const min = Math.min(...alti)
-                    const max = Math.max(...alti)
-                    const barHeight = alti.map(d => `${(((d-min)*80)/(max-min))+10}px`)
-
-                    for (let i=0; i<6; i++) {
-                        var zDigit = calculateZone( parseFloat(alti[i]), parseInt(temp[i]) )
-                        document.getElementById(`site-details-alti-${i}`).innerHTML = alti[i]
-                        document.getElementById(`site-details-altibar-${i}`).style.height = barHeight[i]
-                        document.getElementById(`site-details-temp-${i}`).innerHTML = temp[i]
-                        document.getElementById(`site-details-zone-${i}`).style.color = getZoneColor(zDigit)
-                        zDigit = zDigit===0 ? '&#9471;' : (zDigit==='LoP') ? 'LoP' : `&#1010${zDigit+1}`
-                        document.getElementById(`site-details-zone-${i}`).innerHTML = zDigit
-                        document.getElementById(`site-details-alti-time-${i}`).innerHTML = time[i]
-                    }
+                } catch (error) { 
+                    console.log('History readings data error: ' + error + ' for length of: ' + JSON.stringify(rawHistoryReadingsData.STATION))
+                    console.log('URL used for request:')
+                    console.log(siteHistoryReadingsURL)
                 }
-            } else {
-                document.getElementById(`site-details-pressure-title`).style.display = 'none'
-                document.getElementById(`site-details-pressure-block`).style.display = 'none'
-                document.getElementById(`site-details-pressure-info`).style.display = 'none'
+            }
+        }
+
+        // Fetch historical observations for selected CUASA site using Sierra Gliding CUASA station API
+        if ( detailSiteData.ReadingsSource === 'CUASA' ) {
+
+            // Construct CUASA API reading call
+            // Call format:   https://sierragliding.us/api/station/<station_id>/data?start=<start_timestamp>&end=<end_timestamp>&sample=<interval_seconds>
+            // Example call:  https://sierragliding.us/api/station/1069/data?start=1686012560.231&end=1686012620.231&sample=1
+            let readingEnd = nowTimeStamp / 1000                        // API call expects timestamp in seconds (milliseconds after the decimal point)
+            let readingInterval = 5 * 60                                // Setting a 5 minute interval for history readings
+            let readingStart = readingEnd - ( readingInterval * 10 )    // Offset readingStart to be 10 readings earlier than readingEnd
+            let CUASASiteReadingsURL = `https://sierragliding.us/api/station/` + detailSiteData.ReadingsStation + `/data?start=` + readingStart + `&end=` + readingEnd + `&sample=` + readingInterval
+
+            // Make CORS call to get CUASA API data and process results
+            try {
+                doCORSRequest({method: 'GET', url: CUASASiteReadingsURL, data: ""}, function processResponse(result) {
+                    let rawCUASAReadingsData = JSON.parse(result)
+
+                    // Create a JSON object in Mesonet format
+                    let MesoNetReadings = {
+                        "air_temp_set_1": [],
+                        "altimeter_set_1": [],
+                        "date_time": [],
+                        "stid": detailSiteData.ReadingsStation,
+                        "wind_direction_set_1": [],
+                        "wind_gust_set_1": [],
+                        "wind_speed_set_1": [] 
+                    }
+
+                    // Read the 10 most recent CUASA readings (sometimes 11 are returned from the API call)
+                    var MesoNetIndex = 0
+                    for (let j=(rawCUASAReadingsData.length-10); j<rawCUASAReadingsData.length; j++) {
+                        try {
+                            // Convert date to "9:00 AM" format
+                            // Multipying by 1000 since the UNIX timestamp is in seconds and Javascript timestamp uses milliseconds
+                            const rawDate = new Date(rawCUASAReadingsData[j].timestamp * 1000)
+                            let hour = rawDate.getHours()
+                            let minutes = String(rawDate.getMinutes()).padStart(2, "0")
+                            let ampm = ` AM`
+                            if (hour >= 12) { ampm = ` PM` }
+                            if (hour > 12) { hour = hour - 12 }
+                            let formattedTime = `${hour}:${minutes}${ampm}`
+
+                            // Add CUASA readings data to Mesonet object
+                            // Also convert CUASA speed readings from km/hr to mph
+                            MesoNetReadings.date_time[MesoNetIndex] = formattedTime
+                            MesoNetReadings.wind_direction_set_1[MesoNetIndex] = rawCUASAReadingsData[j].wind_direction_avg
+                            MesoNetReadings.wind_gust_set_1[MesoNetIndex] = rawCUASAReadingsData[j].windspeed_max * 0.621371
+                            MesoNetReadings.wind_speed_set_1[MesoNetIndex] = rawCUASAReadingsData[j].windspeed_avg * 0.621371
+                            MesoNetIndex = MesoNetIndex + 1
+
+                        } catch (error) { 
+                            console.log('CUASA API station processing error: ' + error + ' for station: ' + rawCUASAReadingsData[j].ID)
+                        }
+                    }
+
+                    // Populate station history
+                    populateSiteHistory(MesoNetReadings, detailSiteData)
+
+                })
+            } catch (error) { 
+                console.log('CUASA API station reading error: ' + error + ' for station: ' + detailSiteData.ReadingsStation)
             }
         }
 
@@ -606,6 +585,149 @@ function siteDetailContent(site) {
     } catch (error) { 
         console.log('Error processing detailed content for site: ' + site + ' creating error: ' + error)
     }    
+
+}
+
+// Populate history readings for station
+function populateSiteHistory (siteReadingsData, detailSiteData) {
+  
+    // Make sure there are history readings for selected station
+    if ( !(siteReadingsData.stid === detailSiteData.ReadingsStation) || !siteReadingsData.date_time) {
+        console.log('No history readings found for station ' + detailSiteData.ReadingsStation)
+        console.log('History retrieved is for incorrect station ' + siteReadingsData.stid)
+        console.log('or history does not have a date time; date_time retrieved is: ' + siteReadingsData.date_time)
+    } else {
+
+        for (let i=0; i<siteReadingsData.date_time.length; i++) {
+
+            // Remove trailing characters (am/pm) and show reading time
+            var siteTime = siteReadingsData.date_time[i].toLowerCase()
+            var site_time_space_position = siteTime.search(" ")
+            siteTime = siteTime.substring(0,site_time_space_position)
+            if (siteTime) { document.getElementById(`site-details-history-time-${i}`).innerHTML = siteTime }
+
+            // Show wind speed (or calm) and set color based on speed and type of site
+            var readingWind = 0
+            if (siteReadingsData.wind_speed_set_1) {
+                readingWind = siteReadingsData.wind_speed_set_1[i]
+                var readingWindDisplay = ''
+                if (Math.round(readingWind) >= 1) { readingWindDisplay = Math.round(readingWind) }
+                else { readingWindDisplay = '<span class="fs-3 fw-normal">Calm</span>'}
+                var siteWindColor = windColor(readingWind, detailSiteData.SiteType)
+                document.getElementById(`site-details-history-wind-${i}`).innerHTML = readingWindDisplay
+                document.getElementById(`site-details-history-wind-${i}`).style.color = siteWindColor
+                document.getElementById(`site-details-history-wbar-${i}`).style.height = `${readingWind * 3}px`
+                document.getElementById(`site-details-history-wbar-${i}`).style.backgroundColor = siteWindColor
+                document.getElementById(`site-details-history-break-${i}`).style.height = `5px`
+                document.getElementById(`site-details-history-reading-${i}`).style.display = 'block'
+            }
+
+            // Show wind gust speed (hidden if missing)
+            var readingGust = 0
+            if (siteReadingsData.wind_gust_set_1) {
+                readingGust = siteReadingsData.wind_gust_set_1[i]
+                if (Math.round(readingGust) >= 1) { 
+                    readingGust = Math.round(readingGust)
+                    var siteGustColor = windColor(readingGust, detailSiteData.SiteType)
+                    document.getElementById(`site-details-history-gust-${i}`).innerText = `g` + readingGust
+                    document.getElementById(`site-details-history-gust-${i}`).style.color = siteGustColor
+                    var readingGustDiff = (readingGust - readingWind)
+                    document.getElementById(`site-details-history-gbar-${i}`).style.height = `${readingGustDiff * 3}px`
+                    document.getElementById(`site-details-history-gbar-${i}`).style.backgroundColor = siteGustColor
+                    document.getElementById(`site-details-history-gust-${i}`).style.display = 'block'
+                    document.getElementById(`site-details-history-gbar-${i}`).style.display = 'block'
+                }
+                else { 
+                    document.getElementById(`site-details-history-gust-${i}`).style.display = 'none' 
+                    document.getElementById(`site-details-history-gbar-${i}`).style.height = `0px`
+                    document.getElementById(`site-details-history-gbar-${i}`).style.display = 'none' 
+                }
+            }
+
+            // Show wind direction
+            if (siteReadingsData.wind_direction_set_1) {
+                var readingWindDir = siteReadingsData.wind_direction_set_1[i]
+                var readingWindImage = '&nbsp;'
+                var readingWindDirRotation = 0
+                if (readingWindDir >= 0) { 
+                    readingWindDirRotation = readingWindDir + 90
+                    readingWindImage = '&#10148;' 
+                }
+                // Only display wind direction if there is wind or gust; otherwise display space (null causes incorrect spacing on page)
+                document.getElementById(`site-details-history-wdir-${i}`).innerHTML = `&nbsp;`
+                if ( Math.round(readingWind) >= 1 || Math.round(readingGust) >= 1 ) {
+                    document.getElementById(`site-details-history-wdir-${i}`).innerHTML = readingWindImage
+                    document.getElementById(`site-details-history-wdir-${i}`).style.transform = `rotate(${readingWindDirRotation}deg)`
+                }
+            }
+
+        }
+
+        // Hide remaining history DIVs if fewer than 10 readings
+        for (let i=siteReadingsData.date_time.length; i<10; i++) {
+            document.getElementById(`site-details-history-reading-${i}`).style.display = 'none'
+        }
+
+        // Show pressure zone for airport sites only
+        if ( detailSiteData.SiteType === `Airport` ) {
+            // Show pressure history DIV
+            document.getElementById(`site-details-pressure-title`).style.display = 'block'
+            document.getElementById(`site-details-pressure-block`).style.display = 'block'
+            document.getElementById(`site-details-pressure-info`).style.display = 'block'
+
+            // Update link to full history URL
+            document.getElementById(`site-details-pressure-href`).href = 
+            `https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=${detailSiteData.ReadingsStation}&table=1&banner=off`
+
+            // Find site pressure observations in pressureReadingsData array for the selected site
+            var pressureSiteReadingsData = {}
+            for (let i=0; i<pressureReadingsData.length; i++) {
+                if ( pressureReadingsData[i].stid === detailSiteData.ReadingsStation ) { 
+                    pressureSiteReadingsData = pressureReadingsData[i] 
+                }
+            }
+
+            if (pressureSiteReadingsData.altimeter_set_1) {
+                // Create arrays to store hourly pressure readings to be displayed (hourly; not every pressure reading is displayed)
+                var time=[], alti=[], temp=[]
+
+                // Read each pressure reading and add pressure readings hourly to the array based on the minutes specified in the site info
+                for (let i=0; i<pressureSiteReadingsData.date_time.length; i++) {
+                    if ( parseInt(pressureSiteReadingsData.date_time[i].slice(-5,-3),10) === parseInt(detailSiteData.PressureZoneReadingTime, 10) )
+                    {
+                        time.push(pressureSiteReadingsData.date_time[i].toLowerCase().replace(/:\d{2}/g, ''))
+                        temp.push(`${Math.round(pressureSiteReadingsData.air_temp_set_1[i])}&deg;`)
+                        alti.push(pressureSiteReadingsData.altimeter_set_1[i].toFixed(2))
+                    }
+                }
+
+                // Limit to last 6 entries in arrays
+                time = time.slice(-6)
+                temp = temp.slice(-6)
+                alti = alti.slice(-6)
+
+                // Find height for bar chart
+                const min = Math.min(...alti)
+                const max = Math.max(...alti)
+                const barHeight = alti.map(d => `${(((d-min)*80)/(max-min))+10}px`)
+
+                for (let i=0; i<6; i++) {
+                    var zDigit = calculateZone( parseFloat(alti[i]), parseInt(temp[i]) )
+                    document.getElementById(`site-details-alti-${i}`).innerHTML = alti[i]
+                    document.getElementById(`site-details-altibar-${i}`).style.height = barHeight[i]
+                    document.getElementById(`site-details-temp-${i}`).innerHTML = temp[i]
+                    document.getElementById(`site-details-zone-${i}`).style.color = getZoneColor(zDigit)
+                    zDigit = zDigit===0 ? '&#9471;' : (zDigit==='LoP') ? 'LoP' : `&#1010${zDigit+1}`
+                    document.getElementById(`site-details-zone-${i}`).innerHTML = zDigit
+                    document.getElementById(`site-details-alti-time-${i}`).innerHTML = time[i]
+                }
+            }
+        } else {
+            document.getElementById(`site-details-pressure-title`).style.display = 'none'
+            document.getElementById(`site-details-pressure-block`).style.display = 'none'
+            document.getElementById(`site-details-pressure-info`).style.display = 'none'
+        }
+    }
 }
 
 // Convert first row to JSON keys

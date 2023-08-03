@@ -90,7 +90,7 @@ function toggleDiv(newDiv) {
     // Store navigation settings after navigating to a new page
     storeNavSettings()
 
-    // Call functions to populate new page
+    // Call functions to populate new pages where load is deferred to reduce bandwidth requirements
     if ( newDiv === 'Soaring Forecast' )      { populateSoaringForecast() } 
     else if ( newDiv === 'Weather Forecast' ) { populateWeatherForecast() }
     else if ( newDiv === 'Weather Maps' )     { populateWeatherMaps()     }
