@@ -350,8 +350,9 @@ function showCurrentReadings(data) {
             }
 
             // Show wind gust speed (hidden if missing)
+            // and ignore gusts where the time stamp doesn't match the wind reading time stamp
             var currentGust = 0
-            if (data.wind_gust_value_1) {
+            if (data.wind_gust_value_1 && data.wind_gust_value_1.date_time === data.wind_speed_value_1.date_time) {
                 currentGust = data.wind_gust_value_1.value
                 if (Math.round(currentGust) >= 1) { 
                     currentGust = Math.round(currentGust)
