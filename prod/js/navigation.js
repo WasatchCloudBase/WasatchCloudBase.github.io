@@ -11,36 +11,23 @@ let mapData = ''                // Populated from Google docs in sites.js
 let currentMap = ''             // Set in sites.js
 let returnToPage = currentDiv   // Sets page to return to from site detail
 
-// Load prior map from local storage (if exists due to hitting reload button)
-if ( window.localStorage.getItem('currentMap') ) { 
-    currentMap = window.localStorage.getItem('currentMap')  // Sites.js will display the correct map after the map Divs are created
-}
-
-// Load prior navigation from local storage (if exists due to hitting reload button)
-if ( window.localStorage.getItem('currentDiv') ) { 
-    // Load prior returnToPage and site if reload occurred on site detail page
-    if ( window.localStorage.getItem('currentDiv') === 'Site Details' ) {
-        if ( window.localStorage.getItem('returnToPage') ) { 
-            returnToPage = window.localStorage.getItem('returnToPage') 
-        }
-        if ( window.localStorage.getItem('currentSite') ) { 
-            currentSite = window.localStorage.getItem('currentSite')
-        }
-        // Note that siteDetail(currentSite) function is called at the end of the sites.js async function to repopulate page
-    }
-    toggleDiv( window.localStorage.getItem('currentDiv') ) 
-} else { 
-    // If local storage didn't exist, display default page
-    toggleDiv(currentDiv)
-}
-
-// Reload the page when switching back to the browser
-// if more than 5 minutes have passed since last reload
+// Reload the page when switching focus back to the page  if more than 5 minutes have passed since last reload
 window.onfocus = function() {
     var checkDateTime = new Date()
     var ElapsedTime = ( checkDateTime - now ) / ( 1000  * 60 )  //convert milliseconds to minutes
     if ( ElapsedTime >= 5 ) { location.reload() }
 }
+
+// On page load, fetch stored data from from local storage (if it exists)
+// Note that siteDetail(currentSite) function is called at the end of the sites.js async function to repopulate page
+// based on storage data values
+if ( window.localStorage.getItem('currentMap') )    { currentMap = window.localStorage.getItem('currentMap') }
+if ( window.localStorage.getItem('currentSite') )   { currentSite = window.localStorage.getItem('currentSite') }
+if ( window.localStorage.getItem('returnToPage') )  { returnToPage = window.localStorage.getItem('returnToPage') }
+if ( window.localStorage.getItem('currentDiv') )    { currentDiv = window.localStorage.getItem('currentDiv') } 
+
+// Display current page after local storage load (or default page if there wasn't local storage)
+toggleDiv(currentDiv)
 
 // Store current navigation in local storage for use after reload
 function storeNavSettings() {
@@ -50,19 +37,19 @@ function storeNavSettings() {
     window.localStorage.setItem('returnToPage', returnToPage)
 }
 
-// Handle reload button in browser
+// Store navigation when browser reload button is used
 window.onbeforeunload = function() {
     storeNavSettings()
 }
 
-// Handle refresh button in page
+// Store navigation when page refresh button is used
 function reload() {
     storeNavSettings()
     history.scrollRestoration = 'manual'
     location.reload()
 }
 
-// Handle navigation from page menu
+// Handle page menu navigation
 function toggleDiv(newDiv) {
     document.getElementById(currentDiv).style.display = 'none'
     currentDiv = newDiv

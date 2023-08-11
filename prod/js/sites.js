@@ -235,9 +235,10 @@
         // Call format:   https://sierragliding.us/api/station/<station_id>/data?start=<start_timestamp>&end=<end_timestamp>&sample=<interval_seconds>
         // Example call:  https://sierragliding.us/api/station/1069/data?start=1686012560.231&end=1686012620.231&sample=1
         // Note that latest reading will differ from the most recent history reading because the history reading averages over the readingInterval
+        let nowTimeStamp = Date.now()
         let readingEnd = nowTimeStamp / 1000                        // API call expects timestamp in seconds (milliseconds after the decimal point)
         let readingInterval = 5 * 60                                // Setting a 5 minute interval
-        let readingStart = readingEnd - 1                           // Set start to get only latest reading
+        let readingStart = readingEnd - 30                          // Set start to make sure at least 1 reading is returned
         let CUASASiteReadingsURL = `https://sierragliding.us/api/station/` + CUASASites[i] + `/data?start=` + readingStart + `&end=` + readingEnd + `&sample=` + readingInterval
 
         // Make CORS call to get CUASA API data and process results
@@ -280,16 +281,19 @@
                         MesoNetReadings.wind_gust_value_1.value = rawCUASAReadingsData[j].windspeed_max * 0.621371
                         MesoNetReadings.wind_speed_value_1.value = rawCUASAReadingsData[j].windspeed_avg * 0.621371
                         MesoNetReadings.wind_speed_value_1.date_time = formattedTime
+                        MesoNetReadings.wind_gust_value_1.date_time = formattedTime
 
                     } catch (error) { 
                         console.log('CUASA API station processing error: ' + error + ' for data: ')
                         console.log(rawCUASAReadingsData)
+                        console.log('Processing CUASA URL of:')
+                        console.log(CUASASiteReadingsURL)
                     }
                 }
 
                 // Create new station in readings object and display current readings
                 if (rawCUASAReadingsData.length > 0) {
-                    let newReadingsIndex = readingsData.length // Values start at 0, so this is the next unused index value
+                    let newReadingsIndex = readingsData.length      // Values start at 0, so this is the next unused index value
                     readingsData[newReadingsIndex] = MesoNetReadings
                     showCurrentReadings(readingsData[newReadingsIndex])
                 }
@@ -521,6 +525,7 @@ async function siteDetailContent(site) {
             // Construct CUASA API reading call
             // Call format:   https://sierragliding.us/api/station/<station_id>/data?start=<start_timestamp>&end=<end_timestamp>&sample=<interval_seconds>
             // Example call:  https://sierragliding.us/api/station/1069/data?start=1686012560.231&end=1686012620.231&sample=1
+            let nowTimeStamp = Date.now()
             let readingEnd = nowTimeStamp / 1000                        // API call expects timestamp in seconds (milliseconds after the decimal point)
             let readingInterval = 5 * 60                                // Setting a 5 minute interval for history readings
             let readingStart = readingEnd - ( readingInterval * 10 )    // Offset readingStart to be 10 readings earlier than readingEnd
@@ -755,10 +760,11 @@ function windColor(windSpeed, siteType) {
         var redLim = 28
     }
     // Return color based on wind speed
-    if (windSpeed < ylwLim) {return wwGrn}
-    else if (windSpeed < orgLim) {return wwYlw}
-    else if (windSpeed < redLim) {return wwOrg}
-    else if (windSpeed >= redLim) {return wwRed}
+    let windSpeedDisplay = Math.round(windSpeed)
+    if (windSpeedDisplay < ylwLim) {return wwGrn}
+    else if (windSpeedDisplay < orgLim) {return wwYlw}
+    else if (windSpeedDisplay < redLim) {return wwOrg}
+    else if (windSpeedDisplay >= redLim) {return wwRed}
     else /* Handle calm winds */ {return wwGrn}
 }
 
