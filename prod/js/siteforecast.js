@@ -176,8 +176,8 @@ async function siteForecast(site) {
                         rowCAPE.childNodes[forecastCount].style.color = getCAPEColor(CAPEvalue) 
 
                         // Set color and value for LI
-                        var LIvalue = forecastData.hourly.lifted_index[i]
-                        rowLI.childNodes[forecastCount].innerText = Math.round(LIvalue)
+                        var LIvalue = Math.round(forecastData.hourly.lifted_index[i])
+                        rowLI.childNodes[forecastCount].innerText = LIvalue
                         rowLI.childNodes[forecastCount].style.color = getLIColor(LIvalue)
 
                         // Set value and color for K-index

@@ -85,6 +85,7 @@ function toggleDiv(newDiv) {
 }
 
 function siteDetail(site) {
+    currentSite = site
     toggleDiv('Site Details')
     siteDetailContent(site)
 }
