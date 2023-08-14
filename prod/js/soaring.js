@@ -1,8 +1,6 @@
 'use strict';
 // Soaring forecast page
 
-/* Removed morning Skew-T from HTML and this page; using hi-res model instead
-   Would be worth adding back in if the latest analysis can be shown, rather than sounding time
 // Get morning SkewT
 (async () => {
     const date = now.toLocaleString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'}).split('/')
@@ -11,7 +9,6 @@
     document.getElementById('skew-t-img').src = url
     document.getElementById('skew-t-href').href = url  
 })();
-*/
 
 // Populate Soaring Forecast data when navigating to Soaring Forecast page
 async function populateSoaringForecast() {
