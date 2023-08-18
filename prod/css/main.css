@@ -195,12 +195,22 @@ td:first-child {
   transform: translate(-50%, -50%);
   z-index: 101;
 }
+.radarMap {
+/*  position: fixed;
+  top: 0;
+  left: 0; */
+  z-index: 1;
+  width: 100%;
+  height: 800px;
+/*  zoom: 3;
+  transform: scale(.5); */
+}
 
 /* Flight log CSS */
 /* Adjusting zoom for input elements since the zoom used for the rest of the page makes these unreadably small */
 .zoomdatepicker {
   zoom: 2;
-  transform: scale(.5)
+  transform: scale(.5);
 }
 .form-select {
   zoom: 2.5;

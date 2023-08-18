@@ -7,7 +7,7 @@
    // original source:  const url = `https://climate.cod.edu/data/raob/KSLC/skewt/KSLC.skewt.${date[2]}${date[0]}${date[1]}.12.gif`
     const url = `http://weather.rap.ucar.edu/upper/displayUpper.php?img=KSLC.png&endDate=-1&endTime=-1&duration=0`
     document.getElementById('skew-t-img').src = url
-    document.getElementById('skew-t-href').href = url  
+    document.getElementById('skew-t-href').href = url             
 })();
 
 // Populate Soaring Forecast data when navigating to Soaring Forecast page

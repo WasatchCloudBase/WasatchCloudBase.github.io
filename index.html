@@ -16,6 +16,10 @@
     <link rel="apple-touch-startup-image" href="favicon/PG-1170x2532.png" media="(-webkit-min-device-pixel-ratio: 3) and (orientation: portrait)">
     <link rel="apple-touch-icon" href="favicon/Paraglider icon.png">
     <link rel="icon" type="image/png" href="favicon/Paraglider icon.png">
+
+    <!-- Load libraries for radar map -->
+    <link href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" rel="stylesheet"/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 </head>
 
 <body>
@@ -38,6 +42,7 @@
             <div class="dropdown-menu bg-dark border px-5 text-warning rounded-4 disable-dbl-tap-zoom" id="menu">
                 <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Site List')">Site List</div>
                 <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Map View')">Map View</div>
+                <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Radar Map')">Radar Map</div>
                 <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Weather Maps')">Weather Maps</div>
                 <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Weather Forecast')">Weather Forecast</div>
                 <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Soaring Forecast')">Soaring Forecast</div>
@@ -362,6 +367,20 @@
     </div>    
     <!-- SITE DETAILS AND SITE FORECAST DIV ################################################################################################################################### -->
     
+    <!-- RADAR MAP DIV ######################################################################################################################################################### -->
+    <div class="collapse mb-div-end" id="Radar Map">
+        <div id="timestamp" class="container-fluid p-0 mt-5 pb-3 text-warning display-4"></div>
+        <div id="mapid" class="container-fluid radarMap border wwborder border-2"></div>
+        <div class="row align-items-center d-flex justify-content-around pt-3 mb-4">
+            <div class="col-1"></div>
+            <button class="col-3 me-2 align-self-center display-4 border border-1 bg-dark text-info border-info rounded-4 clickable disable-dbl-tap-zoom" onclick="stop(); showFrame(animationPosition - 1); return;">Back</button>
+            <button id="radarplaystop" class="col-3 me-2 align-self-center display-4 border border-1 bg-dark text-info border-info rounded-4 clickable disable-dbl-tap-zoom" onclick="playStop();">Play/Stop</button>
+            <button class="col-3 me-2 align-self-center display-4 border border-1 bg-dark text-info border-info rounded-4 clickable disable-dbl-tap-zoom" onclick="stop(); showFrame(animationPosition + 1); return;">Next</button>
+            <div class="col-1"></div>
+        </div>
+    </div>    
+    <!-- RADAR MAP DIV #################################################################################################################################################### -->
+
     <!-- WEATHER MAPS DIV ##################################################################################################################################################### -->
     <div class="collapse mb-div-end" id="Weather Maps">
 
@@ -397,7 +416,7 @@
     <!-- WEATHER FORECAST DIV ################################################################################################################################################# -->
     <div class="collapse mb-div-end" id="Weather Forecast">
     
-        <!-- REFERESH NOTE -->
+        <!-- Notification if there are no TFRs -->
         <div class="container-fluid display-5 fs-2 text-info mt-3 mb-3" id="WeatherAlertNotice">There are no active weather alerts for Utah.</div>
 
         <!-- WEATHER ALERTS FOR UTAH -->
@@ -513,8 +532,8 @@
             </a>
             <div class="row align-items-center d-flex justify-content-around pt-3 mb-4">
                 <div class="col-1"></div>
-                <button class="col-3 disable-dbl-tap-zoom me-2 align-self-center display-4 border border-1 bg-dark text-info border-info rounded-4 clickable disable-dbl-tap-zoom" onclick="WeatherStreetBack()">Back</button>
-                <button class="col-3 disable-dbl-tap-zoom me-2 align-self-center display-4 border border-1 bg-dark text-info border-info rounded-4 clickable disable-dbl-tap-zoom" onclick="WeatherStreetNext()">Next</button>
+                <button class="col-3 me-2 align-self-center display-4 border border-1 bg-dark text-info border-info rounded-4 clickable disable-dbl-tap-zoom" onclick="WeatherStreetBack()">Back</button>
+                <button class="col-3 me-2 align-self-center display-4 border border-1 bg-dark text-info border-info rounded-4 clickable disable-dbl-tap-zoom" onclick="WeatherStreetNext()">Next</button>
                 <div class="col-1"></div>
             </div>
         </div>      
@@ -658,7 +677,7 @@
         <div class="container-fluid p-0">
             <a href="https://climate.cod.edu/data/raob/KSLC/skewt" id="skew-t-href" target="_blank">
                 <div class="display-3 pt-5 pb-3">Morning Sounding Skew-T</div>
-                    <img class="border wwborder border-4 border-warning" id="skew-t-img" width="100%">
+                <img class="border wwborder border-4 border-warning" id="skew-t-img" width="100%">
             </a>
         </div>
 
@@ -880,6 +899,7 @@
     <script type="text/javascript" src="prod/js/sites.js"></script>
     <script type="text/javascript" src="prod/js/d3.js"></script>
     <script type="text/javascript" src="prod/js/siteforecast.js"></script>
+    <script type="text/javascript" src="prod/js/radarmap.js"></script>
     <script type="text/javascript" src="prod/js/weathermaps.js"></script>
     <script type="text/javascript" src="prod/js/weather.js"></script>
     <script type="text/javascript" src="prod/js/soaring.js"></script>

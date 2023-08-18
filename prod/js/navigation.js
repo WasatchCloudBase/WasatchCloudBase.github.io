@@ -82,6 +82,7 @@ function toggleDiv(newDiv) {
     else if ( newDiv === 'Weather Forecast' ) { populateWeatherForecast() }
     else if ( newDiv === 'Weather Maps' )     { populateWeatherMaps()     }
     else if ( newDiv === 'Weather Cams' )     { populateWeatherCams()     }
+    else if ( newDiv === 'Radar Map' )        { populateRadarMap()        }
 }
 
 function siteDetail(site) {
