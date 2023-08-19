@@ -22,11 +22,12 @@ var mapInitialized = false;
 // Build radar map whenn navigating to Radar Map page
 async function populateRadarMap() {
 
-    // Show 'loading' image
-    document.getElementById('Loading Image').style.display = 'block' 
-
     // Initialize the underlying map if this is the first call during this browser session
     if (!mapInitialized) {
+
+        // Show 'loading' image
+        document.getElementById('Loading Image').style.display = 'block' 
+
         // Set Leaflet initial map center and zoom level
         map = L.map('mapid').setView(initialLocation, initialZoom);
 
@@ -60,6 +61,7 @@ async function populateRadarMap() {
 
 // Initialize internal data from the API response and options
 function initialize(api, kind) {
+
     // remove all already added tiled layers
     for (var i in radarLayers) {
         map.removeLayer(radarLayers[i]);
@@ -91,6 +93,7 @@ function initialize(api, kind) {
 
 // Check availability and show particular frame position from the timestamps list
 function showFrame(nextPosition, force) {
+
     var preloadingDirection = nextPosition - animationPosition > 0 ? 1 : -1;
     changeRadarPosition(nextPosition, false, force);
 
@@ -184,6 +187,7 @@ function setColors() {
 // Animation functions 
 // @param path - Path to the XYZ tile
 function addLayer(frame) {
+
     if (!radarLayers[frame.path]) {
         var colorScheme = optionKind == 'satellite' ? 0 : optionColorScheme;
         var smooth = optionKind == 'satellite' ? 0 : optionSmoothData;

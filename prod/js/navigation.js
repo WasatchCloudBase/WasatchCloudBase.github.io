@@ -51,6 +51,13 @@ function reload() {
 
 // Handle page menu navigation
 function toggleDiv(newDiv) {
+
+    // Stop radar map animation if navigating from radar map
+    if ( currentDiv === 'Radar Map') { 
+        stop() 
+    }
+
+    // Hide prior page and show new page
     document.getElementById(currentDiv).style.display = 'none'
     currentDiv = newDiv
     document.getElementById(currentDiv).scrollTop = 0
