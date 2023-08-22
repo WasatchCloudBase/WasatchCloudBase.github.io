@@ -1,6 +1,5 @@
 'use strict';
 // Radar Map page
-
 const initialLocation = [40.47, -111.88]   // Set initial location to Point of the Mountain
 const initialZoom = 9                      // Set initial zoom to level 9 (most of Utah shown)
 var apiData = {};
@@ -25,11 +24,15 @@ async function populateRadarMap() {
     // Initialize the underlying map if this is the first call during this browser session
     if (!mapInitialized) {
 
+        // Set map height based on the window size (leaving room for top menu and bottom buttons)
+        document.getElementById('radarmap').height = window.screen.height - 100
+console.log('radar map height set to: ' + document.getElementById('radarmap').height)
+
         // Show 'loading' image
         document.getElementById('Loading Image').style.display = 'block' 
 
         // Set Leaflet initial map center and zoom level
-        map = L.map('mapid').setView(initialLocation, initialZoom);
+        map = L.map('radarmap').setView(initialLocation, initialZoom);
 
         // Define map tiles source
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
