@@ -2,7 +2,7 @@
 // Navigation handling for all pages
 
 // Navigation globals
-let currentDiv = 'Site List'
+let currentDiv = 'Sites - List'
 document.getElementById('current-div').innerHTML = currentDiv
 let currentLoc = 'Salt Lake City'
 document.getElementById('current-loc').innerHTML = currentLoc
@@ -25,6 +25,10 @@ if ( window.localStorage.getItem('currentMap') )    { currentMap = window.localS
 if ( window.localStorage.getItem('currentSite') )   { currentSite = window.localStorage.getItem('currentSite') }
 if ( window.localStorage.getItem('returnToPage') )  { returnToPage = window.localStorage.getItem('returnToPage') }
 if ( window.localStorage.getItem('currentDiv') )    { currentDiv = window.localStorage.getItem('currentDiv') } 
+
+// Update local storage if browser stored old naming conversion used for currentDiv
+if (currentDiv === 'Site List')     { currentDiv = 'Sites - List'}
+if (currentDiv === 'Map View')      { currentDiv = 'Sites - Map'}
 
 // Display current page after local storage load (or default page if there wasn't local storage)
 toggleDiv(currentDiv)
@@ -65,7 +69,7 @@ function toggleDiv(newDiv) {
     document.getElementById(currentDiv).style.display = 'block'
 
     // Hide or display site region drop down based on selected DIV
-    if ( newDiv === 'Map View' || newDiv === 'Site List' ) { document.getElementById('Site Map Select').style.display = 'block' } 
+    if ( newDiv === 'Sites - Map' || newDiv === 'Sites - List' ) { document.getElementById('Site Map Select').style.display = 'block' } 
     else { document.getElementById('Site Map Select').style.display = 'none' }
 
     // Hide or display return-to-prior-page and site guide buttons based on selected DIV

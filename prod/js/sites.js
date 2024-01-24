@@ -33,7 +33,7 @@
                 cloned_map.children[1].children[1].children[1].children[2].id = mapHeader + `-prototype-site-gust`
                 cloned_map.children[1].children[1].children[2].id = mapHeader + `-prototype-site-time`
                 //Add new site to page
-                document.getElementById(`Map View`).appendChild(cloned_map)
+                document.getElementById(`Sites - Map`).appendChild(cloned_map)
                 // Update map name
                 document.getElementById(mapHeader + `-name`).innerText = mapData[i].MapName
 
@@ -75,7 +75,7 @@
                 cloned_region.children[0].children[2].children[3].id = mapHeader + `-prototype-site-list-site-gust`
 
                 // Add new prototype list site to page
-                document.getElementById(`Site List`).appendChild(cloned_region)
+                document.getElementById(`Sites - List`).appendChild(cloned_region)
 
                 // If currentMap isn't available from a prior session, use first map loaded to display
                 if ( !currentMap || currentMap === 'null' ) { currentMap = mapHeader }
@@ -284,10 +284,11 @@
                         MesoNetReadings.wind_gust_value_1.date_time = formattedTime
 
                     } catch (error) { 
-                        console.log('CUASA API station processing error: ' + error + ' for data: ')
+                        console.log('CUASA station likely down: ' + CUASASites[i])
+                        console.log('Error: ' + error + ' for data: ')
                         console.log(rawCUASAReadingsData)
-                        console.log('Processing CUASA URL of:')
-                        console.log(CUASASiteReadingsURL)
+                        console.log('While processing CUASA URL of:' + CUASASiteReadingsURL)
+                        console.log('-----------------')
                     }
                 }
 

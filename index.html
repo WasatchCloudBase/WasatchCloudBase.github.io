@@ -40,8 +40,8 @@
                 <img class="col-1 me-2 align-self-center disable-dbl-tap-zoom clickable disable-dbl-tap-zoom" src="prod/images/refresh.png" height="100%" width="100%" onclick="reload()">
             </div>
             <div class="dropdown-menu bg-dark border px-5 text-warning rounded-4 disable-dbl-tap-zoom" id="menu">
-                <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Site List')">Site List</div>
-                <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Map View')">Map View</div>
+                <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Sites - List')">Sites - List</div>
+                <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Sites - Map')">Sites - Map</div>
                 <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Radar Map')">Radar Map</div>
                 <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Weather Maps')">Weather Maps</div>
                 <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Weather Forecast')">Weather Forecast</div>
@@ -56,7 +56,7 @@
         <div class="collapse sticky-top pb-4 bring-to-front-3" id="Site Map Select">
             <div class="dropdown text-start border border-info rounded-4 bg-dark mx-5 mt-4">
                 <div class="row">
-                    <button class="col-auto btn-MapMenu border-0 fw-bold display-3 text-info bg-dark my-2 mx-5" id="btn-MapMenu" onclick="MapMenu()">&#9776;&#9662;</button>
+                    <button class="col-auto btn-MapMenu disable-dbl-tap-zoom border-0 fw-bold display-3 text-info bg-dark my-2 mx-5" id="btn-MapMenu" onclick="MapMenu()">&#9776;&#9662;</button>
                     <div class="col btn-MapMenu align-self-center display-3 text-center text-info pb-2 clickable disable-dbl-tap-zoom" id="current-map" onclick="MapMenu()"></div>
                 </div>
                 <div class="dropdown-menu bg-dark border px-5 text-info disable-dbl-tap-zoom" id="MapMenu">
@@ -91,7 +91,7 @@
     </div>
 
     <!-- SITE LIST DIV ######################################################################################################################################################## -->
-    <div class="collapse mb-div-end" id="Site List">
+    <div class="collapse mb-div-end" id="Sites - List">
         <!-- Prototype block for site list (actual sites added dynamically in sites.js) -->
         <!-- Master div for region so all sites can be populated but only selected region sites are displayed -->
         <div class="collapse container-fluid" id="region-prototype-site-list">
@@ -117,7 +117,7 @@
     <!-- SITE LIST DIV ######################################################################################################################################################## -->
 
     <!-- MAP VIEW DIV ######################################################################################################################################################### -->
-    <div class="collapse mb-div-end" id="Map View">
+    <div class="collapse mb-div-end" id="Sites - Map">
         <!-- Prototype block for maps (actual maps added dynamically in sites.js) -->
         <div class="collapse" id="prototype-map">
             <div class="collapse container-fluid display-3" id="prototype-map-name">Prototype Map</div>
