@@ -20,13 +20,13 @@ window.onfocus = function() {
 
 // On page load, fetch stored data from from local storage (if it exists)
 // Note that siteDetail(currentSite) function is called at the end of the sites.js async function to repopulate page
-// based on storage data values
-if ( window.localStorage.getItem('currentMap') )    { currentMap = window.localStorage.getItem('currentMap') }
+// based on local storage data values
+//if ( window.localStorage.getItem('currentMap') )    { currentMap = window.localStorage.getItem('currentMap') }
 if ( window.localStorage.getItem('currentSite') )   { currentSite = window.localStorage.getItem('currentSite') }
 if ( window.localStorage.getItem('returnToPage') )  { returnToPage = window.localStorage.getItem('returnToPage') }
 if ( window.localStorage.getItem('currentDiv') )    { currentDiv = window.localStorage.getItem('currentDiv') } 
 
-// Update local storage if browser stored old naming conversion used for currentDiv
+// Update local storage if browser still has old naming convention stored for currentDiv
 if (currentDiv === 'Site List')     { currentDiv = 'Sites - List'}
 if (currentDiv === 'Map View')      { currentDiv = 'Sites - Map'}
 
