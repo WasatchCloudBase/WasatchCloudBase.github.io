@@ -731,14 +731,15 @@ function getThermalInfo ( ambTemp, ambDPTemp, alt, priorThermalDPTemp, priorAlt,
                 // Apply to thermal velocity
                 thermalVelocity = thermalVelocity * ( 1 - thermalReductionFactor )
             }
-
-            // Reduce thermal strength to adjust for glider sink rate
-            // thermalVelocity = thermalVelocity - thermalGliderSinkRate
         }
     }   
 
-    // Round thermal velocity, or set to '' if not present or zero
-    if ( thermalVelocity > 0 ) { thermalVelocity = Math.round ( thermalVelocity * 10 ) / 10 }
+    // Round thermal velocity and reduce by glider sink rate, or set to '' if not present or zero
+    if ( thermalVelocity > 0 ) { 
+        // Reduce thermal strength to adjust for glider sink rate
+//        thermalVelocity = Math.max(thermalVelocity - thermalGliderSinkRate, 0)
+        thermalVelocity = Math.round ( thermalVelocity * 10 ) / 10 
+    }
     else { thermalVelocity = '' } 
     return { thermalVelocity, thermalDPTemp, thermalCloudBaseAlt, topOfLift }
 }

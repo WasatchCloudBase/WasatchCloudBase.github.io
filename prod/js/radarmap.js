@@ -26,7 +26,6 @@ async function populateRadarMap() {
 
         // Set map height based on the window size (leaving room for top menu and bottom buttons)
         document.getElementById('radarmap').height = window.screen.height - 100
-console.log('radar map height set to: ' + document.getElementById('radarmap').height)
 
         // Show 'loading' image
         document.getElementById('Loading Image').style.display = 'block' 
