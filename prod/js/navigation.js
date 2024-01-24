@@ -26,7 +26,7 @@ if ( window.localStorage.getItem('currentSite') )   { currentSite = window.local
 if ( window.localStorage.getItem('returnToPage') )  { returnToPage = window.localStorage.getItem('returnToPage') }
 if ( window.localStorage.getItem('currentDiv') )    { currentDiv = window.localStorage.getItem('currentDiv') } 
 
-// Update local storage if browser still has old naming convention stored for currentDiv
+// Update local storage if browser stored old naming conversion used for currentDiv
 if (currentDiv === 'Site List')     { currentDiv = 'Sites - List'}
 if (currentDiv === 'Map View')      { currentDiv = 'Sites - Map'}
 
