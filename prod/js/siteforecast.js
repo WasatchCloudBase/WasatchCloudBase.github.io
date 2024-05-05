@@ -412,7 +412,6 @@ async function siteForecast(site) {
                         else {  topOfLift.childNodes[forecastCount].innerHTML = `<img src="prod/images/sledride.png" width="80">`
                                 topOfLift.childNodes[forecastCount].style.backgroundColor = "black"
                         }
-
                         
                         // If cloudbase not reached during thermal strength calcs at each pressure level, then calculate forecasted cloudbase
                         // based on surface temperature and dew point gap and standard lapse rate
@@ -734,10 +733,8 @@ function getThermalInfo ( ambTemp, ambDPTemp, alt, priorThermalDPTemp, priorAlt,
         }
     }   
 
-    // Round thermal velocity and reduce by glider sink rate, or set to '' if not present or zero
+    // Round thermal velocity or set to '' if not present or zero
     if ( thermalVelocity > 0 ) { 
-        // Reduce thermal strength to adjust for glider sink rate
-//        thermalVelocity = Math.max(thermalVelocity - thermalGliderSinkRate, 0)
         thermalVelocity = Math.round ( thermalVelocity * 10 ) / 10 
     }
     else { thermalVelocity = '' } 

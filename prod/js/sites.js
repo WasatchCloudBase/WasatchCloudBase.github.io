@@ -672,11 +672,18 @@ function populateSiteHistory (siteReadingsData, detailSiteData) {
 
             // Populate pressure zone history for airport sites only
             if ( detailSiteData.SiteType === `Airport` && siteReadingsData.altimeter_set_1 ) {
-
+console.log('1')
                 // Read each pressure reading and add pressure readings hourly to the array based on the minutes specified in the site info
                 for (let i=0; i<siteReadingsData.date_time.length; i++) {
+console.log('1.1')
+console.log(siteReadingsData)
+console.log(siteReadingsData.date_time.length)
+console.log(siteReadingsData.date_time[i])
+console.log(parseInt(siteReadingsData.date_time[i].slice(-5,-3),10))
+console.log(parseInt(detailSiteData.PressureZoneReadingTime, 10))
                     if ( parseInt(siteReadingsData.date_time[i].slice(-5,-3),10) === parseInt(detailSiteData.PressureZoneReadingTime, 10) )
                     {
+console.log('2.1')
                         time.push(siteReadingsData.date_time[i].toLowerCase().replace(/:\d{2}/g, ''))
                         temp.push(`${Math.round(siteReadingsData.air_temp_set_1[i])}&deg;`)
                         alti.push(siteReadingsData.altimeter_set_1[i].toFixed(2))

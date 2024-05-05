@@ -38,6 +38,7 @@ let thermalRampDistance       = 500     // Height (in m) from the surface below 
 let thermalRampStartPct       = 50      // Initial reduction (in %) of forecasted thermal strength near the surface due to disorganized thermals
 let cloudbaseLapseRatesDiff   = 125     // Difference in DALR and dew point lapse rates (in m / degrees C) used to calculate cloudbase
 let thermalGliderSinkRate     = 1.5     // Glider sink rate to reduce thermal velocity and top of lift
+                                        // NOTE:  thermalGliderSinkRate is not currently utilized
 ;
 
 // GET SUNRISE AND SUNSET FOR SLC AIRPORT
