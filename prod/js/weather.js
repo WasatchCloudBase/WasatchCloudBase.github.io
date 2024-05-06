@@ -53,11 +53,11 @@ async function populateWeatherForecast() {
         let CleanText = ForecastDiscussionText.replace(/[\n\r]/g, " ")
         let date_position_start = CleanText.toUpperCase().search("NATIONAL WEATHER SERVICE SALT LAKE CITY UT")+43
         let date_position_end = CleanText.indexOf(".", date_position_start)-1
-        let synopsis_position_start = CleanText.toUpperCase().search(".SYNOPSIS")+12
+        let synopsis_position_start = CleanText.search(".SYNOPSIS")+12
         let synopsis_position_end = CleanText.indexOf("&&", synopsis_position_start)-2 
-        let aviation_position_start = CleanText.toUpperCase().search(".AVIATION")+19  // Skip ..KSLC..
+        let aviation_position_start = CleanText.search(".AVIATION.")+19  // Skip ..KSLC..
         let aviation_position_end = CleanText.indexOf("&&", aviation_position_start)-2
-        let aviation_rest_of_utah_start = CleanText.toUpperCase().indexOf(".REST OF UTAH AND SOUTHWEST WYOMING.", aviation_position_start) + 38
+        let aviation_rest_of_utah_start = CleanText.indexOf(".REST OF UTAH AND SOUTHWEST WYOMING.", aviation_position_start) + 38
         document.getElementById("forecast-discussion-date").innerText = CleanText.substring(date_position_start, date_position_end)
         document.getElementById("forecast-discussion-synopsis").innerText = CleanText.substring(synopsis_position_start, synopsis_position_end)
         // Separate rest of Utah aviation discussion from SLC (if present)
