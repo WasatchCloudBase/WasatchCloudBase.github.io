@@ -1,4 +1,4 @@
-# Wasatch Cloudbase
+# Utah Cloudbase
 Browser applet to provide weather information for paraglider pilots in Utah.
 
 # Contents
