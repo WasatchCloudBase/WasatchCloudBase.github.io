@@ -662,7 +662,7 @@
         </a>
 
         <!-- MORNING SOUNDING SKEW-T -->
-        <!-- Collapsing (hiding skew-T for now; high-res skew-T above is better, although it isn't updated based on hourly model changes) -->
+        <!-- Collapse div (hiding skew-T for now; high-res skew-T above is better, although it isn't updated based on hourly model changes) -->
         <div class="collapse container-fluid p-0">
             <a href="https://climate.cod.edu/data/raob/KSLC/skewt" id="skew-t-href" target="_blank">
                 <div class="display-3 pt-5 pb-3">Morning Sounding Skew-T</div>
@@ -671,92 +671,56 @@
         </div>
 
         <!-- GRAPHICAL SURFACE WIND FORECAST -->
-        <div class="display-3 pt-4" id="surface-wind">Surface Wind Forecast</div>
-        <div class="fs-1 fw-bold text-info" id="surface-wind-date"></div>
+        <div class="display-3 pt-4">Surface Wind Forecast</div>
+        <div class="display-5 text-info pb-4">(3 hour intervals)</div>
         <a href="https://graphical.weather.gov/sectors/slc.php#tabs" target="_blank">
-            <div class="d-flex fs-1 fw-bold text-info justify-content-around">
-                <div>Morning</div>
-                <div>Mid-day</div>
-            </div>
-            <div class="d-flex mx-2 rounded-4">
-                <img class="rounded-4 px-2 img-fluid" id="surface-wind-0" width="50%">
-                <img class="rounded-4 px-2 img-fluid" id="surface-wind-1" width="50%">
-            </div>
-            <div class="d-flex fs-1 fw-bold text-info justify-content-around">
-                <div>Afternoon</div>
-                <div>Evening</div>
-            </div>
-            <div class="d-flex mx-2 rounded-4">
-                <img class="rounded-4 px-2 img-fluid" id="surface-wind-2" width="50%">
-                <img class="rounded-4 px-2 img-fluid" id="surface-wind-3" width="50%">
-            </div>
+            <img class="d-flex mx-2 rounded-4 img-fluid" id="surface-wind-graphic" src="" width="100%" alt="Forecast unavailable">
         </a>
+        <div class="row align-items-center d-flex justify-content-around pt-3 mb-4">
+            <div class="col-1"></div>
+            <button class="col-3 me-2 align-self-center display-4 border border-1 bg-dark text-info border-info rounded-4 clickable disable-dbl-tap-zoom" onclick="GraphicalForecastBack('surface-wind-graphic')">Back</button>
+            <button class="col-3 me-2 align-self-center display-4 border border-1 bg-dark text-info border-info rounded-4 clickable disable-dbl-tap-zoom" onclick="GraphicalForecastNext('surface-wind-graphic')">Next</button>
+            <div class="col-1"></div>
+        </div>
 
         <!-- GRAPHICAL SURFACE GUST FORECAST -->
-        <div class="display-3 pt-4" id="surface-gust">Surface Gust Forecast</div>
-        <div class="fs-1 fw-bold text-info" id="surface-gust-date"></div>
+        <div class="display-3 pt-4">Surface Gust Forecast</div>
+        <div class="display-5 text-info pb-4">(3 hour intervals)</div>
         <a href="https://graphical.weather.gov/sectors/slc.php#tabs" target="_blank">
-            <div class="d-flex fs-1 fw-bold text-info justify-content-around">
-                <div>Morning</div>
-                <div>Mid-day</div>
-            </div>
-            <div class="d-flex mx-2 rounded-4">
-                <img class="rounded-4 px-2 img-fluid" id="surface-gust-0" width="50%">
-                <img class="rounded-4 px-2 img-fluid" id="surface-gust-1" width="50%">
-            </div>
-            <div class="d-flex fs-1 fw-bold text-info justify-content-around">
-                <div>Afternoon</div>
-                <div>Evening</div>
-            </div>
-            <div class="d-flex mx-2 rounded-4">
-                <img class="rounded-4 px-2 img-fluid" id="surface-gust-2" width="50%">
-                <img class="rounded-4 px-2 img-fluid" id="surface-gust-3" width="50%">
-            </div>
+            <img class="d-flex mx-2 rounded-4 img-fluid" id="surface-gust-graphic" src="" width="100%" alt="Forecast unavailable">
         </a>
+        <div class="row align-items-center d-flex justify-content-around pt-3 mb-4">
+            <div class="col-1"></div>
+            <button class="col-3 me-2 align-self-center display-4 border border-1 bg-dark text-info border-info rounded-4 clickable disable-dbl-tap-zoom" onclick="GraphicalForecastBack('surface-gust-graphic')">Back</button>
+            <button class="col-3 me-2 align-self-center display-4 border border-1 bg-dark text-info border-info rounded-4 clickable disable-dbl-tap-zoom" onclick="GraphicalForecastNext('surface-gust-graphic')">Next</button>
+            <div class="col-1"></div>
+        </div>
 
         <!-- GRAPHICAL CLOUD COVER FORECAST -->
-        <div class="display-3 pt-4" id="cloud-cover">Cloud Cover Forecast</div>
-        <div class="fs-1 fw-bold text-info" id="cloud-cover-date"></div>
+        <div class="display-3 pt-4">Cloud Cover Forecast</div>
+        <div class="display-5 text-info pb-4">(3 hour intervals)</div>
         <a href="https://graphical.weather.gov/sectors/slc.php#tabs" target="_blank">
-            <div class="d-flex fs-1 fw-bold text-info justify-content-around">
-                <div>Morning</div>
-                <div>Mid-day</div>
-            </div>
-            <div class="d-flex mx-2 rounded-4">
-                <img class="rounded-4 px-2 img-fluid" id="cloud-cover-0" width="50%">
-                <img class="rounded-4 px-2 img-fluid" id="cloud-cover-1" width="50%">
-            </div>
-            <div class="d-flex fs-1 fw-bold text-info justify-content-around">
-                <div>Afternoon</div>
-                <div>Evening</div>
-            </div>
-            <div class="d-flex mx-2 rounded-4">
-                <img class="rounded-4 px-2 img-fluid" id="cloud-cover-2" width="50%">
-                <img class="rounded-4 px-2 img-fluid" id="cloud-cover-3" width="50%">
-            </div>
+            <img class="d-flex mx-2 rounded-4 img-fluid" id="cloud-cover-graphic" src="" width="100%" alt="Forecast unavailable">
         </a>
+        <div class="row align-items-center d-flex justify-content-around pt-3 mb-4">
+            <div class="col-1"></div>
+            <button class="col-3 me-2 align-self-center display-4 border border-1 bg-dark text-info border-info rounded-4 clickable disable-dbl-tap-zoom" onclick="GraphicalForecastBack('cloud-cover-graphic')">Back</button>
+            <button class="col-3 me-2 align-self-center display-4 border border-1 bg-dark text-info border-info rounded-4 clickable disable-dbl-tap-zoom" onclick="GraphicalForecastNext('cloud-cover-graphic')">Next</button>
+            <div class="col-1"></div>
+        </div>
 
         <!-- GRAPHICAL PRECIPITATION FORECAST -->
-        <div class="display-3 pt-4" id="precipitation">Precipitation Forecast</div>
-        <div class="fs-1 fw-bold text-info" id="precipitation-date"></div>
+        <div class="display-3 pt-4">Precipitation Forecast</div>
+        <div class="display-5 text-info pb-4">(3 hour intervals)</div>
         <a href="https://graphical.weather.gov/sectors/slc.php#tabs" target="_blank">
-            <div class="d-flex fs-1 fw-bold text-info justify-content-around">
-                <div>Morning</div>
-                <div>Mid-day</div>
-            </div>
-            <div class="d-flex mx-2 rounded-4">
-                <img class="rounded-4 px-2 img-fluid" id="precipitation-0" width="50%">
-                <img class="rounded-4 px-2 img-fluid" id="precipitation-1" width="50%">
-            </div>
-            <div class="d-flex fs-1 fw-bold text-info justify-content-around">
-                <div>Afternoon</div>
-                <div>Evening</div>
-            </div>
-            <div class="d-flex mx-2 rounded-4">
-                <img class="rounded-4 px-2 img-fluid" id="precipitation-2" width="50%">
-                <img class="rounded-4 px-2 img-fluid" id="precipitation-3" width="50%">
-            </div>
+            <img class="d-flex mx-2 rounded-4 img-fluid" id="precipitation-graphic" src="" width="100%" alt="Forecast unavailable">
         </a>
+        <div class="row align-items-center d-flex justify-content-around pt-3 mb-4">
+            <div class="col-1"></div>
+            <button class="col-3 me-2 align-self-center display-4 border border-1 bg-dark text-info border-info rounded-4 clickable disable-dbl-tap-zoom" onclick="GraphicalForecastBack('precipitation-graphic')">Back</button>
+            <button class="col-3 me-2 align-self-center display-4 border border-1 bg-dark text-info border-info rounded-4 clickable disable-dbl-tap-zoom" onclick="GraphicalForecastNext('precipitation-graphic')">Next</button>
+            <div class="col-1"></div>
+        </div>
 
     </div>
     <!-- SOARING FORECAST DIV ################################################################################################################################################# -->

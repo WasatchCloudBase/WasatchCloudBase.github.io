@@ -17,43 +17,24 @@ async function populateSoaringForecast() {
     document.getElementById('Loading Image').style.display = 'block' 
 
     // Get today's graphical forecast (wind, gust, cloud cover, and precipitation)
-    const GraphForecastURL = 'https://graphical.weather.gov/images/slc/'
     let forecastDate = new Date()
     let forecastHour = forecastDate.getHours()
-    let nextDay = null
-    let nextDayTemp = `${new Date(forecastDate.setHours(forecastDate.getHours()+24)).toLocaleString('en-us', {weekday: 'long'})}`
 
-    // Past images aren't available, so set the loop index to start with the current image based on time
-    // Image values seem to be:
-    // 1 - prior image (not available)
-    // 2 - next image (3 hour increments), etc.
-    // Only show current day images through 6pm (reduce image_count if images aren't available starting at 9am)
-    let image_count = 4
-    let image_index = 4                                                // 12am -  3am; start with  9am image
-    if (forecastHour >  3 && forecastHour <=  6) { image_index = 3}    //  3am -  6am; start with  9am image
-    if (forecastHour >  6 && forecastHour <=  9) { image_index = 2}    //  6am -  9am; start with  9am image
-    if (forecastHour >  9 && forecastHour <= 12) { image_index = 2     //  9am - 12pm; start with 12pm image
-                                                   image_count = 3}    
-    if (forecastHour > 12 && forecastHour <= 15) { image_index = 2     // 12pm -  3pm; start with  3pm image
-                                                   image_count = 2}    
-    if (forecastHour > 15 && forecastHour <= 18) { image_index = 2     //  3pm -  6pm; start with  6pm image
-                                                   image_count = 1}
-    if (forecastHour > 18 && forecastHour <= 21) { image_index = 6     //  6pm -  9pm; start with  9am image next day
-                                                   nextDay = nextDayTemp }
-    if (forecastHour > 21)                       { image_index = 5    //  9pm - 12pm; start with  9am image next day
-                                                   nextDay = nextDayTemp }
-    
-    document.getElementById('surface-wind-date').innerHTML = nextDay
-    document.getElementById('surface-gust-date').innerHTML = nextDay
-    document.getElementById('cloud-cover-date').innerHTML = nextDay
-    document.getElementById('precipitation-date').innerHTML = nextDay
-
-    for (let i=0; i<image_count; i++) {
-        document.getElementById(`surface-wind-${i}`).src = `${GraphForecastURL}WindSpd${image_index+i}_slc.png`
-        document.getElementById(`surface-gust-${i}`).src = `${GraphForecastURL}WindGust${image_index+i}_slc.png`
-        document.getElementById(`cloud-cover-${i}`).src = `${GraphForecastURL}Sky${image_index+i}_slc.png`
-        document.getElementById(`precipitation-${i}`).src = `${GraphForecastURL}Wx${image_index+i}_slc.png`
-    }
+    // Set the initial image to the first available image based on time (past images aren't available)
+    // Images start with 0 at 3am, 1 at 6am, 2 at 9am, etc.; default is 2 (9am)
+    // Since past images aren't available, using graphicImageMinimum to track the minimum available images when user uses back button
+    if (forecastHour >  9 && forecastHour <= 12) {                          //  9am - 12pm; start with 12pm image (3)
+        graphicSurfaceWindImage = graphicSurfaceGustImage = graphicCloudCoverImage = graphicPrecipitationImage = graphicImageMinimum = 3}
+    if (forecastHour > 12 && forecastHour <= 15) {                          // 12pm -  3pm; start with  3pm image (4)
+        graphicSurfaceWindImage = graphicSurfaceGustImage = graphicCloudCoverImage = graphicPrecipitationImage = graphicImageMinimum = 4}
+    if (forecastHour > 15 && forecastHour <= 18) {                          //  3pm -  6pm; start with  6pm image (5)
+        graphicSurfaceWindImage = graphicSurfaceGustImage = graphicCloudCoverImage = graphicPrecipitationImage = graphicImageMinimum = 5}
+    if (forecastHour > 18                      ) {                          //  6pm -  9pm; start with  9am image next day (10)
+        graphicSurfaceWindImage = graphicSurfaceGustImage = graphicCloudCoverImage = graphicPrecipitationImage = graphicImageMinimum = 10}
+    document.getElementById(`surface-wind-graphic`).src = `${GraphForecastURL}WindSpd${graphicSurfaceWindImage}_slc.png`
+    document.getElementById(`surface-gust-graphic`).src = `${GraphForecastURL}WindGust${graphicSurfaceGustImage}_slc.png`
+    document.getElementById(`cloud-cover-graphic`).src = `${GraphForecastURL}Sky${graphicCloudCoverImage}_slc.png`
+    document.getElementById(`precipitation-graphic`).src = `${GraphForecastURL}Wx${graphicPrecipitationImage}_slc.png`
 
     // Get Soaring Forecast text
     const soaringForecastURL = 'https://forecast.weather.gov/product.php?site=SLC&issuedby=SLC&product=SRG&format=TXT&version=1&glossary=0'
@@ -221,3 +202,42 @@ function getLiftParams(temp, data, position = 0, raobSlope, raobYInt, params = {
         console.log('Error: ' + error + ' in getLiftParams for temp: ' + temp + ' and position: ' + position + ' in data: ' + JSON.stringify(data[position]))
     }
 };
+
+// Update Graphical forecast images based on forward/back buttons
+function GraphicalForecastNext(forecast_type) {
+    if (forecast_type == 'surface-wind-graphic' && graphicSurfaceWindImage < 20) {
+        graphicSurfaceWindImage = graphicSurfaceWindImage + 1
+        document.getElementById(`surface-wind-graphic`).src = `${GraphForecastURL}WindSpd${graphicSurfaceWindImage}_slc.png`
+    }
+    if (forecast_type == 'surface-gust-graphic' && graphicSurfaceGustImage < 20) {
+        graphicSurfaceGustImage = graphicSurfaceGustImage + 1
+        document.getElementById(`surface-gust-graphic`).src = `${GraphForecastURL}WindGust${graphicSurfaceGustImage}_slc.png`
+    }
+    if (forecast_type == 'cloud-cover-graphic' && graphicCloudCoverImage < 20) {
+        graphicCloudCoverImage = graphicCloudCoverImage + 1
+        document.getElementById(`cloud-cover-graphic`).src = `${GraphForecastURL}Sky${graphicCloudCoverImage}_slc.png`
+    }
+    if (forecast_type == 'precipitation-graphic' && graphicPrecipitationImage < 20) {
+        graphicPrecipitationImage = graphicPrecipitationImage + 1
+        document.getElementById(`precipitation-graphic`).src = `${GraphForecastURL}Wx${graphicPrecipitationImage}_slc.png`
+    }
+}
+function GraphicalForecastBack(forecast_type) {
+    // Only select previous image if there is one available (current image > minimum image)
+    if (forecast_type == 'surface-wind-graphic' && graphicSurfaceWindImage > graphicImageMinimum) {
+        graphicSurfaceWindImage = graphicSurfaceWindImage - 1
+        document.getElementById(`surface-wind-graphic`).src = `${GraphForecastURL}WindSpd${graphicSurfaceWindImage}_slc.png`
+    }
+    if (forecast_type == 'surface-gust-graphic' && graphicSurfaceGustImage > graphicImageMinimum) {
+        graphicSurfaceGustImage = graphicSurfaceGustImage - 1
+        document.getElementById(`surface-gust-graphic`).src = `${GraphForecastURL}WindGust${graphicSurfaceGustImage}_slc.png`
+    }
+    if (forecast_type == 'cloud-cover-graphic' && graphicCloudCoverImage > graphicImageMinimum) {
+        graphicCloudCoverImage = graphicCloudCoverImage - 1
+        document.getElementById(`cloud-cover-graphic`).src = `${GraphForecastURL}Sky${graphicCloudCoverImage}_slc.png`
+    }
+    if (forecast_type == 'precipitation-graphic' && graphicPrecipitationImage > graphicImageMinimum) {
+        graphicPrecipitationImage = graphicPrecipitationImage - 1
+        document.getElementById(`precipitation-graphic`).src = `${GraphForecastURL}Wx${graphicPrecipitationImage}_slc.png`
+    }
+}
