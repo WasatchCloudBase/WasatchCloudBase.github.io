@@ -1,4 +1,4 @@
-# Wasatch Cloudbase
+# Utah Cloudbase
 Browser applet to provide weather information for paraglider pilots in Utah.
 
 # Contents
@@ -22,4 +22,5 @@ Highly recommend installing as follows:
   - Click on the 'send to' icon at the bottom (box with an arrow pointing up)
   - Click on 'Add to Home Screen'
   - Click 'Add'
+
 You can then access directly from the home screen (without browser bars, etc.).
