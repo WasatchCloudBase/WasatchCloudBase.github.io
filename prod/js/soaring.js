@@ -16,13 +16,43 @@ async function populateSoaringForecast() {
     // Show 'loading' image
     document.getElementById('Loading Image').style.display = 'block' 
 
-    // Get surface wind forecast graphics
-    if (now.getHours()>=6 && now.getHours()<=14) {
-        const offset = now.getTimezoneOffset()/60===6 ? '3 pm' : '2 pm'
-        document.getElementById('graphical-wind-time').innerHTML = offset
-        document.getElementById('graphical-wind-img').src = 'https://graphical.weather.gov/images/slc/WindSpd3_slc.png'
-        document.getElementById('graphical-gust-img').src = 'https://graphical.weather.gov/images/slc/WindGust3_slc.png'
-        document.getElementById('graphical-wind-div').style.display = 'block'        
+    // Get today's graphical forecast (wind, gust, cloud cover, and precipitation)
+    const GraphForecastURL = 'https://graphical.weather.gov/images/slc/'
+    let forecastDate = new Date()
+    let forecastHour = forecastDate.getHours()
+    let nextDay = null
+    let nextDayTemp = `${new Date(forecastDate.setHours(forecastDate.getHours()+24)).toLocaleString('en-us', {weekday: 'long'})}`
+
+    // Past images aren't available, so set the loop index to start with the current image based on time
+    // Image values seem to be:
+    // 1 - prior image (not available)
+    // 2 - next image (3 hour increments), etc.
+    // Only show current day images through 6pm (reduce image_count if images aren't available starting at 9am)
+    let image_count = 4
+    let image_index = 4                                                // 12am -  3am; start with  9am image
+    if (forecastHour >  3 && forecastHour <=  6) { image_index = 3}    //  3am -  6am; start with  9am image
+    if (forecastHour >  6 && forecastHour <=  9) { image_index = 2}    //  6am -  9am; start with  9am image
+    if (forecastHour >  9 && forecastHour <= 12) { image_index = 2     //  9am - 12pm; start with 12pm image
+                                                   image_count = 3}    
+    if (forecastHour > 12 && forecastHour <= 15) { image_index = 2     // 12pm -  3pm; start with  3pm image
+                                                   image_count = 2}    
+    if (forecastHour > 15 && forecastHour <= 18) { image_index = 2     //  3pm -  6pm; start with  6pm image
+                                                   image_count = 1}
+    if (forecastHour > 18 && forecastHour <= 21) { image_index = 6     //  6pm -  9pm; start with  9am image next day
+                                                   nextDay = nextDayTemp }
+    if (forecastHour > 21)                       { image_index = 5    //  9pm - 12pm; start with  9am image next day
+                                                   nextDay = nextDayTemp }
+    
+    document.getElementById('surface-wind-date').innerHTML = nextDay
+    document.getElementById('surface-gust-date').innerHTML = nextDay
+    document.getElementById('cloud-cover-date').innerHTML = nextDay
+    document.getElementById('precipitation-date').innerHTML = nextDay
+
+    for (let i=0; i<image_count; i++) {
+        document.getElementById(`surface-wind-${i}`).src = `${GraphForecastURL}WindSpd${image_index+i}_slc.png`
+        document.getElementById(`surface-gust-${i}`).src = `${GraphForecastURL}WindGust${image_index+i}_slc.png`
+        document.getElementById(`cloud-cover-${i}`).src = `${GraphForecastURL}Sky${image_index+i}_slc.png`
+        document.getElementById(`precipitation-${i}`).src = `${GraphForecastURL}Wx${image_index+i}_slc.png`
     }
 
     // Get Soaring Forecast text

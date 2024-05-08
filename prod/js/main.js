@@ -14,7 +14,7 @@ const wwBlue = '#0d6efd'    // Bootstrap blue (primary)
 const wwCyan = '#0dcaf0'    // Bootstrap cyan (info)
 
 // Set initial defaults
-let day3ForecastURL = 'https://api.weather.gov/gridpoints/SLC/97,175/forecast'
+let day5ForecastURL = 'https://api.weather.gov/gridpoints/SLC/97,175/forecast'
 let TFRDetails = ''
 let WeatherStreetImage = 1
 let siteData = []               // Populated from Google docs in sites.js

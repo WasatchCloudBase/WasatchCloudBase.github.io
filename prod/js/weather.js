@@ -7,8 +7,8 @@ async function populateWeatherForecast() {
     // Show 'loading' image
     document.getElementById('Loading Image').style.display = 'block' 
 
-    // Make call for initial 3 day forecast on load
-    get3DayForecast()
+    // Make call for initial 5 day forecast on load
+    get5DayForecast()
 
     // Get any Utah Weather Alerts (hidden if none)
     // const url = 'https://wasatchcloudbase.github.io/example_files/noaa_alerts_utah.json'
@@ -69,65 +69,54 @@ async function populateWeatherForecast() {
         document.getElementById("forecast-discussion-aviation").innerText = CleanText.substring(aviation_position_start, aviation_position_end)
     }
 
-    // Get Utah graphical forecast images for cloud cover and precipitation
-    const GraphForecastURL = 'https://graphical.weather.gov/images/slc/'
-    const forecastDate = new Date()
-    const timeStr = (forecastDate.getHours()>18 || forecastDate.getHours()<7) ? 5 : 1
-    const nextDay = forecastDate.getHours()>18 ? `( ${new Date(forecastDate.setHours(forecastDate.getHours()+24)).toLocaleString('en-us', {weekday: 'short'})} )` : null
-    document.getElementById('sky-next-day').innerHTML = nextDay
-    for (let i=0; i<4; i++) {
-        document.getElementById(`graphical-sky-${i}`).src = `${GraphForecastURL}Sky${timeStr+i}_slc.png`
-        document.getElementById(`graphical-wx-${i}`).src = `${GraphForecastURL}Wx${timeStr+i}_slc.png`
-    }
-
     // Hide 'loading' image
     document.getElementById('Loading Image').style.display = 'none' 
 }
 
-// 3 DAY FORECAST
-// Get 3 day forecast based on selection location
+// 5 DAY FORECAST
+// Get 5 day forecast based on selection location
 //const url = 'https://wasatchcloudbase.github.io/example_files/example_noaa_forecast.json'
-async function get3DayForecast() {
+async function get5DayForecast() {
     // Clear prior results while loading
     // (a lag sometimes occurs the first time forecasts are queried)
-    for (let i=1; i<4; i++) {
+    for (let i=1; i<6; i++) {
         document.getElementById(`forecast-day${i}-day`).innerHTML = 'Loading forecast...'
         document.getElementById(`forecast-day${i}-txt`).innerHTML = ''
         document.getElementById(`forecast-day${i}-img`).src = ''
     }
-    var response = await fetch(day3ForecastURL)
+    var response = await fetch(day5ForecastURL)
     var noaaData = await response.json()
     if (noaaData) {
         try {
             let position = noaaData.properties.periods[0].isDaytime ? 0 : 1
-            for (let i=1; i<4; i++) {
+            for (let i=1; i<6; i++) {
                 document.getElementById(`forecast-day${i}-day`).innerHTML = noaaData.properties.periods[position].name
                 document.getElementById(`forecast-day${i}-txt`).innerHTML = noaaData.properties.periods[position].detailedForecast
                 document.getElementById(`forecast-day${i}-img`).src = noaaData.properties.periods[position].icon
                 position += 2
             }
         } catch (error) { 
-            console.log('3 day forecast error' + error) 
+            console.log('5 day forecast error' + error) 
         }
     }
 }
 
-// Toggle changes to 3 day forecast location
+// Toggle changes to 5 day forecast location
 function toggleLoc(newLoc) {
     var currentLoc = newLoc
     document.getElementById('current-loc').innerHTML = currentLoc
     // Determine forecast based on location selected
     // Can get different location grid points from:  https://api.weather.gov/points/{lat},{lon}
     if (currentLoc === 'Salt Lake City') {
-        day3ForecastURL = 'https://api.weather.gov/gridpoints/SLC/97,175/forecast'
+        day5ForecastURL = 'https://api.weather.gov/gridpoints/SLC/97,175/forecast'
     } else if (currentLoc === 'The V') {
-        day3ForecastURL = 'https://api.weather.gov/gridpoints/SLC/102,181/forecast'
+        day5ForecastURL = 'https://api.weather.gov/gridpoints/SLC/102,181/forecast'
     } else if (currentLoc === 'Inspo') {
-        day3ForecastURL = 'https://api.weather.gov/gridpoints/SLC/106,153/forecast'
+        day5ForecastURL = 'https://api.weather.gov/gridpoints/SLC/106,153/forecast'
     } else if (currentLoc === 'Monroe Peak') {
-        day3ForecastURL = 'https://api.weather.gov/gridpoints/SLC/80,75/forecast'
+        day5ForecastURL = 'https://api.weather.gov/gridpoints/SLC/80,75/forecast'
     }
-    get3DayForecast()
+    get5Forecast()
 }
 
 // Update WeatherStreet forecast image based on forward/back buttons

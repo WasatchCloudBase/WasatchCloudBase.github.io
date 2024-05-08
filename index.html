@@ -460,11 +460,11 @@
             <div class="fs-1 mt-2 text-info text-decoration-underline">Weather terms glossary and acronyms</div>
         </a>    
 
-        <!-- NEXT 3 DAYS -->
+        <!-- NEXT 5 DAYS -->
         <div class="container-fluid p-0 mt-3">
-            <div class="display-3 py-4">Daily Forecast (3 days)</div>
+            <div class="display-3 py-4">Daily Forecast (5 days)</div>
 
-            <!-- Drop down to select location for 3 day forecast -->
+            <!-- Drop down to select location for 5 day forecast -->
             <div class="dropdown text-start border border-info rounded-4 bg-dark mx-5 mt-1 mb-5">
                 <div class="row">
                     <button class="col-auto btn-LocMenu border-0 fw-bold display-3 text-info bg-dark my-2 mx-5" id="btn-LocMenu" onclick="LocMenu()">&#9776;&#9662;</button>
@@ -478,7 +478,7 @@
                 </div>
             </div>
 
-            <!-- Populate 3 day forecast -->
+            <!-- Populate 5 day forecast -->
             <a href="https://forecast.weather.gov/MapClick.php?lat=40.76031000000006&lon=-111.88821999999999#.YSqo945KhhF" id='Next3DayURL' target="_blank">
                 <div class="bg-dark py-3 rounded-4 lh-base">
                     <div class="row mx-0">
@@ -496,7 +496,7 @@
                         </div>
                         <div class="col">
                             <div class="display-5 text-warning text-start mb-3" id="forecast-day2-day"></div>
-                            <div class="fs-1 text-start" id="forecast-day2-txt">Data Error: Try again later</div>
+                            <div class="fs-1 text-start" id="forecast-day2-txt"></div>
                         </div><hr class="dash mt-3">
                     </div>
                     <div class="row mx-0">
@@ -506,6 +506,24 @@
                         <div class="col">
                             <div class="display-5 text-warning text-start mb-3" id="forecast-day3-day"></div>
                             <div class="fs-1 text-start" id="forecast-day3-txt"></div>
+                        </div><hr class="dash mt-3">
+                    </div>
+                    <div class="row mx-0">
+                        <div class="col-3 ms-4 align-self-center text-start">
+                            <img id="forecast-day4-img" height=200px>
+                        </div>
+                        <div class="col">
+                            <div class="display-5 text-warning text-start mb-3" id="forecast-day4-day"></div>
+                            <div class="fs-1 text-start" id="forecast-day4-txt"></div>
+                        </div><hr class="dash mt-3">
+                    </div>
+                    <div class="row mx-0">
+                        <div class="col-3 ms-4 align-self-center text-start">
+                            <img id="forecast-day5-img" height=200px>
+                        </div>
+                        <div class="col">
+                            <div class="display-5 text-warning text-start mb-3" id="forecast-day5-day"></div>
+                            <div class="fs-1 text-start" id="forecast-day5-txt">Data Error: Try again later</div>
                         </div>
                     </div>
                 </div>
@@ -537,36 +555,6 @@
                 <div class="col-1"></div>
             </div>
         </div>      
-
-        <!-- GRAPHICAL SKY COVER (CLOUD COVER AND PRECIPITATION) FORECAST -->
-        <div class="display-3 pt-4" id="SKYCOVERTEST">Cloud Cover and Precipitation Forecast</div>
-        <div class="fs-1 fw-bold text-info" id="sky-next-day"></div>
-        <a href="https://graphical.weather.gov/sectors/slc.php#tabs" target="_blank">
-            <div class="d-flex fs-1 fw-bold text-info justify-content-around">
-                <div>Morning</div>
-                <div>Mid-day</div>
-                <div>Afternoon</div>
-                <div>Evening</div>
-            </div>
-            <div class="d-flex mx-2 rounded-4">
-                <div class="col">
-                    <img class="rounded-4 img-fluid" id="graphical-sky-0">
-                    <img class="img-fluid" id="graphical-wx-0">
-                </div>
-                <div class="col">
-                    <img class="rounded-4 img-fluid" id="graphical-sky-1">
-                    <img class="img-fluid" id="graphical-wx-1">
-                </div>
-                <div class="col">
-                    <img class="rounded-4 img-fluid" id="graphical-sky-2">
-                    <img class="img-fluid" id="graphical-wx-2">
-                </div>
-                <div class="col">
-                    <img class="rounded-4 img-fluid" id="graphical-sky-3">
-                    <img class="img-fluid" id="graphical-wx-3">
-                </div>
-            </div>
-        </a>
 
     </div>
     <!-- WEATHER FORECAST DIV ################################################################################################################################################# -->
@@ -674,28 +662,101 @@
         </a>
 
         <!-- MORNING SOUNDING SKEW-T -->
-        <div class="container-fluid p-0">
+        <!-- Collapsing (hiding skew-T for now; high-res skew-T above is better, although it isn't updated based on hourly model changes) -->
+        <div class="collapse container-fluid p-0">
             <a href="https://climate.cod.edu/data/raob/KSLC/skewt" id="skew-t-href" target="_blank">
                 <div class="display-3 pt-5 pb-3">Morning Sounding Skew-T</div>
                 <img class="border wwborder border-4 border-warning" id="skew-t-img" width="100%">
             </a>
         </div>
 
-        <!-- GRAPHICAL SURFACE WIND FORECAST (SHOWN ONLY BEFORE 2PM LOCAL TIME) -->
-        <div class="collapse container-fluid p-0" id="graphical-wind-div">
-            <div class="display-3 pt-5 pb-3">Surface Wind Forecast</div>
-            <div class="row fw-bold fs-1 justify-content-center">
-                <div class="col-4">Wind</div>
-                <div class="col-2 text-info" id="graphical-wind-time"></div>
-                <div class="col-4">Gust</div>
+        <!-- GRAPHICAL SURFACE WIND FORECAST -->
+        <div class="display-3 pt-4" id="surface-wind">Surface Wind Forecast</div>
+        <div class="fs-1 fw-bold text-info" id="surface-wind-date"></div>
+        <a href="https://graphical.weather.gov/sectors/slc.php#tabs" target="_blank">
+            <div class="d-flex fs-1 fw-bold text-info justify-content-around">
+                <div>Morning</div>
+                <div>Mid-day</div>
             </div>
-            <a href="https://graphical.weather.gov/sectors/slc.php#tabs" target="_blank">
-                <div>
-                    <img class="border border-4 rounded-4 img-fluid me-1" id="graphical-wind-img" width="49%">
-                    <img class="border border-4 rounded-4 img-fluid ms-1" id="graphical-gust-img" width="49%">
-                </div>
-            </a>
-        </div>
+            <div class="d-flex mx-2 rounded-4">
+                <img class="rounded-4 px-2 img-fluid" id="surface-wind-0" width="50%">
+                <img class="rounded-4 px-2 img-fluid" id="surface-wind-1" width="50%">
+            </div>
+            <div class="d-flex fs-1 fw-bold text-info justify-content-around">
+                <div>Afternoon</div>
+                <div>Evening</div>
+            </div>
+            <div class="d-flex mx-2 rounded-4">
+                <img class="rounded-4 px-2 img-fluid" id="surface-wind-2" width="50%">
+                <img class="rounded-4 px-2 img-fluid" id="surface-wind-3" width="50%">
+            </div>
+        </a>
+
+        <!-- GRAPHICAL SURFACE GUST FORECAST -->
+        <div class="display-3 pt-4" id="surface-gust">Surface Gust Forecast</div>
+        <div class="fs-1 fw-bold text-info" id="surface-gust-date"></div>
+        <a href="https://graphical.weather.gov/sectors/slc.php#tabs" target="_blank">
+            <div class="d-flex fs-1 fw-bold text-info justify-content-around">
+                <div>Morning</div>
+                <div>Mid-day</div>
+            </div>
+            <div class="d-flex mx-2 rounded-4">
+                <img class="rounded-4 px-2 img-fluid" id="surface-gust-0" width="50%">
+                <img class="rounded-4 px-2 img-fluid" id="surface-gust-1" width="50%">
+            </div>
+            <div class="d-flex fs-1 fw-bold text-info justify-content-around">
+                <div>Afternoon</div>
+                <div>Evening</div>
+            </div>
+            <div class="d-flex mx-2 rounded-4">
+                <img class="rounded-4 px-2 img-fluid" id="surface-gust-2" width="50%">
+                <img class="rounded-4 px-2 img-fluid" id="surface-gust-3" width="50%">
+            </div>
+        </a>
+
+        <!-- GRAPHICAL CLOUD COVER FORECAST -->
+        <div class="display-3 pt-4" id="cloud-cover">Cloud Cover Forecast</div>
+        <div class="fs-1 fw-bold text-info" id="cloud-cover-date"></div>
+        <a href="https://graphical.weather.gov/sectors/slc.php#tabs" target="_blank">
+            <div class="d-flex fs-1 fw-bold text-info justify-content-around">
+                <div>Morning</div>
+                <div>Mid-day</div>
+            </div>
+            <div class="d-flex mx-2 rounded-4">
+                <img class="rounded-4 px-2 img-fluid" id="cloud-cover-0" width="50%">
+                <img class="rounded-4 px-2 img-fluid" id="cloud-cover-1" width="50%">
+            </div>
+            <div class="d-flex fs-1 fw-bold text-info justify-content-around">
+                <div>Afternoon</div>
+                <div>Evening</div>
+            </div>
+            <div class="d-flex mx-2 rounded-4">
+                <img class="rounded-4 px-2 img-fluid" id="cloud-cover-2" width="50%">
+                <img class="rounded-4 px-2 img-fluid" id="cloud-cover-3" width="50%">
+            </div>
+        </a>
+
+        <!-- GRAPHICAL PRECIPITATION FORECAST -->
+        <div class="display-3 pt-4" id="precipitation">Precipitation Forecast</div>
+        <div class="fs-1 fw-bold text-info" id="precipitation-date"></div>
+        <a href="https://graphical.weather.gov/sectors/slc.php#tabs" target="_blank">
+            <div class="d-flex fs-1 fw-bold text-info justify-content-around">
+                <div>Morning</div>
+                <div>Mid-day</div>
+            </div>
+            <div class="d-flex mx-2 rounded-4">
+                <img class="rounded-4 px-2 img-fluid" id="precipitation-0" width="50%">
+                <img class="rounded-4 px-2 img-fluid" id="precipitation-1" width="50%">
+            </div>
+            <div class="d-flex fs-1 fw-bold text-info justify-content-around">
+                <div>Afternoon</div>
+                <div>Evening</div>
+            </div>
+            <div class="d-flex mx-2 rounded-4">
+                <img class="rounded-4 px-2 img-fluid" id="precipitation-2" width="50%">
+                <img class="rounded-4 px-2 img-fluid" id="precipitation-3" width="50%">
+            </div>
+        </a>
 
     </div>
     <!-- SOARING FORECAST DIV ################################################################################################################################################# -->
