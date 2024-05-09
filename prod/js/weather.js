@@ -80,7 +80,7 @@ async function get5DayForecast() {
     // Clear prior results while loading
     // (a lag sometimes occurs the first time forecasts are queried)
     for (let i=1; i<6; i++) {
-        document.getElementById(`forecast-day${i}-day`).innerHTML = 'Loading forecast...'
+        document.getElementById(`forecast-day${i}-day`).innerHTML = 'Loading forecast'
         document.getElementById(`forecast-day${i}-txt`).innerHTML = ''
         document.getElementById(`forecast-day${i}-img`).src = ''
     }
@@ -116,6 +116,7 @@ async function toggleLoc(newLoc) {
     if (fiveDayForecastData) {
         try {
             fiveDayForecastURL = fiveDayForecastData.properties.forecast
+            document.getElementById(`Next5DayURL`).href = `https://forecast.weather.gov/MapClick.php?lat=${forecast_lat}&lon=${forecast_lon}`
         } catch (error) {
             console.log('5 day forecast grid coordinates lookup error: ' + error) 
         }

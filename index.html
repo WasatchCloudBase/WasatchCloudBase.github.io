@@ -28,7 +28,7 @@
         <div class="row align-items-center d-flex justify-content-around mb-2">
             <div class="col-auto"><img src="prod/images/Sun_icon_gold_black_canvas.png" height="50" width="50"></div>
             <div class="col-auto display-5 fs-1 align-self-center text-warning" id="sunrise_time"></div>
-            <div class="col display-3">Wasatch Cloudbase</div>
+            <div class="col display-3">Utah Cloudbase</div>
             <div class="col-auto display-5 fs-1 align-self-center text-warning" id="sunset_time"></div>
             <div class="col-auto"><img src="prod/images/Moon_icon_gold.png" height="50" width="50"></div>
         </div>
@@ -42,12 +42,13 @@
             <div class="dropdown-menu bg-dark border px-5 text-warning rounded-4 disable-dbl-tap-zoom" id="menu">
                 <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Sites - List')">Sites - List</div>
                 <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Sites - Map')">Sites - Map</div>
-                <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Radar Map')">Radar Map</div>
-                <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Weather Maps')">Weather Maps</div>
                 <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Weather Forecast')">Weather Forecast</div>
                 <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Soaring Forecast')">Soaring Forecast</div>
+                <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Weather Maps')">Weather Maps</div>
+                <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Radar Map')">Radar Map</div>
                 <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Weather Cams')">Weather Cams</div>
-                <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Flights and Links')">Flights and Links</div>
+                <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('Links')">Links</div>
+                <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('FlySkyHy Custom Airspace')">FlySkyHy Custom Airspace</div>
                 <div class="py-3 display-3 clickable disable-dbl-tap-zoom" onclick="toggleDiv('About')">About</div>
             </div>
         </div>
@@ -458,7 +459,7 @@
             </div>
 
             <!-- Populate 5 day forecast -->
-            <a href="https://forecast.weather.gov/MapClick.php?lat=40.76031000000006&lon=-111.88821999999999#.YSqo945KhhF" id='Next3DayURL' target="_blank">
+            <a href="https://forecast.weather.gov/MapClick.php?lat=40.47&lon=-111.88" id='Next5DayURL' target="_blank">
                 <div class="bg-dark py-3 rounded-4 lh-base">
                     <div class="row mx-0">
                         <div class="col-3 ms-4 align-self-center text-start">
@@ -866,8 +867,8 @@
         </div>
     </div>
 
-    <!-- FLIGHTS AND LINKS #################################################################################################################################################### -->
-    <div class="collapse mb-div-end" id="Flights and Links">
+    <!-- LINKS ######################################################################################################################################################### -->
+    <div class="collapse mb-div-end" id="Links">
 
         <!-- HEADER SECTIONS -->
         <div class="container-fluid display-3 mt-5" id="live-tracking">Live Tracking</div>
@@ -876,10 +877,26 @@
         <div class="container-fluid display-3 mt-5" id="site-guides">Utah Site Guides</div>
         <div class="container-fluid display-3 mt-5" id="replay-flights">Replay Flights</div>
         <div class="container-fluid display-3 mt-5" id="weather-links">Weather</div>
-        <div class="container-fluid display-3 mt-5" id="custom-airspace">LZs / No Land Areas for FlySkyHy
+
+            <!-- LINK PROTOTYPE -->
+            <a href="https://tbd.com" target="_blank" id="prototype-link-href">
+                <div class="collapse container-fluid rounded-4 bg-dark my-4" id="prototype-link-block">
+                    <div class="row pt-2 px-4 display-4" id="prototype-link-name"></div>
+                    <div class="row px-4 pb-3 fs-1 text-info text-start" id="prototype-link-description"></div>
+                </div>
+            </a>
+
+    </div>
+
+    <!-- FLYSKYHY CUSTOM AIRSPACE #################################################################################################################################################### -->
+    <div class="collapse mb-div-end" id="FlySkyHy Custom Airspace">
+
+        <!-- HEADER SECTIONS -->
+        <!-- Link and contents is build using the Links prototype DIV above, and populated in links.js-->
+        <div class="container-fluid display-3 mt-5" id="custom-airspace">
             <div class="container rounded-4 border border-4 display-5 rounded-4 bg-dark text-info">FlySkyHy airspace file instructions
                 <div>
-                    <div class="row fs-1 px-4 pt-3">1. Click on link below to download file</div>
+                    <div class="row fs-1 px-4 pt-3">1. Click on file below to download</div>
                     <div class="row fs-1 px-4">2. Open with FlySkyHy to import</div>
                     <div class="row fs-1 px-4">3. Configure FlySKyHy airspace colors:</div>
                     <div class="row fs-2 pb-4">
@@ -896,14 +913,6 @@
                 </div>
             </div>
         </div>
-
-            <!-- LINK PROTOTYPE -->
-            <a href="https://tbd.com" target="_blank" id="prototype-link-href">
-                <div class="collapse container-fluid rounded-4 bg-dark my-4" id="prototype-link-block">
-                    <div class="row pt-2 px-4 display-4" id="prototype-link-name"></div>
-                    <div class="row px-4 pb-3 fs-1 text-info text-start" id="prototype-link-description"></div>
-                </div>
-            </a>
 
     </div>
 

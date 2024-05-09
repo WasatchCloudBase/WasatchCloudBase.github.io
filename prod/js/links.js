@@ -1,5 +1,6 @@
 'use strict';
 // External hyperlinks page
+// Also builds link on FlySkyHy Custom Airspace page
 
 // Build link DIVs and populate link data
 (async () => {

@@ -5,7 +5,7 @@
 (async () => {
 
     // Retrieve map data in JSON format from Google sheets API
-    // Maintain map data here:  https://docs.google.com/spreadsheets/d/1nBEJuTCWkUidSFKQjBjcJgKeteC_oy8LqL2P7uhGyLQ/edit#gid=1983117904
+    // Maintain map data here:  https://docs.google.com/spreadsheets/d/1nBEJuTCWkUidSFKQjBjcJgKeteC_oy8LqL2P7uhGyLQ/edit#gid=0
     var map_data_url = "https://sheets.googleapis.com/v4/spreadsheets/1nBEJuTCWkUidSFKQjBjcJgKeteC_oy8LqL2P7uhGyLQ/values/Maps/?alt=json" +
         "&key=AIzaSyDSro1lDdAQsNEZq06IxwjOlQQP1tip-fs"
     var response = await fetch(map_data_url)
