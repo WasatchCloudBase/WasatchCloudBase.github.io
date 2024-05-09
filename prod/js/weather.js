@@ -84,7 +84,7 @@ async function get5DayForecast() {
         document.getElementById(`forecast-day${i}-txt`).innerHTML = ''
         document.getElementById(`forecast-day${i}-img`).src = ''
     }
-    var response = await fetch(day5ForecastURL)
+    var response = await fetch(fiveDayForecastURL)
     var noaaData = await response.json()
     if (noaaData) {
         try {
@@ -96,27 +96,32 @@ async function get5DayForecast() {
                 position += 2
             }
         } catch (error) { 
-            console.log('5 day forecast error' + error) 
+            console.log('5 day forecast error: ' + error) 
         }
     }
 }
 
 // Toggle changes to 5 day forecast location
-function toggleLoc(newLoc) {
+async function toggleLoc(newLoc) {
     var currentLoc = newLoc
-    document.getElementById('current-loc').innerHTML = currentLoc
-    // Determine forecast based on location selected
-    // Can get different location grid points from:  https://api.weather.gov/points/{lat},{lon}
-    if (currentLoc === 'Salt Lake City') {
-        day5ForecastURL = 'https://api.weather.gov/gridpoints/SLC/97,175/forecast'
-    } else if (currentLoc === 'The V') {
-        day5ForecastURL = 'https://api.weather.gov/gridpoints/SLC/102,181/forecast'
-    } else if (currentLoc === 'Inspo') {
-        day5ForecastURL = 'https://api.weather.gov/gridpoints/SLC/106,153/forecast'
-    } else if (currentLoc === 'Monroe Peak') {
-        day5ForecastURL = 'https://api.weather.gov/gridpoints/SLC/80,75/forecast'
+    document.getElementById('current-loc').innerHTML = document.getElementById('location-menu-' + currentLoc + '-name').innerText
+    // Get lat and lon for selected forecast site
+    let forecast_lon = document.getElementById('location-menu-' + currentLoc + '-lon').innerText
+    let forecast_lat = document.getElementById('location-menu-' + currentLoc + '-lat').innerText
+    // Get forecast URL from:  https://api.weather.gov/points/{lat},{lon}
+    // which returns a JSON with a 'forecast' attribute that is the updated URL
+    let fiveDayForecastAPI = `https://api.weather.gov/points/${forecast_lat},${forecast_lon}`  
+    const fiveDayForecastAPIResponse = await fetch(fiveDayForecastAPI)
+    const fiveDayForecastData = await fiveDayForecastAPIResponse.json()
+    if (fiveDayForecastData) {
+        try {
+            fiveDayForecastURL = fiveDayForecastData.properties.forecast
+        } catch (error) {
+            console.log('5 day forecast grid coordinates lookup error: ' + error) 
+        }
     }
-    get5Forecast()
+    // Refresh 5 day forecast
+    get5DayForecast()
 }
 
 // Update WeatherStreet forecast image based on forward/back buttons

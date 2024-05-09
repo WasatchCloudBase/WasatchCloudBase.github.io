@@ -436,30 +436,6 @@
             </a>
         </div>
 
-        <!-- AREA FORECAST DISCUSSION -->
-        <div class="container-fluid p-0 mt-5 pb-3 display-3">SLC Area Forecast Discussion</div>
-        <a href="https://www.weather.gov/wrh/TextProduct?product=xxxafdslc" target="_blank">
-            <div class="container-fluid display-5 rounded-4 bg-dark lh-base">
-                <div class="row pt-3 pb-3">
-                    <div class="col-auto text-warning">Forecast date:</div>
-                    <div class="col-auto text-start align-self-end" id="forecast-discussion-date"></div>
-                </div>
-                <div class="col-auto text-start text-warning">Synopsis</div>
-                <div class="fs-1 col-auto text-start pb-3" id="forecast-discussion-synopsis"></div>
-                <div class="row">
-                    <div class="col-auto text-warning">Aviation - SLC</div>
-                    <div class="fs-1 col-auto text-start pb-3" id="forecast-discussion-aviation"></div>
-                </div>
-                <div class="row" id="forecast-discussion-aviation-utah-block">
-                    <div class="col-auto text-warning">Aviation - rest of Utah</div>
-                    <div class="fs-1 col-auto text-start pb-3" id="forecast-discussion-aviation-utah"></div>
-                </div>
-            </div>
-        </a>
-        <a href="https://www.weather.gov/jetstream/append_intro" target="_blank">
-            <div class="fs-1 mt-2 text-info text-decoration-underline">Weather terms glossary and acronyms</div>
-        </a>    
-
         <!-- NEXT 5 DAYS -->
         <div class="container-fluid p-0 mt-3">
             <div class="display-3 py-4">Daily Forecast (5 days)</div>
@@ -470,11 +446,14 @@
                     <button class="col-auto btn-LocMenu border-0 fw-bold display-3 text-info bg-dark my-2 mx-5" id="btn-LocMenu" onclick="LocMenu()">&#9776;&#9662;</button>
                     <div class="col btn-LocMenu align-self-center display-3 text-center text-info pb-2 clickable disable-dbl-tap-zoom" id="current-loc" onclick="LocMenu()"></div>
                 </div>
-                <div class="dropdown-menu bg-dark border px-5 text-info" id="LocMenu">
-                    <div class="py-3 display-4 clickable disable-dbl-tap-zoom" onclick="toggleLoc('Salt Lake City')">Salt Lake City</div>
-                    <div class="py-3 display-4 clickable disable-dbl-tap-zoom" onclick="toggleLoc('The V')">The V</div>
-                    <div class="py-3 display-4 clickable disable-dbl-tap-zoom" onclick="toggleLoc('Inspo')">Inspo</div>
-                    <div class="py-3 display-4 clickable disable-dbl-tap-zoom" onclick="toggleLoc('Monroe Peak')">Monroe Peak</div>
+                <div class="dropdown-menu bg-dark border px-5 text-info" id="LocMenuDropdown">
+                    <!-- Prototype block for location menu drop down list (actual sites added dynamically in sites.js) -->
+                    <div class="py-1 display-4 clickable disable-dbl-tap-zoom" id="prototype-location-menu-site" onclick="toggleLoc('Not specified')">
+                        <span id="prototype-location-menu-site-name"></span>
+                        <!-- These elements are not displayed; they hold the lon and lat for use in determining forecast area -->
+                        <div class="collapse display-4" id="prototype-location-menu-site-lon"></div>
+                        <div class="collapse display-4" id="prototype-location-menu-site-lat"></div>
+                    </div>
                 </div>
             </div>
 
@@ -528,7 +507,31 @@
                     </div>
                 </div>
             </a>
-        </div>        
+        </div>                
+
+        <!-- AREA FORECAST DISCUSSION -->
+        <div class="container-fluid p-0 mt-5 pb-3 display-3">SLC Area Forecast Discussion</div>
+        <a href="https://www.weather.gov/wrh/TextProduct?product=xxxafdslc" target="_blank">
+            <div class="container-fluid display-5 rounded-4 bg-dark lh-base">
+                <div class="row pt-3 pb-3">
+                    <div class="col-auto text-warning">Forecast date:</div>
+                    <div class="col-auto text-start align-self-end" id="forecast-discussion-date"></div>
+                </div>
+                <div class="col-auto text-start text-warning">Synopsis</div>
+                <div class="fs-1 col-auto text-start pb-3" id="forecast-discussion-synopsis"></div>
+                <div class="row">
+                    <div class="col-auto text-warning">Aviation - SLC</div>
+                    <div class="fs-1 col-auto text-start pb-3" id="forecast-discussion-aviation"></div>
+                </div>
+                <div class="row" id="forecast-discussion-aviation-utah-block">
+                    <div class="col-auto text-warning">Aviation - rest of Utah</div>
+                    <div class="fs-1 col-auto text-start pb-3" id="forecast-discussion-aviation-utah"></div>
+                </div>
+            </div>
+        </a>
+        <a href="https://www.weather.gov/jetstream/append_intro" target="_blank">
+            <div class="fs-1 mt-2 text-info text-decoration-underline">Weather terms glossary and acronyms</div>
+        </a>    
 
         <!-- FRONTS FORECAST (12 HOURS) -->
         <div class="container-fluid p-0">

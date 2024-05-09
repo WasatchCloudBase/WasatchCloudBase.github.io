@@ -178,8 +178,30 @@
                     }
                 }
 
+                //Add new site to 5-day weather forecast drop down list (if parameter indicates it should be included)
+                if ( siteData[i].IncludeIn5DayForecast === 'Yes' ) {
+                    // Clone prototype location menu value DIV
+                    const cloned_loc_menu_site = document.getElementById(`prototype-location-menu-site`).cloneNode(true)
+                    //Rename ID from prototype clone to new location menu site
+                    cloned_loc_menu_site.id = 'location-menu-' + siteID
+                    cloned_loc_menu_site.children[0].id = 'location-menu-' + siteID + '-name'
+                    cloned_loc_menu_site.children[1].id = 'location-menu-' + siteID + '-lon'
+                    cloned_loc_menu_site.children[2].id = 'location-menu-' + siteID + '-lat'
+
+                    //Add new location menu site to page
+                    document.getElementById(`LocMenuDropdown`).appendChild(cloned_loc_menu_site)
+
+                    // Update location menu name and lat/lon
+                    document.getElementById('location-menu-' + siteID + '-name').innerText = siteData[i].SiteName
+                    document.getElementById('location-menu-' + siteID + '-lon').innerText = siteData[i].ForecastLon
+                    document.getElementById('location-menu-' + siteID + '-lat').innerText = siteData[i].ForecastLat
+
+                    // Update onclick event to change 5 day forecast location
+                    document.getElementById('location-menu-' + siteID).setAttribute("onclick", `toggleLoc('${siteID}')`)
+                }
+
             } catch (error) { 
-                console.log('Site forecast reading error: ' + error + ' for site: ' + siteData[i].SiteID)
+                console.log('Site forecast reading and div build error: ' + error + ' for site: ' + siteData[i].SiteID)
             }
         }
     }
@@ -191,6 +213,8 @@
             // Remove d-flex class, which uses !important and overrides the display style
             document.getElementById(mapData[i].MapID + `-prototype-site-list-site`).classList.remove("d-flex")
             document.getElementById(mapData[i].MapID + `-prototype-site-list-site`).style.display = 'none'
+            document.getElementById(`prototype-location-menu-site`).classList.remove("d-flex")
+            document.getElementById(`prototype-location-menu-site`).style.display = 'none'
         } catch (error) { 
             console.log('Hide prototype error: ' + error + ' for map: ' + mapData[i].MapID)
         }

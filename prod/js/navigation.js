@@ -4,7 +4,7 @@
 // Navigation globals
 let currentDiv = 'Sites - List'
 document.getElementById('current-div').innerHTML = currentDiv
-let currentLoc = 'Salt Lake City'
+let currentLoc = 'POTM NS'
 document.getElementById('current-loc').innerHTML = currentLoc
 let currentSite = ''            // Set in sites.js
 let mapData = ''                // Populated from Google docs in sites.js
@@ -117,7 +117,7 @@ window.onclick = function(event) {
         if (menu.classList.contains('show')) menu.classList.remove('show')
     }
     if (!event.target.matches('.btn-LocMenu')) {
-        const LocMenu = document.getElementById('LocMenu')
+        const LocMenu = document.getElementById('LocMenuDropdown')
         if (LocMenu.classList.contains('show')) LocMenu.classList.remove('show')
     }
     if (!event.target.matches('.btn-MapMenu')) {
@@ -127,7 +127,7 @@ window.onclick = function(event) {
 }
 
 function menu() { document.getElementById('menu').classList.toggle('show') }
-function LocMenu() { document.getElementById('LocMenu').classList.toggle('show') }
+function LocMenu() { document.getElementById('LocMenuDropdown').classList.toggle('show') }
 function MapMenu() { document.getElementById('MapMenu').classList.toggle('show') }
 
 // Update site map and site list as selected region is changed
