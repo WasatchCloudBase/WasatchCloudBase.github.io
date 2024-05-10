@@ -39,7 +39,7 @@ async function populateWeatherCams() {
                 // Update weather cam data
                 document.getElementById(weatherCamID + `-weather-cam-name`).innerHTML = weatherCamData[i].WeatherCamName
                 document.getElementById(weatherCamID + `-weather-cam-href`).href = weatherCamData[i].WeatherCamLinkURL
-                if (weatherCamData[i].DisplayCurrentImage = 'Yes') {
+                if (weatherCamData[i].DisplayCurrentImage === 'Yes') {
                     if (weatherCamData[i].WeatherCamImageURL != '') {
                         document.getElementById(weatherCamID + `-weather-cam-img`).src = weatherCamData[i].WeatherCamLImageURL
                     } else {
