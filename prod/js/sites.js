@@ -285,45 +285,47 @@
                         "value": '' } 
                 }
 
-                // Read the most recent CUASA reading (allowing for more than one to possibly be returned)
-                for (let j=(rawCUASAReadingsData.length-1); j<rawCUASAReadingsData.length; j++) {
-                    try {
-                        // Convert date to "9:00 AM" format
-                        // Multipying by 1000 since the UNIX timestamp is in seconds and Javascript timestamp uses milliseconds
-                        const rawDate = new Date(rawCUASAReadingsData[j].timestamp * 1000)
-                        let hour = rawDate.getHours()
-                        let minutes = String(rawDate.getMinutes()).padStart(2, "0")
-                        let ampm = ` AM`
-                        if (hour >= 12) { ampm = ` PM` }
-                        if (hour > 12) { hour = hour - 12 }
-                        let formattedTime = `${hour}:${minutes}${ampm}`
-
-                        // Add latest CUASA reading data to Mesonet object
-                        // Also convert CUASA speed reading from km/hr to mph
-                        MesoNetReadings.date_time = formattedTime
-                        MesoNetReadings.wind_direction_value_1.value = rawCUASAReadingsData[j].wind_direction_avg
-                        MesoNetReadings.wind_gust_value_1.value = rawCUASAReadingsData[j].windspeed_max * 0.621371
-                        MesoNetReadings.wind_speed_value_1.value = rawCUASAReadingsData[j].windspeed_avg * 0.621371
-                        MesoNetReadings.wind_speed_value_1.date_time = formattedTime
-                        MesoNetReadings.wind_gust_value_1.date_time = formattedTime
-
-                    } catch (error) { 
-                        console.log('CUASA station likely down: ' + CUASASites[i])
-                        console.log('Error: ' + error + ' for data: ')
-                        console.log(rawCUASAReadingsData)
-                        console.log('While processing CUASA URL of:' + CUASASiteReadingsURL)
-                        console.log('-----------------')
-                    }
-                }
-
-                // Create new station in readings object and display current readings
+                // If data was returned, read the most recent CUASA reading (allowing for more than one to possibly be returned)
                 if (rawCUASAReadingsData.length > 0) {
+                    for (let j=(rawCUASAReadingsData.length-1); j<rawCUASAReadingsData.length; j++) {
+                        try {
+                            // Convert date to "9:00 AM" format
+                            // Multipying by 1000 since the UNIX timestamp is in seconds and Javascript timestamp uses milliseconds
+                            const rawDate = new Date(rawCUASAReadingsData[j].timestamp * 1000)
+                            let hour = rawDate.getHours()
+                            let minutes = String(rawDate.getMinutes()).padStart(2, "0")
+                            let ampm = ` AM`
+                            if (hour >= 12) { ampm = ` PM` }
+                            if (hour > 12) { hour = hour - 12 }
+                            let formattedTime = `${hour}:${minutes}${ampm}`
+
+                            // Add latest CUASA reading data to Mesonet object
+                            // Also convert CUASA speed reading from km/hr to mph
+                            MesoNetReadings.date_time = formattedTime
+                            MesoNetReadings.wind_direction_value_1.value = rawCUASAReadingsData[j].wind_direction_avg
+                            MesoNetReadings.wind_gust_value_1.value = rawCUASAReadingsData[j].windspeed_max * 0.621371
+                            MesoNetReadings.wind_speed_value_1.value = rawCUASAReadingsData[j].windspeed_avg * 0.621371
+                            MesoNetReadings.wind_speed_value_1.date_time = formattedTime
+                            MesoNetReadings.wind_gust_value_1.date_time = formattedTime
+
+                        } catch (error) { 
+                            console.log('CUASA station likely down: ' + CUASASites[i])
+                            console.log('Error: ' + error + ' for data: ')
+                            console.log(rawCUASAReadingsData)
+                            console.log('While processing CUASA URL of:' + CUASASiteReadingsURL)
+                            console.log('-----------------')
+                        }
+                    }
+
+                    // Create new station in readings object and display current readings
                     let newReadingsIndex = readingsData.length      // Values start at 0, so this is the next unused index value
                     readingsData[newReadingsIndex] = MesoNetReadings
                     showCurrentReadings(readingsData[newReadingsIndex])
+                } else {
+                    console.log('No readings data returned for CUASA station: ' + CUASASites[i])
                 }
 
-            })
+            })  // end of CORS request
         } catch (error) { 
             console.log('CUASA API station reading error: ' + error + ' for station: ' + CUASASites[i])
         }
