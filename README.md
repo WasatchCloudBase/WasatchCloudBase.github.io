@@ -1,4 +1,4 @@
-# Utah Cloudbase
+# Cloudbase Utah
 Browser applet to provide weather information for paraglider pilots in Utah.
 
 # Contents
@@ -16,12 +16,12 @@ Browser applet to provide weather information for paraglider pilots in Utah.
   - FlySKyHy Custom Airspace - File for FlySkyHy that contains LZs/DNL areas and thermal hot spots
 
 # How to install
-Can be used on a PC, but is optimized for mobile (particularly iPhones).
-Highly recommend installing as follows:
+This app can be used on a PC, but is optimized for mobile (particularly iPhones).
+For best results, highly recommend installing on an iPhone as follows:
   - Open Safari on iPhone
   - Go to:  https://wasatchcloudbase.github.io/
-  - Click on the 'send to' icon at the bottom (box with an arrow pointing up)
+  - Click on the 'send to' icon at the bottom (square with an arrow pointing up)
   - Click on 'Add to Home Screen'
   - Click 'Add'
 
-You can then access directly from the home screen (without browser bars, etc.).
+You can then access directly from the home screen as an app (without browser bars, etc.).
