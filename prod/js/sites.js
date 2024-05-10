@@ -528,16 +528,21 @@ async function siteDetailContent(site) {
                                 readingsData[i][key] = readingsData[i][key].slice(-readingsCount)
                             }
 
+                            // Create object of pressure observations which will displayed for airport stations
+                           // (separate object is used because pressure history is shown on a longer time scale)
+                            pressureReadingsData[i] = JSON.parse(JSON.stringify(rawHistoryReadingsData.STATION[i].OBSERVATIONS))
+                            pressureReadingsData[i].stid = JSON.parse(JSON.stringify(rawHistoryReadingsData.STATION[i].STID))
+
                         } catch (error) { 
                             console.log('Station history reading error: ' + error + ' for station: ' + rawHistoryReadingsData.STATION[i].STID)
                         }
                     }
 
                     // Set readings for history processing
-                    populateSiteHistory(readingsData[0], detailSiteData)
+                    populateSiteHistory(readingsData[0], pressureReadingsData[0], detailSiteData)
 
                 } catch (error) { 
-                    console.log('History readings data error: ' + error + ' for length of: ' + JSON.stringify(rawHistoryReadingsData.STATION))
+                    console.log('History readings data error: ' + error + ' for: ' + JSON.stringify(rawHistoryReadingsData.STATION))
                     console.log('URL used for request:')
                     console.log(siteHistoryReadingsURL)
                 }
@@ -600,7 +605,8 @@ async function siteDetailContent(site) {
                     }
 
                     // Populate station history
-                    populateSiteHistory(MesoNetReadings, detailSiteData)
+                    // CUASA sites do not include airports, so pressure readings data parameter is empty
+                    populateSiteHistory(MesoNetReadings, '', detailSiteData)
 
                 })
             } catch (error) { 
@@ -618,7 +624,7 @@ async function siteDetailContent(site) {
 }
 
 // Populate history readings for station
-function populateSiteHistory (siteReadingsData, detailSiteData) {
+function populateSiteHistory (siteReadingsData, sitePressureReadingsData, detailSiteData) {
   
     // Make sure there are history readings for selected station
     if ( !(siteReadingsData.stid === detailSiteData.ReadingsStation) || !siteReadingsData.date_time) {
@@ -626,9 +632,6 @@ function populateSiteHistory (siteReadingsData, detailSiteData) {
         console.log('History retrieved is for incorrect station ' + siteReadingsData.stid)
         console.log('or history does not have a date time; date_time retrieved is: ' + siteReadingsData.date_time)
     } else {
-
-        // Create arrays to store hourly pressure readings to be displayed (hourly; not every pressure reading is displayed)
-        var time=[], alti=[], temp=[]
 
         // Read through history readings and calculate how to display
         for (let i=0; i<siteReadingsData.date_time.length; i++) {
@@ -693,28 +696,6 @@ function populateSiteHistory (siteReadingsData, detailSiteData) {
                     document.getElementById(`site-details-history-wdir-${i}`).style.transform = `rotate(${readingWindDirRotation}deg)`
                 }
             }
-
-            // Populate pressure zone history for airport sites only
-            if ( detailSiteData.SiteType === `Airport` && siteReadingsData.altimeter_set_1 ) {
-console.log('1')
-                // Read each pressure reading and add pressure readings hourly to the array based on the minutes specified in the site info
-                for (let i=0; i<siteReadingsData.date_time.length; i++) {
-console.log('1.1')
-console.log(siteReadingsData)
-console.log(siteReadingsData.date_time.length)
-console.log(siteReadingsData.date_time[i])
-console.log(parseInt(siteReadingsData.date_time[i].slice(-5,-3),10))
-console.log(parseInt(detailSiteData.PressureZoneReadingTime, 10))
-                    if ( parseInt(siteReadingsData.date_time[i].slice(-5,-3),10) === parseInt(detailSiteData.PressureZoneReadingTime, 10) )
-                    {
-console.log('2.1')
-                        time.push(siteReadingsData.date_time[i].toLowerCase().replace(/:\d{2}/g, ''))
-                        temp.push(`${Math.round(siteReadingsData.air_temp_set_1[i])}&deg;`)
-                        alti.push(siteReadingsData.altimeter_set_1[i].toFixed(2))
-                    }
-                }
-            }
-
         }
 
         // Hide remaining history DIVs if fewer than 10 readings
@@ -722,8 +703,26 @@ console.log('2.1')
             document.getElementById(`site-details-history-reading-${i}`).style.display = 'none'
         }
 
-        // Show pressure zone for airport sites only
-        if ( detailSiteData.SiteType === `Airport` ) {
+        // Process pressure readings for airport stations
+        if ( detailSiteData.SiteType === `Airport`) {
+
+            // Create arrays to store hourly pressure readings to be displayed (hourly; not every pressure reading is displayed)
+            var time=[], alti=[], temp=[]
+            // Read through history readings and calculate how to display
+            for (let i=0; i<sitePressureReadingsData.date_time.length; i++) {
+                // Populate pressure zone history
+                if ( sitePressureReadingsData.altimeter_set_1 ) {
+                    // Read each pressure reading and add pressure readings hourly to the array based on the minutes specified in the site info
+                    for (let i=0; i<sitePressureReadingsData.date_time.length; i++) {
+                        if ( parseInt(sitePressureReadingsData.date_time[i].slice(-5,-3),10) === parseInt(detailSiteData.PressureZoneReadingTime, 10) ) {
+                            time.push(sitePressureReadingsData.date_time[i].toLowerCase().replace(/:\d{2}/g, ''))
+                            temp.push(`${Math.round(sitePressureReadingsData.air_temp_set_1[i])}&deg;`)
+                            alti.push(sitePressureReadingsData.altimeter_set_1[i].toFixed(2))
+                        }
+                    }
+                }
+            }
+
             // Show pressure history DIV
             document.getElementById(`site-details-pressure-title`).style.display = 'block'
             document.getElementById(`site-details-pressure-block`).style.display = 'block'

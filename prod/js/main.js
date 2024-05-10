@@ -14,36 +14,36 @@ const wwBlue = '#0d6efd'    // Bootstrap blue (primary)
 const wwCyan = '#0dcaf0'    // Bootstrap cyan (info)
 
 // Set initial defaults
-let fiveDayForecastURL = 'https://api.weather.gov/gridpoints/SLC/99,162/forecast'
-let TFRDetails = ''
-let WeatherStreetImage = 1
-let GraphForecastURL = 'https://graphical.weather.gov/images/slc/'
-let graphicImageMinimum = 2             // 9am default image; uppdated in soaring.js
-let graphicSurfaceWindImage = 2         // 9am default image; uppdated in soaring.js
-let graphicSurfaceGustImage = 2         // 9am default image; uppdated in soaring.js
-let graphicCloudCoverImage = 2          // 9am default image; uppdated in soaring.js
-let graphicPrecipitationImage = 2       // 9am default image; uppdated in soaring.js
-let siteData = []                       // Populated from Google docs in sites.js
-let siteReadingsURL             = `https://api.mesowest.net/v2/station/latest?`      // The rest of the URL is built in sites.js
-let siteHistoryReadingsURLStart = `https://api.mesowest.net/v2/station/timeseries?`  // The rest of the URL is built in sites.js
-let CUASASites = []                 // Populated in sites.js
-let readingsData = []               // Populated using API call in sites.js
-let pressureReadingsData = []       // Populated using API call in sites.js
-let liftParams = {}, maxTempF, soundingData = {}  // Defaults for decoded skew-T
-let sunrise_hour = ''
-let sunset_hour = ''
-let weatherCodes = ''
-let helpTopics = ''
+var fiveDayForecastURL = 'https://api.weather.gov/gridpoints/SLC/99,162/forecast'
+var TFRDetails = ''
+var WeatherStreetImage = 1
+var GraphForecastURL = 'https://graphical.weather.gov/images/slc/'
+var graphicImageMinimum = 2             // 9am default image; uppdated in soaring.js
+var graphicSurfaceWindImage = 2         // 9am default image; uppdated in soaring.js
+var graphicSurfaceGustImage = 2         // 9am default image; uppdated in soaring.js
+var graphicCloudCoverImage = 2          // 9am default image; uppdated in soaring.js
+var graphicPrecipitationImage = 2       // 9am default image; uppdated in soaring.js
+var siteData = []                       // Populated from Google docs in sites.js
+var siteReadingsURL             = `https://api.mesowest.net/v2/station/latest?`      // The rest of the URL is built in sites.js
+var siteHistoryReadingsURLStart = `https://api.mesowest.net/v2/station/timeseries?`  // The rest of the URL is built in sites.js
+var CUASASites = []                 // Populated in sites.js
+var readingsData = []               // Populated using API call in sites.js
+var pressureReadingsData = []       // Populated using API call in sites.js
+var liftParams = {}, maxTempF, soundingData = {}  // Defaults for decoded skew-T
+var sunrise_hour = ''
+var sunset_hour = ''
+var weatherCodes = ''
+var helpTopics = ''
 
 // Forecast thermal lift parameters (the default values below are overridden with values from Google sheet)
 // These allow changes for glider sink rate, surface disorganization, etc., to better match other models (e.g., XCSkies)
-let thermalLapseRate          = 9.8     // Standard thermal lapse rate (DALR) is 9.8 degrees C/1k m; higher lapse rate results in lower top of lift and lower thermal speed at higher altitudes
-let thermalVelocityConstant   = 5.6     // Theoretical standard is 5.6; lower constant results in lower thermal speeds at all altitutdes
-let thermalTriggerTempDiff    = 3       // Difference in air (2m) and ground temp to trigger thermals; higher number results in weaker starting conditions for thermals
-let thermalRampDistance       = 500     // Height (in m) from the surface below which thermals are weaker because they are not yet organized
-let thermalRampStartPct       = 50      // Initial reduction (in %) of forecasted thermal strength near the surface due to disorganized thermals
-let cloudbaseLapseRatesDiff   = 125     // Difference in DALR and dew point lapse rates (in m / degrees C) used to calculate cloudbase
-let thermalGliderSinkRate     = 1.5     // Glider sink rate to reduce thermal velocity and top of lift
+var thermalLapseRate          = 9.8     // Standard thermal lapse rate (DALR) is 9.8 degrees C/1k m; higher lapse rate results in lower top of lift and lower thermal speed at higher altitudes
+var thermalVelocityConstant   = 5.6     // Theoretical standard is 5.6; lower constant results in lower thermal speeds at all altitutdes
+var thermalTriggerTempDiff    = 3       // Difference in air (2m) and ground temp to trigger thermals; higher number results in weaker starting conditions for thermals
+var thermalRampDistance       = 500     // Height (in m) from the surface below which thermals are weaker because they are not yet organized
+var thermalRampStartPct       = 50      // Initial reduction (in %) of forecasted thermal strength near the surface due to disorganized thermals
+var cloudbaseLapseRatesDiff   = 125     // Difference in DALR and dew point lapse rates (in m / degrees C) used to calculate cloudbase
+var thermalGliderSinkRate     = 1.5     // Glider sink rate to reduce thermal velocity and top of lift
                                         // NOTE:  thermalGliderSinkRate is not currently utilized
 ;
 
