@@ -8,42 +8,43 @@ const rowDate           = tableRows[0]
 const rowTime           = tableRows[1]
 const rowWeatherCode    = tableRows[2]
 const rowPrecipProb     = tableRows[3]
-const rowTemp2m         = tableRows[4]
-const rowCloudCover     = tableRows[5]
-const rowCloudCoverLow  = tableRows[6]
-const rowCloudCoverMid  = tableRows[7]
-const rowCloudCoverHigh = tableRows[8]
-const rowCAPE           = tableRows[9]
-const rowLI             = tableRows[10]
-const rowKI             = tableRows[11]
-const rowDateWind       = tableRows[12]
-const rowTimeWind       = tableRows[13]
-const rowWind500        = tableRows[14]
-const rowWind550        = tableRows[15]
-const rowWind600        = tableRows[16]
-const rowWind650        = tableRows[17]
-const rowWind700        = tableRows[18]
-const rowWind750        = tableRows[19]
-const rowWind800        = tableRows[20]
-const rowWind850        = tableRows[21]
-const rowWind900        = tableRows[22]
-const rowWind950        = tableRows[23]
-const rowWind10m        = tableRows[24]
-const rowDateThermal    = tableRows[25]
-const rowTimeThermal    = tableRows[26]
-const rowVVel500        = tableRows[27]
-const rowVVel550        = tableRows[28]
-const rowVVel600        = tableRows[29]
-const rowVVel650        = tableRows[30]
-const rowVVel700        = tableRows[31]
-const rowVVel750        = tableRows[32]
-const rowVVel800        = tableRows[33]
-const rowVVel850        = tableRows[34]
-const rowVVel900        = tableRows[35]
-const rowVVel950        = tableRows[36]
-const topOfLift         = tableRows[37]
-const cloudBase         = tableRows[38]
-const rowPressureZone   = tableRows[39]
+const rowToLTemp        = tableRows[4]
+const rowTemp2m         = tableRows[5]
+const rowCloudCover     = tableRows[6]
+const rowCloudCoverLow  = tableRows[7]
+const rowCloudCoverMid  = tableRows[8]
+const rowCloudCoverHigh = tableRows[9]
+const rowCAPE           = tableRows[10]
+const rowLI             = tableRows[11]
+const rowKI             = tableRows[12]
+const rowDateWind       = tableRows[13]
+const rowTimeWind       = tableRows[14]
+const rowWind500        = tableRows[15]
+const rowWind550        = tableRows[16]
+const rowWind600        = tableRows[17]
+const rowWind650        = tableRows[18]
+const rowWind700        = tableRows[19]
+const rowWind750        = tableRows[20]
+const rowWind800        = tableRows[21]
+const rowWind850        = tableRows[22]
+const rowWind900        = tableRows[23]
+const rowWind950        = tableRows[24]
+const rowWind10m        = tableRows[25]
+const rowDateThermal    = tableRows[26]
+const rowTimeThermal    = tableRows[27]
+const rowVVel500        = tableRows[28]
+const rowVVel550        = tableRows[29]
+const rowVVel600        = tableRows[30]
+const rowVVel650        = tableRows[31]
+const rowVVel700        = tableRows[32]
+const rowVVel750        = tableRows[33]
+const rowVVel800        = tableRows[34]
+const rowVVel850        = tableRows[35]
+const rowVVel900        = tableRows[36]
+const rowVVel950        = tableRows[37]
+const topOfLift         = tableRows[38]
+const cloudBase         = tableRows[39]
+const rowPressureZone   = tableRows[40]
 var forecastTableBuilt = false  /* Only build the table data cells the first time the function is called */
 
 // Global variables for top of lift and cloudbase for each hourly forecast
@@ -215,6 +216,10 @@ async function siteForecast(site) {
                         rowTemp2m           .childNodes[forecastCount].innerText = TempF + `\u00B0`
                         rowTemp2m           .childNodes[forecastCount].style.color = getTempColor (TempF)
 
+                        // Set default for Top of Lift Temp to surface temp
+                        rowToLTemp          .childNodes[forecastCount].innerText = TempF + `\u00B0`
+                        rowToLTemp          .childNodes[forecastCount].style.color = getTempColor (TempF)
+
                         // Display precip probability % and set text color
                         rowPrecipProb       .childNodes[forecastCount].innerText = (forecastData.hourly.precipitation_probability[i]>0) ? forecastData.hourly.precipitation_probability[i] : ''
                         rowPrecipProb       .childNodes[forecastCount].style.color = getPrecipProbColor(forecastData.hourly.precipitation_probability[i])
@@ -262,6 +267,7 @@ async function siteForecast(site) {
                         var aboveTop = ``
                         topOfLiftAlt = ``
                         cloudBaseAlt = ``
+                        var topOfLiftTemp = ''
                         // Determine lift for 950 hPa level
                         // Note:  getThermalInfo call for all levels except 950hPa include a parameter from the PRIOR pressure level (for prior amb DP temp)
                         if ( !aboveTop ) {
@@ -273,7 +279,8 @@ async function siteForecast(site) {
                             priorAlt = forecastData.hourly.geopotential_height_950hPa[i]
                             if ( topOfLiftAlt ) {
                                 rowVVel950.childNodes[forecastCount].style.borderBottom = rowWind950.childNodes[forecastCount].style.borderBottom = "2px solid teal"
-                                aboveTop = true 
+                                aboveTop = true
+                                topOfLiftTemp = forecastData.hourly.temperature_950hPa[i]
                             } 
                         }
                         if ( aboveTop ) { rowVVel950.childNodes[forecastCount].style.backgroundColor = rowWind950.childNodes[forecastCount].style.backgroundColor = "black" } 
@@ -288,6 +295,7 @@ async function siteForecast(site) {
                             if ( topOfLiftAlt ) {
                                 rowVVel900.childNodes[forecastCount].style.borderBottom = rowWind900.childNodes[forecastCount].style.borderBottom = "2px solid teal"
                                 aboveTop = true 
+                                topOfLiftTemp = forecastData.hourly.temperature_900hPa[i]
                             } 
                         }
                         if ( aboveTop ) { rowVVel900.childNodes[forecastCount].style.backgroundColor = rowWind900.childNodes[forecastCount].style.backgroundColor = "black" } 
@@ -302,6 +310,7 @@ async function siteForecast(site) {
                             if ( topOfLiftAlt ) {
                                 rowVVel850.childNodes[forecastCount].style.borderBottom = rowWind850.childNodes[forecastCount].style.borderBottom = "2px solid teal"
                                 aboveTop = true 
+                                topOfLiftTemp = forecastData.hourly.temperature_850hPa[i]
                             } 
                         }
                         if ( aboveTop ) { rowVVel850.childNodes[forecastCount].style.backgroundColor = rowWind850.childNodes[forecastCount].style.backgroundColor = "black" } 
@@ -316,6 +325,7 @@ async function siteForecast(site) {
                             if ( topOfLiftAlt ) {
                                 rowVVel800.childNodes[forecastCount].style.borderBottom = rowWind800.childNodes[forecastCount].style.borderBottom = "2px solid teal"
                                 aboveTop = true 
+                                topOfLiftTemp = forecastData.hourly.temperature_800hPa[i]
                             } 
                         }
                         if ( aboveTop ) { rowVVel800.childNodes[forecastCount].style.backgroundColor = rowWind800.childNodes[forecastCount].style.backgroundColor = "black" } 
@@ -330,6 +340,7 @@ async function siteForecast(site) {
                             if ( topOfLiftAlt ) {
                                 rowVVel750.childNodes[forecastCount].style.borderBottom = rowWind750.childNodes[forecastCount].style.borderBottom = "2px solid teal"
                                 aboveTop = true 
+                                topOfLiftTemp = forecastData.hourly.temperature_750hPa[i]
                             } 
                         }
                         if ( aboveTop ) { rowVVel750.childNodes[forecastCount].style.backgroundColor = rowWind750.childNodes[forecastCount].style.backgroundColor = "black" } 
@@ -344,6 +355,7 @@ async function siteForecast(site) {
                             if ( topOfLiftAlt ) {
                                 rowVVel700.childNodes[forecastCount].style.borderBottom = rowWind700.childNodes[forecastCount].style.borderBottom = "2px solid teal"
                                 aboveTop = true 
+                                topOfLiftTemp = forecastData.hourly.temperature_700hPa[i]
                             } 
                         }
                         if ( aboveTop ) { rowVVel700.childNodes[forecastCount].style.backgroundColor = rowWind700.childNodes[forecastCount].style.backgroundColor = "black" } 
@@ -358,6 +370,7 @@ async function siteForecast(site) {
                             if ( topOfLiftAlt ) {
                                 rowVVel650.childNodes[forecastCount].style.borderBottom = rowWind650.childNodes[forecastCount].style.borderBottom = "2px solid teal"
                                 aboveTop = true 
+                                topOfLiftTemp = forecastData.hourly.temperature_650hPa[i]
                             } 
                         }
                         if ( aboveTop ) { rowVVel650.childNodes[forecastCount].style.backgroundColor = rowWind650.childNodes[forecastCount].style.backgroundColor = "black" } 
@@ -372,6 +385,7 @@ async function siteForecast(site) {
                             if ( topOfLiftAlt ) {
                                 rowVVel600.childNodes[forecastCount].style.borderBottom = rowWind600.childNodes[forecastCount].style.borderBottom = "2px solid teal"
                                 aboveTop = true 
+                                topOfLiftTemp = forecastData.hourly.temperature_600hPa[i]
                             } 
                         }
                         if ( aboveTop ) { rowVVel600.childNodes[forecastCount].style.backgroundColor = rowWind600.childNodes[forecastCount].style.backgroundColor = "black" } 
@@ -386,6 +400,7 @@ async function siteForecast(site) {
                             if ( topOfLiftAlt ) {
                                 rowVVel550.childNodes[forecastCount].style.borderBottom = rowWind550.childNodes[forecastCount].style.borderBottom = "2px solid teal"
                                 aboveTop = true 
+                                topOfLiftTemp = forecastData.hourly.temperature_550hPa[i]
                             } 
                         }
                         if ( aboveTop ) { rowVVel550.childNodes[forecastCount].style.backgroundColor = rowWind550.childNodes[forecastCount].style.backgroundColor = "black" } 
@@ -400,14 +415,25 @@ async function siteForecast(site) {
                             if ( topOfLiftAlt ) {
                                 rowVVel500.childNodes[forecastCount].style.borderBottom = rowWind500.childNodes[forecastCount].style.borderBottom = "2px solid teal"
                                 aboveTop = true 
+                                topOfLiftTemp = forecastData.hourly.temperature_500hPa[i]
                             } 
                         }
                         if ( aboveTop ) { rowVVel500.childNodes[forecastCount].style.backgroundColor = rowWind500.childNodes[forecastCount].style.backgroundColor = "black" } 
 
-                        // Display top of lift (rounded to nearest 100 feet)
-                        if ( topOfLiftAlt > surfaceAlt10m ) {topOfLift.childNodes[forecastCount].innerText = Math.round(topOfLiftAlt/100)*100/1000 + 'k ft'}
-                        // Check if there was still lift at the top of the forecast range, and display a rocket ship
-                        else if (thermalObject.thermalVelocity > 0 ) {topOfLift.childNodes[forecastCount].innerHTML = `<img src="prod/images/rocket-3432.png" width="60">`}
+                        // Display top of lift (rounded to nearest 100 feet) and set Top of Lift Temp
+                        if ( topOfLiftAlt > surfaceAlt10m ) {
+                            topOfLift.childNodes[forecastCount].innerText = Math.round(topOfLiftAlt/100)*100/1000 + 'k ft'
+                            let ToLTempF = Math.round(tempCtoF(topOfLiftTemp))
+                            rowToLTemp          .childNodes[forecastCount].innerText = ToLTempF + `\u00B0`
+                            rowToLTemp          .childNodes[forecastCount].style.color = getTempColor (ToLTempF)
+                        }
+                        // Check if there was still lift at the top of the forecast range, and display a rocket ship and set Top of Lift Temp
+                        else if (thermalObject.thermalVelocity > 0 ) {
+                            topOfLift.childNodes[forecastCount].innerHTML = `<img src="prod/images/rocket-3432.png" width="60">`
+                            let ToLTempF = Math.round(tempCtoF(forecastData.hourly.temperature_500hPa[i]))  // use temp at 18k feet
+                            rowToLTemp          .childNodes[forecastCount].innerText = ToLTempF + `\u00B0`
+                            rowToLTemp          .childNodes[forecastCount].style.color = getTempColor (ToLTempF)
+                        }
                         // Otherwise, there is no lift, and display a sled ride
                         else {  topOfLift.childNodes[forecastCount].innerHTML = `<img src="prod/images/sledride.png" width="80">`
                                 topOfLift.childNodes[forecastCount].style.backgroundColor = "black"
