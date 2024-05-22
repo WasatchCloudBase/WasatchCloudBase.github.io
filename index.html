@@ -151,6 +151,16 @@
             <div class="text-center align-items-center py-3 text-warning">Click this box to close</div>
         </div>
 
+        <!-- Link to real-time (1 minute) station readings (currently only for KU42 South Valley Regional Airport) -->
+        <div class="container-fluid display-3 mb-2 ms-3' id="real-time-readings">
+            <div class="row">
+                <a href="https://online.saiawos.com/KU42/ios/cdisplay.html" 
+                    class="col clickable disable-dbl-tap-zoom border border-info bg-dark rounded-4 py-2 mx-3" id="real-time-readings-link" target="_blank">
+                    <div class="text-info pb-2 display-5" id="site-details-guide">Link to real-time (1 minute) readings</div>
+                </a>
+            </div>
+        </div>  
+
         <!-- SITE DETAILS WIND READING HISTORY  (12 MOST RECENT READINGS)-->
         <div class="container-fluid display-3">Wind History</div>
         <div class="container-fluid display-5 rounded-4 bg-dark lh-base mt-3">
@@ -252,7 +262,7 @@
                     </div>
                 </div>
             </a>
-        </div>
+        </div>      
 
         <!-- PRESSURE HISTORY  -->
         <div class="collapse container-fluid display-3 mt-3" id="site-details-pressure-title">Pressure Zone History</div>

@@ -76,8 +76,14 @@ function toggleDiv(newDiv) {
     if ( newDiv === 'Site Details' ) {
         document.getElementById('Site Details buttons').style.display = 'block'
         document.getElementById('forecastTableContainer').scrollLeft = 0
+        // Only display link to real-time readings for South Valley Regional Airport KU42
+        document.getElementById('real-time-readings').style.display = 'none'
+ //       if (currentSite === 'Airport 2') {
+            document.getElementById('real-time-readings').style.display = 'block'
+//        } 
     } else {
         document.getElementById('Site Details buttons').style.display = 'none'
+//        document.getElementById('real-time-readings').style.display = 'none'
         // Update the returnToPage to current page
         returnToPage = newDiv 
     }
