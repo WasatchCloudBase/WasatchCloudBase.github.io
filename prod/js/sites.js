@@ -226,6 +226,8 @@
         `&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&within=120&obtimezone=local&timeformat=%-I:%M%20%p&` + 
         `token=ef3b9f4584b64e6da12d8688f19d9f4a`  //0030ed6480a4440eb29ec23ff37fe159`
 
+console.log(siteReadingsURL)
+
     // Get latest readings per station using Mesonet API
     var response = await fetch(siteReadingsURL)
     var rawReadingsData = await response.json()
@@ -423,14 +425,19 @@ function showCurrentReadings(data) {
             // Show pressure zone for airport sites only
             document.getElementById(siteListHeading + `-pressure-zone`).innerHTML = ''
             if ( currentSiteData.SiteType === `Airport` ) {
-                const latestAlti = parseFloat(data.altimeter_value_1.value).toFixed(2)
-                const latestTemp = Math.round(data.air_temp_value_1.value)
-                var latestZone = calculateZone(latestAlti, latestTemp)
-                const latestZoneColor = getZoneColor(latestZone)
-                latestZone = latestZone===0 ? '&#9471;' : (latestZone==='LoP') ? 'LoP' : `&#1010${latestZone+1}`
-                document.getElementById(siteListHeading + `-pressure-text`).innerHTML = `Zone`
-                document.getElementById(siteListHeading + `-pressure-zone`).innerHTML = latestZone
-                document.getElementById(siteListHeading + `-pressure-zone`).style.color = latestZoneColor
+                try {
+                    const latestAlti = parseFloat(data.altimeter_value_1.value).toFixed(2)
+                    const latestTemp = Math.round(data.air_temp_value_1.value)
+                    var latestZone = calculateZone(latestAlti, latestTemp)
+                    const latestZoneColor = getZoneColor(latestZone)
+                    latestZone = latestZone===0 ? '&#9471;' : (latestZone==='LoP') ? 'LoP' : `&#1010${latestZone+1}`
+                    document.getElementById(siteListHeading + `-pressure-text`).innerHTML = `Zone`
+                    document.getElementById(siteListHeading + `-pressure-zone`).innerHTML = latestZone
+                    document.getElementById(siteListHeading + `-pressure-zone`).style.color = latestZoneColor
+                }
+                catch(error) {
+                    console.log('Error in pressure zone processing: ' + error + ' for: ' + siteMapHeading)
+                }
             }
         }
 
@@ -725,35 +732,44 @@ function populateSiteHistory (siteReadingsData, sitePressureReadingsData, detail
                 }
             }
 
-            // Show pressure history DIV
-            document.getElementById(`site-details-pressure-title`).style.display = 'block'
-            document.getElementById(`site-details-pressure-block`).style.display = 'block'
-            document.getElementById(`site-details-pressure-info`).style.display = 'block'
-
-            // Update link to full history URL
-            document.getElementById(`site-details-pressure-href`).href = 
-            `https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=${detailSiteData.ReadingsStation}&table=1&banner=off`
-
             // Limit to last 6 entries in arrays
             time = time.slice(-6)
             temp = temp.slice(-6)
             alti = alti.slice(-6)
 
-            // Find height for bar chart
-            const min = Math.min(...alti)
-            const max = Math.max(...alti)
-            const barHeight = alti.map(d => `${(((d-min)*80)/(max-min))+10}px`)
+            // Do not process or display if pressure data not available
+            if (temp.length === 0 || time.length === 0 || alti.length === 0) {
+                document.getElementById(`site-details-pressure-title`).style.display = 'none'
+                document.getElementById(`site-details-pressure-block`).style.display = 'none'
+                document.getElementById(`site-details-pressure-info`).style.display = 'none'
+            } else {
 
-            for (let i=0; i<6; i++) {
-                var zDigit = calculateZone( parseFloat(alti[i]), parseInt(temp[i]) )
-                document.getElementById(`site-details-alti-${i}`).innerHTML = alti[i]
-                document.getElementById(`site-details-altibar-${i}`).style.height = barHeight[i]
-                document.getElementById(`site-details-temp-${i}`).innerHTML = temp[i]
-                document.getElementById(`site-details-zone-${i}`).style.color = getZoneColor(zDigit)
-                zDigit = zDigit===0 ? '&#9471;' : (zDigit==='LoP') ? 'LoP' : `&#1010${zDigit+1}`
-                document.getElementById(`site-details-zone-${i}`).innerHTML = zDigit
-                document.getElementById(`site-details-alti-time-${i}`).innerHTML = time[i]
+                // Show pressure history DIV
+                document.getElementById(`site-details-pressure-title`).style.display = 'block'
+                document.getElementById(`site-details-pressure-block`).style.display = 'block'
+                document.getElementById(`site-details-pressure-info`).style.display = 'block'
+
+                // Update link to full history URL
+                document.getElementById(`site-details-pressure-href`).href = 
+                `https://www.wrh.noaa.gov/mesowest/timeseries.php?sid=${detailSiteData.ReadingsStation}&table=1&banner=off`
+
+                // Find height for bar chart
+                const min = Math.min(...alti)
+                const max = Math.max(...alti)
+                const barHeight = alti.map(d => `${(((d-min)*80)/(max-min))+10}px`)
+
+                for (let i=0; i<6; i++) {
+                    var zDigit = calculateZone( parseFloat(alti[i]), parseInt(temp[i]) )
+                    document.getElementById(`site-details-alti-${i}`).innerHTML = alti[i]
+                    document.getElementById(`site-details-altibar-${i}`).style.height = barHeight[i]
+                    document.getElementById(`site-details-temp-${i}`).innerHTML = temp[i]
+                    document.getElementById(`site-details-zone-${i}`).style.color = getZoneColor(zDigit)
+                    zDigit = zDigit===0 ? '&#9471;' : (zDigit==='LoP') ? 'LoP' : `&#1010${zDigit+1}`
+                    document.getElementById(`site-details-zone-${i}`).innerHTML = zDigit
+                    document.getElementById(`site-details-alti-time-${i}`).innerHTML = time[i]
+                }
             }
+
         } else {
             document.getElementById(`site-details-pressure-title`).style.display = 'none'
             document.getElementById(`site-details-pressure-block`).style.display = 'none'
