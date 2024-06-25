@@ -15,6 +15,7 @@ const wwCyan = '#0dcaf0'    // Bootstrap cyan (info)
 
 // Set initial defaults
 var fiveDayForecastURL = 'https://api.weather.gov/gridpoints/SLC/99,162/forecast'
+var fiveDayForecastIconURL = 'https://api.weather.gov'
 var TFRDetails = ''
 var WeatherStreetImage = 1
 var GraphForecastURL = 'https://graphical.weather.gov/images/slc/'

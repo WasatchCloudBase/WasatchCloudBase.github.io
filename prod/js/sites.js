@@ -226,8 +226,6 @@
         `&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&within=120&obtimezone=local&timeformat=%-I:%M%20%p&` + 
         `token=ef3b9f4584b64e6da12d8688f19d9f4a`  //0030ed6480a4440eb29ec23ff37fe159`
 
-console.log(siteReadingsURL)
-
     // Get latest readings per station using Mesonet API
     var response = await fetch(siteReadingsURL)
     var rawReadingsData = await response.json()
