@@ -1,6 +1,59 @@
 'use strict';
 // Weather Forecast page
 
+// 5 DAY FORECAST
+// Get 5 day forecast based on selection location
+//const url = 'https://wasatchcloudbase.github.io/example_files/example_noaa_forecast.json'
+async function get5DayForecast() {
+    // Clear prior results while loading
+    // (a lag sometimes occurs the first time forecasts are queried)
+    for (let i=1; i<6; i++) {
+        document.getElementById(`forecast-day${i}-day`).innerHTML = 'Loading forecast'
+        document.getElementById(`forecast-day${i}-txt`).innerHTML = ''
+        document.getElementById(`forecast-day${i}-img`).src = ''
+    }
+    var response = await fetch(fiveDayForecastURL)
+    var noaaData = await response.json()
+    if (noaaData) {
+        try {
+            let position = noaaData.properties.periods[0].isDaytime ? 0 : 1
+            for (let i=1; i<6; i++) {
+                document.getElementById(`forecast-day${i}-day`).innerHTML = noaaData.properties.periods[position].name
+                document.getElementById(`forecast-day${i}-txt`).innerHTML = noaaData.properties.periods[position].detailedForecast
+                document.getElementById(`forecast-day${i}-img`).src = fiveDayForecastIconURL + noaaData.properties.periods[position].icon
+                position += 2
+            }
+        } catch (error) { 
+            console.log('5 day forecast error: ' + error) 
+        }
+    }
+}
+
+// Toggle changes to 5 day forecast location
+async function toggleLoc(newLoc) {
+    var currentLoc = newLoc
+    document.getElementById('current-loc').innerHTML = document.getElementById('location-menu-' + currentLoc + '-name').innerText
+    // Get lat and lon for selected forecast site
+    let forecast_lon = document.getElementById('location-menu-' + currentLoc + '-lon').innerText
+    let forecast_lat = document.getElementById('location-menu-' + currentLoc + '-lat').innerText
+    // Get forecast URL from:  https://api.weather.gov/points/{lat},{lon}
+    // which returns a JSON with a 'forecast' attribute that is the updated URL
+    let fiveDayForecastAPI = `https://api.weather.gov/points/${forecast_lat},${forecast_lon}`  
+    const fiveDayForecastAPIResponse = await fetch(fiveDayForecastAPI)
+    const fiveDayForecastData = await fiveDayForecastAPIResponse.json()
+    if (fiveDayForecastData) {
+        try {
+            fiveDayForecastURL = fiveDayForecastData.properties.forecast
+            document.getElementById(`Next5DayURL`).href = `https://forecast.weather.gov/MapClick.php?lat=${forecast_lat}&lon=${forecast_lon}`
+        } catch (error) {
+            console.log('5 day forecast grid coordinates lookup error: ' + error) 
+        }
+    }
+    // Refresh 5 day forecast
+    get5DayForecast()
+}
+
+
 // Populate Weather Forecast data when navigating to Weather Forecast page
 async function populateWeatherForecast() {
 
@@ -71,58 +124,6 @@ async function populateWeatherForecast() {
 
     // Hide 'loading' image
     document.getElementById('Loading Image').style.display = 'none' 
-}
-
-// 5 DAY FORECAST
-// Get 5 day forecast based on selection location
-//const url = 'https://wasatchcloudbase.github.io/example_files/example_noaa_forecast.json'
-async function get5DayForecast() {
-    // Clear prior results while loading
-    // (a lag sometimes occurs the first time forecasts are queried)
-    for (let i=1; i<6; i++) {
-        document.getElementById(`forecast-day${i}-day`).innerHTML = 'Loading forecast'
-        document.getElementById(`forecast-day${i}-txt`).innerHTML = ''
-        document.getElementById(`forecast-day${i}-img`).src = ''
-    }
-    var response = await fetch(fiveDayForecastURL)
-    var noaaData = await response.json()
-    if (noaaData) {
-        try {
-            let position = noaaData.properties.periods[0].isDaytime ? 0 : 1
-            for (let i=1; i<6; i++) {
-                document.getElementById(`forecast-day${i}-day`).innerHTML = noaaData.properties.periods[position].name
-                document.getElementById(`forecast-day${i}-txt`).innerHTML = noaaData.properties.periods[position].detailedForecast
-                document.getElementById(`forecast-day${i}-img`).src = fiveDayForecastIconURL + noaaData.properties.periods[position].icon
-                position += 2
-            }
-        } catch (error) { 
-            console.log('5 day forecast error: ' + error) 
-        }
-    }
-}
-
-// Toggle changes to 5 day forecast location
-async function toggleLoc(newLoc) {
-    var currentLoc = newLoc
-    document.getElementById('current-loc').innerHTML = document.getElementById('location-menu-' + currentLoc + '-name').innerText
-    // Get lat and lon for selected forecast site
-    let forecast_lon = document.getElementById('location-menu-' + currentLoc + '-lon').innerText
-    let forecast_lat = document.getElementById('location-menu-' + currentLoc + '-lat').innerText
-    // Get forecast URL from:  https://api.weather.gov/points/{lat},{lon}
-    // which returns a JSON with a 'forecast' attribute that is the updated URL
-    let fiveDayForecastAPI = `https://api.weather.gov/points/${forecast_lat},${forecast_lon}`  
-    const fiveDayForecastAPIResponse = await fetch(fiveDayForecastAPI)
-    const fiveDayForecastData = await fiveDayForecastAPIResponse.json()
-    if (fiveDayForecastData) {
-        try {
-            fiveDayForecastURL = fiveDayForecastData.properties.forecast
-            document.getElementById(`Next5DayURL`).href = `https://forecast.weather.gov/MapClick.php?lat=${forecast_lat}&lon=${forecast_lon}`
-        } catch (error) {
-            console.log('5 day forecast grid coordinates lookup error: ' + error) 
-        }
-    }
-    // Refresh 5 day forecast
-    get5DayForecast()
 }
 
 // Update WeatherStreet forecast image based on forward/back buttons

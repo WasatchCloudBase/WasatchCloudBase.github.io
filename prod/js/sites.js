@@ -157,15 +157,12 @@
                 document.getElementById(siteID + `-site-list-name`).innerText = siteData[i].SiteName
                 // Update onclick event for site details
                 document.getElementById(siteID + `-site-list` ).setAttribute("onclick", `siteDetail('${siteID}')`)
-                // Set altitude units
-                var alt_units = ``
-                if ( siteData[i].ReadingsAlt === 'Stn down' ) {
-                    document.getElementById(siteHeader + `-time`).innerText = 'Stn down'    
-                } else { alt_units = ` ft` }
                 // Update altitude
-                document.getElementById(siteID + `-site-list-alt`).innerText = siteData[i].ReadingsAlt + alt_units
+                document.getElementById(siteID + `-site-list-alt`).innerText = siteData[i].ReadingsAlt + ' ft'
+                // Set default time to display that station is down (overridden when readings are queried below)
+                document.getElementById(siteID + `-site-list-time`).innerText = 'Station Down'
 
-                // Add site Mesonet API call for readings if station is not null
+                // Build listing of Mesonet staions to query below (Mesonet API calls all stations at once)
                 if ( siteData[i].ReadingsSource === 'Mesonet' && siteData[i].ReadingsStation ) {
                     siteReadingsURL = siteReadingsURL + `&stid=` + siteData[i].ReadingsStation 
                 }
@@ -217,38 +214,6 @@
             document.getElementById(`prototype-location-menu-site`).style.display = 'none'
         } catch (error) { 
             console.log('Hide prototype error: ' + error + ' for map: ' + mapData[i].MapID)
-        }
-    }
-
-    // Complete the URL for Mesonet API for latest readings
-    // Note that URL limits current readings to the past 2 hours to prevent outdated readings
-    siteReadingsURL = siteReadingsURL +
-        `&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&within=120&obtimezone=local&timeformat=%-I:%M%20%p&` + 
-        `token=ef3b9f4584b64e6da12d8688f19d9f4a`  //0030ed6480a4440eb29ec23ff37fe159`
-
-    // Get latest readings per station using Mesonet API
-    var response = await fetch(siteReadingsURL)
-    var rawReadingsData = await response.json()
-    if (rawReadingsData) {
-        try {
-            // Extract all of the stations readings from the raw file and show the current reading for each station
-            for (let i=0; i<rawReadingsData.STATION.length; i++) {
-                try {
-                    // Create object of observations for each station and update on site map
-                    readingsData[i] = JSON.parse(JSON.stringify(rawReadingsData.STATION[i].OBSERVATIONS))
-                    readingsData[i].stid = JSON.parse(JSON.stringify(rawReadingsData.STATION[i].STID))
-
-                    // Populate current readings
-                    showCurrentReadings(readingsData[i])
-
-                } catch (error) { 
-                    console.log('Station reading error: ' + error + ' for station: ' + rawReadingsData.STATION[i].STID)
-                }
-            }
-        } catch (error) { 
-            console.log('Readings Data error: ' + error + ' for length of: ' + JSON.stringify(rawReadingsData.STATION))
-            console.log('URL used for request:')
-            console.log(siteReadingsURL)
         }
     }
 
@@ -328,6 +293,38 @@
             })  // end of CORS request
         } catch (error) { 
             console.log('CUASA API station reading error: ' + error + ' for station: ' + CUASASites[i])
+        }
+    }
+
+    // Complete the URL for Mesonet API for latest readings
+    // Note that URL limits current readings to the past 2 hours to prevent outdated readings
+    siteReadingsURL = siteReadingsURL +
+        `&recent=420&vars=air_temp,altimeter,wind_direction,wind_gust,wind_speed&units=english,speed|mph,temp|F&within=120&obtimezone=local&timeformat=%-I:%M%20%p&` + 
+        `token=ef3b9f4584b64e6da12d8688f19d9f4a`  //0030ed6480a4440eb29ec23ff37fe159`
+
+    // Get latest readings per station using Mesonet API
+    var response = await fetch(siteReadingsURL)
+    var rawReadingsData = await response.json()
+    if (rawReadingsData) {
+        try {
+            // Extract all of the stations readings from the raw file and show the current reading for each station
+            for (let i=0; i<rawReadingsData.STATION.length; i++) {
+                try {
+                    // Create object of observations for each station and update on site map
+                    readingsData[i] = JSON.parse(JSON.stringify(rawReadingsData.STATION[i].OBSERVATIONS))
+                    readingsData[i].stid = JSON.parse(JSON.stringify(rawReadingsData.STATION[i].STID))
+
+                    // Populate current readings
+                    showCurrentReadings(readingsData[i])
+
+                } catch (error) { 
+                    console.log('Station reading error: ' + error + ' for station: ' + rawReadingsData.STATION[i].STID)
+                }
+            }
+        } catch (error) { 
+            console.log('Readings Data error: ' + error + ' for length of: ' + JSON.stringify(rawReadingsData.STATION))
+            console.log('URL used for request:')
+            console.log(siteReadingsURL)
         }
     }
 
