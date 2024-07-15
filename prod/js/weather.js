@@ -21,9 +21,6 @@ async function get5DayForecast() {
                 document.getElementById(`forecast-day${i}-day`).innerHTML = noaaData.properties.periods[position].name
                 document.getElementById(`forecast-day${i}-txt`).innerHTML = noaaData.properties.periods[position].detailedForecast
                 document.getElementById(`forecast-day${i}-img`).src = fiveDayForecastIconURL + noaaData.properties.periods[position].icon
-
-document.getElementById(`Next5DayURL`).href = fiveDayForecastIconURL + noaaData.properties.periods[position].icon
-
                 position += 2
             }
         } catch (error) { 
