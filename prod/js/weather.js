@@ -20,7 +20,7 @@ async function get5DayForecast() {
             for (let i=1; i<6; i++) {
                 document.getElementById(`forecast-day${i}-day`).innerHTML = noaaData.properties.periods[position].name
                 document.getElementById(`forecast-day${i}-txt`).innerHTML = noaaData.properties.periods[position].detailedForecast
-                document.getElementById(`forecast-day${i}-img`).src = fiveDayForecastIconURL + noaaData.properties.periods[position].icon
+                document.getElementById(`forecast-day${i}-img`).src = noaaData.properties.periods[position].icon
                 position += 2
             }
         } catch (error) { 
