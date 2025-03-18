@@ -132,6 +132,7 @@ async function populateSoaringForecast() {
     }
 
     // GCP SOARING FORECAST
+/*
     try {
         const maxTempURL = 'https://storage.googleapis.com/wasatch-wind-static/maxtemp.json'
         doCORSRequest({method: 'GET', url: maxTempURL, data: ""}, function processResponse(result) {
@@ -148,6 +149,7 @@ async function populateSoaringForecast() {
     } catch (error) { 
         console.log('max temp URL build error: ' + error) 
     }
+        */
 
     // Hide 'loading' image
     document.getElementById('Loading Image').style.display = 'none' 
